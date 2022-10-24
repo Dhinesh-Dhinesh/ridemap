@@ -11,3 +11,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* .overlay {     
+  width: 3rem;
+  height: 3rem;
+  margin: 10px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(61, 62, 66, 0.5);  
+} */
+
+.leaflet-routing-container{
+  display:none;
+}
