@@ -11,10 +11,15 @@ import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import markerPng from './icons/fullpng.png';
 import clgIcon from './icons/college.png';
-import "leaflet-easybutton"
 
 //Routing
 import RoutingMachine from "./hooks/RoutingMachine.js";
+
+//hooks
+import ScrollBar from './hooks/ScrollBar.js';
+
+//icons
+import MyLocationIcon from '@mui/icons-material/MyLocation';
 
 //full png image for the router markers to hide
 let defaultPngIcon = L.icon({
@@ -59,11 +64,6 @@ function App() {
         setLocationMarker(latlng);
         current.flyTo(latlng, ZOOM_LVL);
 
-        //button for jump to current location
-        L.easyButton(`<i class="fa fa-map-marker" aria-hidden="true"></i>`, function (btn, map) {
-          current.flyTo(latlng, ZOOM_LVL);
-        }).setPosition('bottomleft').addTo(mapRef.current);
-
         //marker for college icon
         L.marker([11.922635790851622, 79.62689991349808], { icon: collegeIcon }).addTo(mapRef.current).bindPopup("College");
       };
@@ -92,28 +92,47 @@ function App() {
   }, []);
 
   return (
-    <MapContainer center={center} zoom={ZOOM_LVL} scrollWheelZoom={true}
-      style={{ widht: '100vw', height: '100vh', position: 'relative' }}
-      ref={mapRef}
-    >
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {
-        locationMarker && (
-          <Marker position={locationMarker} icon={locationIcon}>
-            <Popup>
-              you are here
-            </Popup>
-          </Marker>
-        )
-      }
-      <RoutingMachine waypoints={[
-        L.latLng(16.506, 80.648),
-        L.latLng(17.384, 78.4866),
-        L.latLng(12.971, 77.5945)
-      ]} />
-    </MapContainer>
+    <>
+      <MapContainer center={center} zoom={ZOOM_LVL} scrollWheelZoom={true}
+        style={{ widht: '100vw', height: '100vh', position: 'relative' }}
+        ref={mapRef} zoomControl={false}
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {
+          locationMarker && (
+            <Marker position={locationMarker} icon={locationIcon}>
+              <Popup>
+                you are here
+              </Popup>
+            </Marker>
+          )
+        }
+        <RoutingMachine waypoints={[
+          L.latLng(16.506, 80.648),
+          L.latLng(17.384, 78.4866),
+          L.latLng(12.971, 77.5945)
+        ]} />
+      </MapContainer>
+      <div className="overlay flex overflow-x-auto bottom-0 w-screen">
+        {
+          [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
+            return (
+              <div>
+                <ScrollBar key={index} />
+              </div>
+            )
+          })
+        }
+      </div>
+      <div className='overlay top-4 left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
+      flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
+      onClick={()=>mapRef.current.flyTo(locationMarker,ZOOM_LVL)}
+      >
+        <MyLocationIcon />
+      </div>
+    </>
   )
 }
 
