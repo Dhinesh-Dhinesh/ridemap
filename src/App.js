@@ -20,6 +20,7 @@ import ScrollBar from './hooks/ScrollBar.js';
 
 //icons
 import MyLocationIcon from '@mui/icons-material/MyLocation';
+import DirectionsBusFilledRoundedIcon from '@mui/icons-material/DirectionsBusFilledRounded';
 
 //full png image for the router markers to hide
 let defaultPngIcon = L.icon({
@@ -49,6 +50,14 @@ function App() {
   const [center] = useState({ lat: 11.922635790851622, lng: 79.62689991349808 })     //college location
   const [locationMarker, setLocationMarker] = useState(null);
   const ZOOM_LVL = 13;
+  const [isRouteShown, setIsRouteShown] = useState(false);
+
+  //style
+  const mountedStyle = { animation: "inAnimation 250ms ease-in" };
+  const unmountedStyle = {
+    animation: "outAnimation 270ms ease-out",
+    animationFillMode: "forwards"
+  };
 
   //Reference to MapContainer
   const mapRef = useRef();
@@ -98,7 +107,7 @@ function App() {
         ref={mapRef} zoomControl={false}
       >
         <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          url="https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png"
         />
         {
           locationMarker && (
@@ -115,7 +124,8 @@ function App() {
           L.latLng(12.971, 77.5945)
         ]} />
       </MapContainer>
-      <div className="overlay flex overflow-x-auto bottom-0 w-screen">
+      <div className="overlay flex overflow-x-auto bottom-0 w-screen"
+        style={isRouteShown ? mountedStyle : unmountedStyle}>
         {
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
             return (
@@ -128,9 +138,13 @@ function App() {
       </div>
       <div className='overlay top-4 left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
       flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
-      onClick={()=>mapRef.current.flyTo(locationMarker,ZOOM_LVL)}
-      >
+        onClick={() => mapRef.current.flyTo(locationMarker, ZOOM_LVL)}>
         <MyLocationIcon />
+      </div>
+      <div className='overlay top-14 left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
+      flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
+        onClick={() => setIsRouteShown(!isRouteShown)}>
+        <DirectionsBusFilledRoundedIcon />
       </div>
     </>
   )
