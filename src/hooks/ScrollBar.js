@@ -1,9 +1,9 @@
 import React from 'react';
 
-function ScrollBar() {
+function ScrollBar({click}) {
     return (
         // container
-        <div class="bg-gray-600 w-52 m-4 rounded-2xl h-32">
+        <div class="bg-gray-700 w-52 m-4 rounded-2xl h-32">
             {/* sub-container */}
             <div class="border-lime-400 border-l-4 m-2 p-1 flex relative top-2 justify-around rounded-sm">
                 {/* <!-- left box --> */}
@@ -20,7 +20,7 @@ function ScrollBar() {
             </div>
             {/* <!-- sub-container 2--> */}
             <div class="border flex justify-center items-center m-3 text-white rounded-lg 
-            text-sm font-bold h-8 mt-4 hover:bg-slate-100 hover:text-slate-600">
+            text-sm font-bold h-8 mt-4 hover:bg-slate-100 hover:text-slate-600" onClick={click}>
                 Show Map
             </div>
         </div>
