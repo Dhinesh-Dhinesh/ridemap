@@ -4,14 +4,14 @@ import React, { useEffect, useState, useRef } from 'react';
 import L from 'leaflet';
 import {
   MapContainer, TileLayer,
-  Marker, Popup
+  Marker, Popup,
 } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+// import icon from 'leaflet/dist/images/marker-icon.png';
+// import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import markerPng from './icons/fullpng.png';
 import clgIcon from './icons/college.png';
-
+import circleIcon from './icons/circle.png';
 //Routing
 import RoutingMachine from "./hooks/RoutingMachine.js";
 
@@ -38,10 +38,10 @@ L.Marker.prototype.options.icon = defaultPngIcon;
 
 
 let locationIcon = L.icon({
-  iconUrl: icon,
-  shadowUrl: iconShadow,
-  iconSize: [29, 46],
-  iconAnchor: [17, 46]
+  iconUrl: circleIcon,
+  // shadowUrl: iconShadow,
+  iconSize: [46, 46],
+  iconAnchor: [22, 26]
 });
 
 let collegeIcon = L.icon({
@@ -88,6 +88,7 @@ function App() {
 
         //marker for college icon
         L.marker([11.922635790851622, 79.62689991349808], { icon: collegeIcon }).addTo(mapRef.current).bindPopup("College");
+
       };
 
       const errorCallback = (error) => {
@@ -121,6 +122,7 @@ function App() {
           onClose={toggleDrawer}
           direction='bottom'
           overlayOpacity={0.1}
+          // size={600}
           // enableOverlay={false}
           className='rounded-t-3xl h-screen'>
           <div className="rounded-t-3xl bg-gray-800 h-full text-white">
@@ -137,7 +139,7 @@ function App() {
                   <p className='text-xs text-gray-400'>Driver</p>
                 </div>
                 <div className='absolute mt-1 right-14'>
-                  <LocalPhoneIcon style={{ color: '#AEF359' }} />
+                  <a href="tel:555-123-4567"><LocalPhoneIcon style={{ color: '#AEF359' }} /></a>
                 </div>
               </div>
             </div>
@@ -180,9 +182,11 @@ function App() {
           )
         }
         <RoutingMachine waypoints={[
-          L.latLng(16.506, 80.648),
-          L.latLng(17.384, 78.4866),
-          L.latLng(12.971, 77.5945)
+          L.latLng(12.248859, 79.641574),
+          L.latLng(12.154107, 79.606408),
+          L.latLng(12.024463202149139, 79.5380167048937),
+          L.latLng(11.996838397553915, 79.6325349925457),
+          L.latLng(11.922653, 79.627336)
         ]} />
       </MapContainer>
       <div className="overlay flex overflow-x-auto bottom-0 w-screen"

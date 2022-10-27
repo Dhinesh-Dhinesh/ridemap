@@ -7,7 +7,7 @@
   z-index: 10000;
 }
 
-.leaflet-routing-container{
+.leaflet-control-attribution,.leaflet-routing-container{
   display:none;
 }
 

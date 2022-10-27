@@ -6,7 +6,7 @@ const createRoutineMachineLayer = (props) => {
     const instance = L.Routing.control({
         waypoints: props.waypoints,
         lineOptions: {
-            styles: [{ color: "#6FA1EC", weight: 4 }]
+            styles: [{ color: "#AEF359", weight: 6 }]
         },
         show: false,
         collapsible: false,
