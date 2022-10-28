@@ -7,7 +7,7 @@ import React, { useEffect, useState, useRef } from 'react';
 // } from '../../firebase/firebase';
 // import { useNavigate } from 'react-router-dom';
 import { db } from "../../firebase/firebase"
-import { ref, onValue } from "firebase/database";
+import { ref, onValue, onChildChanged } from "firebase/database";
 
 //leaflet
 import L from 'leaflet';
@@ -128,7 +128,7 @@ export default function Home() {
 
     //firebase
     useEffect(() => {
-        const dataRef = ref(db, 'busses/');
+        const dataRef = ref(db, 'busses');
         onValue(dataRef, (snapshot) => {
             let val = [];
             snapshot.forEach((childSnapshot) => {
@@ -136,10 +136,17 @@ export default function Home() {
                 let childData = childSnapshot.val();
                 val.push({ "key": key, "data": childData });
             });
-
             setBusData(val);
-        }, {
-            onlyOnce: true
+        });
+
+        onChildChanged(dataRef, (data) => {
+            let val = [];
+            data.forEach((childSnapshot) => {
+                let key = childSnapshot.key;
+                let childData = childSnapshot.val();
+                val.push({ "key": key, "data": childData });
+            });
+            setBusData(val);
         });
     }, [])
 
@@ -271,6 +278,7 @@ export default function Home() {
                                             parseInt(item.key) + 1, item.data.busdetails.busno, item.data.busdetails.seats)
                                     }}
                                     busno={parseInt(item.key) + 1}
+                                    status={item.data.busdetails.status}
                                 />
                             </div>
                         )

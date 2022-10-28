@@ -1,6 +1,6 @@
 import React from 'react';
 
-function ScrollBar({ click , busno }) {
+function ScrollBar({ click , busno , status}) {
     return (
         // container
         <div className="bg-gray-800 w-52 m-4 rounded-2xl h-32">
@@ -15,7 +15,7 @@ function ScrollBar({ click , busno }) {
                 {/* <!-- Right box --> */}
                 <div className=" text-white mt-6 font-bold">
                     <p className="text-xs text-gray-400">Status</p>
-                    On Route
+                    { status ? "On Route" : "In College"}
                 </div>
             </div>
             {/* <!-- sub-container 2--> */}
