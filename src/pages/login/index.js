@@ -23,6 +23,7 @@ export default function Login() {
       if (snapshot.exists()) {
         if (snapshot.val() === 1) {
           logOutIfLoggedIn();
+          window.location.reload();
           console.log('user already signed in')
         }
       } else {

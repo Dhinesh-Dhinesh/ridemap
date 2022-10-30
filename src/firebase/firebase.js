@@ -36,16 +36,8 @@ export function useAuth() {
     const unsub = onAuthStateChanged(auth, user => {
 
       setCurrentUser(user)
-      if (user) {
-        setTimeout(() => {
-          sessionStorage.setItem("uid", user.uid);
-          set(ref(db, "users/" + user.uid + "/"), {
-            signin: 1
-          })
-        }, 3000);
 
-        const disRef = ref(db, "users/" + user.uid + "/signin");
-        onDisconnect(disRef).set(0)
+      if (user) {
 
         get(child(ref(db), `users/${user.uid}/signin`)).then((snapshot) => {
           if (snapshot.exists()) {
@@ -56,6 +48,13 @@ export function useAuth() {
               }
               logOutIfLoggedIn()
               console.log('user already signed in')
+            } else {
+              sessionStorage.setItem("uid", user.uid); //!get uid in logout handler
+              set(ref(db, "users/" + user.uid + "/"), {
+                signin: 1
+              })
+              const disRef = ref(db, "users/" + user.uid + "/signin");
+              onDisconnect(disRef).set(0);
             }
           } else {
             console.log("No data available");

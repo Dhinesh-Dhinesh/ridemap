@@ -41,9 +41,6 @@ import 'react-modern-drawer/dist/index.css'
 //bottom-nav
 import BottomNav from '../../components/bottomNav'
 
-//Data
-// import { data } from '../../data/data'
-
 
 //full png image for the router markers to hide
 let defaultPngIcon = L.icon({
@@ -148,15 +145,6 @@ export default function Home() {
 
             
         });
-
-        // let loginTwoDevice = sessionStorage.getItem('xsx');
-
-        // if (!loginTwoDevice) {
-        //     let userId = sessionStorage.getItem('uid');
-        //     const disRef = ref(db, "users/" + userId + "/signin");
-        //     onDisconnect(disRef).set(0)
-        // }
-
     }, [])
 
 
