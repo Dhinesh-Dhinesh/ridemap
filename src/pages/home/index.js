@@ -1,21 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 //Firebase
-// import {
-//     useAuth,
-//     logOut
-// } from '../../firebase/firebase';
-import { useNavigate } from 'react-router-dom';
 import { db } from "../../firebase/firebase"
 import { ref, onValue, set } from "firebase/database";
 import { logOut } from '../../firebase/firebase';
 
 //leaflet
 import L from 'leaflet';
-import {
-    MapContainer, TileLayer,
-    Marker, Popup,
-} from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 
 //Marker Icons
@@ -41,6 +34,8 @@ import 'react-modern-drawer/dist/index.css'
 //bottom-nav
 import BottomNav from '../../components/bottomNav'
 
+//!routing - test
+import routes from '../../data/routes.js';
 
 //full png image for the router markers to hide
 let defaultPngIcon = L.icon({
@@ -53,7 +48,6 @@ L.Marker.prototype.options.icon = defaultPngIcon;
 
 let locationIcon = L.icon({
     iconUrl: circleIcon,
-    // shadowUrl: iconShadow,
     iconSize: [46, 46],
     iconAnchor: [22, 26]
 });
@@ -84,13 +78,16 @@ export default function Home() {
         }
     };
 
+    //leaflet
     const [center] = useState({ lat: 11.922635790851622, lng: 79.62689991349808 })     //college location
     const [locationMarker, setLocationMarker] = useState(null);
     const ZOOM_LVL = 12;
+
+    //!routing - test
+    const [wayPoints, setwayPoints] = useState([]);
+
+    //Bus data ui
     const [isBusNavShown, setIsBusNavShown] = useState(false);
-
-
-    //Bus data
     const [busData, setBusData] = useState([]);
 
     //drawer
@@ -109,20 +106,14 @@ export default function Home() {
         setPhoneNumber(phone);
         setTrackNo(trackno);
         setSeats(seats);
+
+        //sets routes with index of the showmap bars 
+        setwayPoints(busno - 1);
     }
     const toggleDrawerDefault = () => {
         setIsDrawerOpen((prevState) => !prevState);
         setIsBusNavShown((prevState) => !prevState);
     }
-
-    //routing
-    const wayPoints = [
-        L.latLng(12.248859, 79.641574),
-        L.latLng(12.154107, 79.606408),
-        L.latLng(12.024463202149139, 79.5380167048937),
-        L.latLng(11.996838397553915, 79.6325349925457),
-        L.latLng(11.922653, 79.627336)
-    ]
 
     //style
     const mountedStyle = { animation: "inAnimation 250ms ease-in" };
@@ -143,7 +134,6 @@ export default function Home() {
             });
             setBusData(val);
 
-            
         });
     }, [])
 
@@ -178,14 +168,15 @@ export default function Home() {
                 navigator.geolocation.getCurrentPosition(options => {
                     let latlng = [options.coords.latitude, options.coords.longitude];
                     setLocationMarker(latlng);
-                    // console.log("called interval");      //!dev
                 })
             }, 1000);
 
         }, 2000);
     }
 
-    //calls just one time when renders
+    //waypoints
+
+    //calls geoLocation )and( set router waypoints
     useEffect(() => {
         getLocation();
     }, []);
@@ -219,9 +210,7 @@ export default function Home() {
                             </div>
                         </div>
                         {/* second div */}
-                        <div className='bg-gray-700 p-2.5 rounded-2xl h-15 mx-6
-            grid grid-cols-3 gap-4
-            '>
+                        <div className='bg-gray-700 p-2.5 rounded-2xl h-15 mx-6 grid grid-cols-3 gap-4'>
                             <div className='flex justify-center items-center flex-col'>
                                 <p className='text-xs text-gray-400'>Track No.</p>
                                 <p className='text-sm font-bold'>{trackNo}</p>
@@ -240,14 +229,17 @@ export default function Home() {
             </div>
             <MapContainer center={center} zoom={ZOOM_LVL} scrollWheelZoom={true}
                 style={{ widht: '100vw', height: '100vh', position: 'relative' }}
-                ref={mapRef} zoomControl={false}
-            >
+                ref={mapRef} zoomControl={false} >
                 <TileLayer
                     url="https://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}"
                     subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
                     className="map-tiles"
                 />
-                <RoutingMachine coords={wayPoints} />
+                {/* Routing Machine */}
+                {wayPoints === 0 ? <RoutingMachine coords={routes[0]} /> : null}
+                {wayPoints === 1 ? <RoutingMachine coords={routes[1]} /> : null}
+
+                {/* Location Marker */}
                 {
                     locationMarker && (
                         <div>
@@ -264,14 +256,12 @@ export default function Home() {
                 style={isBusNavShown ? mountedStyle : unmountedStyle}>
                 {
                     busData.map((item) => {
-
-
                         return (
                             <div key={item.key}>
                                 <ScrollBar
                                     click={() => {
                                         toggleDrawer(item.data.driverdetail.name, item.data.driverdetail.phone,
-                                            parseInt(item.key) + 1, item.data.busdetails.busno, item.data.busdetails.seats)
+                                            parseInt(item.key) + 1, item.data.busdetails.busno, item.data.busdetails.seats);
                                     }}
                                     busno={parseInt(item.key) + 1}
                                     status={item.data.busdetails.status}
@@ -283,7 +273,7 @@ export default function Home() {
             </div>
 
             {/* BottomNav */}
-            <div className='overlay bottom-0 w-full felx'>
+            <div className='fixed z-[10000] bottom-0 w-full'>
                 <div>
                     <BottomNav />
                 </div>
@@ -291,19 +281,19 @@ export default function Home() {
 
             {/* Layer icons */}
             <div className='overlay top-4 left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
-      flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
+                    flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
                 onClick={() => mapRef.current.flyTo(locationMarker, ZOOM_LVL)}>
                 <MyLocationIcon />
             </div>
             <div className='overlay top-24 left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
-      flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
+                flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
                 onClick={handleLogOut}>
                 <LogoutIcon />
             </div>
             {
                 !isDrawerOpen && (
                     <div className='overlay top-14 left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
-      flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
+                        flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
                         onClick={() => setIsBusNavShown(!isBusNavShown)}>
                         <DirectionsBusFilledRoundedIcon />
                     </div>

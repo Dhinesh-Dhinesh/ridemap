@@ -28,17 +28,14 @@ export function logOut() {
   return signOut(auth);
 }
 
-// Custom Hook
 export function useAuth() {
   const [currentUser, setCurrentUser] = useState();
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, user => {
-
       setCurrentUser(user)
 
       if (user) {
-
         get(child(ref(db), `users/${user.uid}/signin`)).then((snapshot) => {
           if (snapshot.exists()) {
             if (snapshot.val() === 1) {

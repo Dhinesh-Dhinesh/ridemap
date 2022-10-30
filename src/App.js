@@ -6,13 +6,12 @@ import Home from './pages/home/index.js';
 import NotFound from './pages/error/index.js';
 
 import ProtectRoute from './components/ProtectedRoute.js';
-
 import { useAuth } from './firebase/firebase';
 
 export default function App() {
 
   const user = useAuth();
-  
+
   return (
     <BrowserRouter>
       <Routes>

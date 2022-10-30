@@ -1,15 +1,15 @@
-import {  useState, } from 'react'
+import { useState, } from 'react'
 
 import { useNavigate } from 'react-router-dom';
 import { signIn, useAuth, db, logOut } from '../../firebase/firebase';
-import { ref, get, child, } from 'firebase/database'
+import { ref, get, child, set } from 'firebase/database'
 
 export default function Login() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading,setLoading] = useState(false);
-  
+  const [loading, setLoading] = useState(false);
+
   const user = useAuth();
   let navigate = useNavigate();
 
@@ -18,23 +18,25 @@ export default function Login() {
     navigate('/');
   }
 
-  const checkUserLoggedIn =  (id) => {
+  const checkUserLoggedIn = (id) => {
     get(child(ref(db), `users/${id}/signin`)).then((snapshot) => {
       if (snapshot.exists()) {
         if (snapshot.val() === 1) {
           logOutIfLoggedIn();
-          window.location.reload();
+          // window.location.reload();
           console.log('user already signed in')
         }
       } else {
-        console.log("No data available");
+        set(ref(db, "users/" + id + "/"), {
+          signin: 1
+        })
       }
     }).catch((error) => {
       console.error(error);
     });
   }
 
-  if ((user === undefined) || (loading) ) {
+  if ((user === undefined) || (loading)) {
     return <div>loading</div>
   }
 
