@@ -5,9 +5,10 @@ import React, { useEffect, useState, useRef } from 'react';
 //     useAuth,
 //     logOut
 // } from '../../firebase/firebase';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { db } from "../../firebase/firebase"
-import { ref, onValue, onChildChanged } from "firebase/database";
+import { ref, onValue, set } from "firebase/database";
+import { logOut } from '../../firebase/firebase';
 
 //leaflet
 import L from 'leaflet';
@@ -31,6 +32,7 @@ import MyLocationIcon from '@mui/icons-material/MyLocation';
 import DirectionsBusFilledRoundedIcon from '@mui/icons-material/DirectionsBusFilledRounded';
 import PersonIcon from '@mui/icons-material/Person';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 //drawer
 import Drawer from 'react-modern-drawer'
@@ -41,6 +43,7 @@ import BottomNav from '../../components/bottomNav'
 
 //Data
 // import { data } from '../../data/data'
+
 
 //full png image for the router markers to hide
 let defaultPngIcon = L.icon({
@@ -66,24 +69,29 @@ let collegeIcon = L.icon({
 
 export default function Home() {
 
+    // Logout 
+    const navigate = useNavigate();
 
-    //Auth
-    // const user = useAuth();
-    // const navigate = useNavigate();
-
-    // const handleLogOut = async () => {
-    //     try {
-    //         await logOut();
-    //         navigate('/');
-    //     } catch (e) {
-    //         console.log(e.message)
-    //     }
-    // };
+    const handleLogOut = async (e) => {
+        e.preventDefault();
+        try {
+            let user = sessionStorage.getItem('uid');
+            set(ref(db, "users/" + user + "/"), {
+                signin: 0
+            })
+            await logOut();
+            sessionStorage.removeItem('uid');
+            navigate('/');
+        } catch (e) {
+            console.log(e.message)
+        }
+    };
 
     const [center] = useState({ lat: 11.922635790851622, lng: 79.62689991349808 })     //college location
     const [locationMarker, setLocationMarker] = useState(null);
     const ZOOM_LVL = 12;
     const [isBusNavShown, setIsBusNavShown] = useState(false);
+
 
     //Bus data
     const [busData, setBusData] = useState([]);
@@ -137,17 +145,18 @@ export default function Home() {
                 val.push({ "key": key, "data": childData });
             });
             setBusData(val);
+
+            
         });
 
-        onChildChanged(dataRef, (data) => {
-            let val = [];
-            data.forEach((childSnapshot) => {
-                let key = childSnapshot.key;
-                let childData = childSnapshot.val();
-                val.push({ "key": key, "data": childData });
-            });
-            setBusData(val);
-        });
+        // let loginTwoDevice = sessionStorage.getItem('xsx');
+
+        // if (!loginTwoDevice) {
+        //     let userId = sessionStorage.getItem('uid');
+        //     const disRef = ref(db, "users/" + userId + "/signin");
+        //     onDisconnect(disRef).set(0)
+        // }
+
     }, [])
 
 
@@ -191,7 +200,6 @@ export default function Home() {
     //calls just one time when renders
     useEffect(() => {
         getLocation();
-        // handleLogOut()
     }, []);
 
     return (
@@ -298,6 +306,11 @@ export default function Home() {
       flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
                 onClick={() => mapRef.current.flyTo(locationMarker, ZOOM_LVL)}>
                 <MyLocationIcon />
+            </div>
+            <div className='overlay top-24 left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
+      flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
+                onClick={handleLogOut}>
+                <LogoutIcon />
             </div>
             {
                 !isDrawerOpen && (

@@ -1,31 +1,56 @@
-import { useState, } from 'react'
+import {  useState, } from 'react'
 
 import { useNavigate } from 'react-router-dom';
-import { signIn, useAuth } from '../../firebase/firebase';
+import { signIn, useAuth, db, logOut } from '../../firebase/firebase';
+import { ref, get, child, } from 'firebase/database'
 
 export default function Login() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const [loading,setLoading] = useState(false);
+  
   const user = useAuth();
   let navigate = useNavigate();
 
-  if (user === undefined) {
+  const logOutIfLoggedIn = async () => {
+    await logOut();
+    navigate('/');
+  }
+
+  const checkUserLoggedIn =  (id) => {
+    get(child(ref(db), `users/${id}/signin`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        if (snapshot.val() === 1) {
+          logOutIfLoggedIn();
+          console.log('user already signed in')
+        }
+      } else {
+        console.log("No data available");
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+  }
+
+  if ((user === undefined) || (loading) ) {
     return <div>loading</div>
   }
 
   if (user) {
-    navigate('/home');
+    checkUserLoggedIn(user.uid);
+    return navigate('/home');
   }
 
-
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
+    setLoading(true);
     try {
-      await signIn(email, password)
-      navigate('/home')
+      signIn(email, password).then((data) => {
+
+        checkUserLoggedIn(data.user.uid)
+        setLoading(false);
+      })
     } catch (e) {
       console.log(e.message)
     }

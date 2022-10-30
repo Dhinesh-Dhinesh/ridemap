@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 //svg
 import ErrorSVG from './assets/error-404.svg'
@@ -13,7 +14,7 @@ export default function Error() {
                 Page Not Found
             </p>
             <p className='mt-4 text-primary border-2 border-primary bg-gray-700 p-2 px-6 rounded-full hover:text-slate-200'>
-                Go back to the home page...
+                <Link to="/">Go back to the home page...</Link>
             </p>
         </div>
     )

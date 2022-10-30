@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
-import { getDatabase } from "firebase/database";
+import { getDatabase, set, ref, onDisconnect, child, get } from "firebase/database";
+
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN,
@@ -32,11 +33,41 @@ export function useAuth() {
   const [currentUser, setCurrentUser] = useState();
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, user => setCurrentUser(user));
+    const unsub = onAuthStateChanged(auth, user => {
+
+      setCurrentUser(user)
+      if (user) {
+        setTimeout(() => {
+          sessionStorage.setItem("uid", user.uid);
+          set(ref(db, "users/" + user.uid + "/"), {
+            signin: 1
+          })
+        }, 3000);
+
+        const disRef = ref(db, "users/" + user.uid + "/signin");
+        onDisconnect(disRef).set(0)
+
+        get(child(ref(db), `users/${user.uid}/signin`)).then((snapshot) => {
+          if (snapshot.exists()) {
+            if (snapshot.val() === 1) {
+              async function logOutIfLoggedIn() {
+                await logOut();
+                window.location.reload();
+              }
+              logOutIfLoggedIn()
+              console.log('user already signed in')
+            }
+          } else {
+            console.log("No data available");
+          }
+        }).catch((error) => {
+          console.error(error);
+        })
+
+      }
+    });
     return unsub;
   }, [])
-
-  console.log(currentUser);
 
   return currentUser;
 }
