@@ -1,6 +1,6 @@
 import { useState, } from 'react'
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { signIn, useAuth, db, logOut } from '../../firebase/firebase';
 import { ref, get, child, set } from 'firebase/database'
 
@@ -13,18 +13,17 @@ export default function Login() {
   const user = useAuth();
   let navigate = useNavigate();
 
-  const logOutIfLoggedIn = async () => {
-    await logOut();
-    navigate('/');
-  }
 
   const checkUserLoggedIn = (id) => {
     get(child(ref(db), `users/${id}/signin`)).then((snapshot) => {
       if (snapshot.exists()) {
         if (snapshot.val() === 1) {
-          logOutIfLoggedIn();
-          // window.location.reload();
+          (async function logOutIfLoggedIn() {
+            await logOut();
+            navigate('/');
+          })();
           console.log('user already signed in')
+          return;
         }
       } else {
         set(ref(db, "users/" + id + "/"), {
@@ -36,13 +35,13 @@ export default function Login() {
     });
   }
 
-  if ((user === undefined) || (loading)) {
-    return <div>loading</div>
+  if (user === undefined || loading) {
+    return <div className="flex justify-center items-center w-screen h-screen">loading</div>
   }
 
   if (user) {
     checkUserLoggedIn(user.uid);
-    return navigate('/home');
+    return <Navigate to='/home' />
   }
 
   const handleSubmit = (e) => {

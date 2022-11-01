@@ -5,7 +5,8 @@ import LogIn from './pages/login/index.js';
 import Home from './pages/home/index.js';
 import NotFound from './pages/error/index.js';
 
-import ProtectRoute from './components/ProtectedRoute.js';
+import { Navigate } from 'react-router-dom';
+// import ProtectRoute from './components/ProtectedRoute.js';
 import { useAuth } from './firebase/firebase';
 
 export default function App() {
@@ -16,7 +17,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route exact path="/" element={<LogIn />} />
-        <Route path="/home" element={user ? <Home /> : <ProtectRoute />} />
+        <Route path="/home" element={user ? <Home /> : <Navigate to="/" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

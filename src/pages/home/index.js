@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { db } from "../../firebase/firebase"
 import { ref, onValue, set } from "firebase/database";
 import { logOut } from '../../firebase/firebase';
+import { changeRoutesFromDb } from '../../data/routes';
 
 //leaflet
 import L from 'leaflet';
@@ -35,7 +36,7 @@ import 'react-modern-drawer/dist/index.css'
 import BottomNav from '../../components/bottomNav'
 
 //!routing - test
-import routes from '../../data/routes.js';
+// import routes from '../../data/routes.js';
 
 //full png image for the router markers to hide
 let defaultPngIcon = L.icon({
@@ -85,6 +86,7 @@ export default function Home() {
 
     //!routing - test
     const [wayPoints, setwayPoints] = useState([]);
+    const [routes, setRoutes] = useState([]);
 
     //Bus data ui
     const [isBusNavShown, setIsBusNavShown] = useState(false);
@@ -122,22 +124,6 @@ export default function Home() {
         animationFillMode: "forwards"
     };
 
-    //firebase
-    useEffect(() => {
-        const dataRef = ref(db, 'busses');
-        onValue(dataRef, (snapshot) => {
-            let val = [];
-            snapshot.forEach((childSnapshot) => {
-                let key = childSnapshot.key;
-                let childData = childSnapshot.val();
-                val.push({ "key": key, "data": childData });
-            });
-            setBusData(val);
-
-        });
-    }, [])
-
-
     //Reference to MapContainer
     const mapRef = useRef();
 
@@ -174,11 +160,24 @@ export default function Home() {
         }, 2000);
     }
 
-    //waypoints
-
-    //calls geoLocation )and( set router waypoints
+    //firebase data and geolocation
     useEffect(() => {
         getLocation();
+
+        (async function getRoutes() {
+            setRoutes(await changeRoutesFromDb());
+        })();
+
+        const dataRef = ref(db, 'busses');
+        onValue(dataRef, (snapshot) => {
+            let val = [];
+            snapshot.forEach((childSnapshot) => {
+                let key = childSnapshot.key;
+                let childData = childSnapshot.val();
+                val.push({ "key": key, "data": childData });
+            });
+            setBusData(val);
+        });
     }, []);
 
     return (
