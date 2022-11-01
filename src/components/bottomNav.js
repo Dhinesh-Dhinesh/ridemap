@@ -11,7 +11,6 @@ const Navigation = () => {
   const [active, setActive] = useState(0);
   
   return (
-    // <div className="absolute -bottom-12">
     <div className="flex justify-center bg-gray-600 w-full ">
       <div className="bg-gray-600 max-h-[4.4rem] rounded-t-xl">
         <ul className="flex relative">

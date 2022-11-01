@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 //Firebase
 import { db } from "../../firebase/firebase"
@@ -35,9 +35,6 @@ import 'react-modern-drawer/dist/index.css'
 //bottom-nav
 import BottomNav from '../../components/bottomNav'
 
-//!routing - test
-// import routes from '../../data/routes.js';
-
 //full png image for the router markers to hide
 let defaultPngIcon = L.icon({
     iconUrl: markerPng,
@@ -62,7 +59,6 @@ let collegeIcon = L.icon({
 export default function Home() {
 
     // Logout 
-    const navigate = useNavigate();
 
     const handleLogOut = async (e) => {
         e.preventDefault();
@@ -73,7 +69,7 @@ export default function Home() {
             })
             await logOut();
             sessionStorage.removeItem('uid');
-            navigate('/');
+            return <Navigate to="/" />
         } catch (e) {
             console.log(e.message)
         }
@@ -84,7 +80,7 @@ export default function Home() {
     const [locationMarker, setLocationMarker] = useState(null);
     const ZOOM_LVL = 12;
 
-    //!routing - test
+    //routing
     const [wayPoints, setwayPoints] = useState([]);
     const [routes, setRoutes] = useState([]);
 
@@ -127,7 +123,7 @@ export default function Home() {
     //Reference to MapContainer
     const mapRef = useRef();
 
-    //Get current location when page loads )and( update location for every 5 seconds
+    //Get current location when page loads )and( update location for every 1 seconds
     const getLocation = () => {
 
         setTimeout(() => {
@@ -251,7 +247,7 @@ export default function Home() {
                     )
                 }
             </MapContainer>
-            <div className="overlay flex overflow-x-auto bottom-16 w-screen"
+            <div className="fixed z-[10000] flex overflow-x-auto bottom-16 w-screen"
                 style={isBusNavShown ? mountedStyle : unmountedStyle}>
                 {
                     busData.map((item) => {
