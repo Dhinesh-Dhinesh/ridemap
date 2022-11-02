@@ -33,7 +33,7 @@ import Drawer from 'react-modern-drawer'
 import 'react-modern-drawer/dist/index.css'
 
 //bottom-nav
-import BottomNav from '../../components/bottomNav'
+// import BottomNav from '../../components/bottomNav'
 
 //full png image for the router markers to hide
 let defaultPngIcon = L.icon({
@@ -224,7 +224,7 @@ export default function Home() {
             </div>
             <MapContainer center={center} zoom={ZOOM_LVL} scrollWheelZoom={true}
                 style={{ widht: '100vw', height: '100vh', position: 'relative' }}
-                ref={mapRef} zoomControl={false} >
+                ref={mapRef} zoomControl={false}>
                 <TileLayer
                     url="https://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}"
                     subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
@@ -268,11 +268,11 @@ export default function Home() {
             </div>
 
             {/* BottomNav */}
-            <div className='fixed z-[10000] bottom-0 w-full'>
+            {/* <div className='fixed z-[10000] bottom-0 w-full'>
                 <div>
                     <BottomNav />
                 </div>
-            </div>
+            </div> */}
 
             {/* Layer icons */}
             <div className='overlay top-4 left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
