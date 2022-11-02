@@ -9,8 +9,9 @@ import { changeRoutesFromDb } from '../../data/routes';
 
 //leaflet
 import L from 'leaflet';
-import { MapContainer, TileLayer, Marker, Popup, } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
+import ToggleBusScroll from '../../components/toggleBusScroll';
 
 //Marker Icons
 import markerPng from './assets/fullpng.png';
@@ -80,12 +81,14 @@ export default function Home() {
     const [locationMarker, setLocationMarker] = useState(null);
     const ZOOM_LVL = 12;
 
+
+
     //routing
     const [wayPoints, setwayPoints] = useState([]);
     const [routes, setRoutes] = useState([]);
 
     //Bus data ui
-    const [isBusNavShown, setIsBusNavShown] = useState(false);
+    const [isBusNavShown, setIsBusNavShown] = useState(true);
     const [busData, setBusData] = useState([]);
 
     //drawer
@@ -110,7 +113,7 @@ export default function Home() {
     }
     const toggleDrawerDefault = () => {
         setIsDrawerOpen((prevState) => !prevState);
-        setIsBusNavShown((prevState) => !prevState);
+        setIsBusNavShown(false);
     }
 
     //style
@@ -246,6 +249,8 @@ export default function Home() {
                         </div>
                     )
                 }
+
+                <ToggleBusScroll callback={setIsBusNavShown}/>
             </MapContainer>
             <div className="fixed z-[10000] flex overflow-x-auto bottom-16 w-screen"
                 style={isBusNavShown ? mountedStyle : unmountedStyle}>
@@ -266,13 +271,6 @@ export default function Home() {
                     })
                 }
             </div>
-
-            {/* BottomNav */}
-            {/* <div className='fixed z-[10000] bottom-0 w-full'>
-                <div>
-                    <BottomNav />
-                </div>
-            </div> */}
 
             {/* Layer icons */}
             <div className='overlay top-4 left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
