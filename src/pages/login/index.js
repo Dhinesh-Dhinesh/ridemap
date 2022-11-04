@@ -4,6 +4,8 @@ import { useNavigate, Navigate } from 'react-router-dom';
 import { signIn, useAuth, db, logOut } from '../../firebase/firebase';
 import { ref, get, child, set } from 'firebase/database'
 
+import ReactLoading from "react-loading";
+
 export default function Login() {
 
   const [email, setEmail] = useState('');
@@ -36,7 +38,9 @@ export default function Login() {
   }
 
   if (user === undefined || loading) {
-    return <div className="flex justify-center items-center w-screen h-screen">loading</div>
+    return <div className="flex justify-center items-center w-screen h-screen bg-gray-700">
+      <ReactLoading type="spinningBubbles" color="#AEF359"/>
+    </div>
   }
 
   if (user) {

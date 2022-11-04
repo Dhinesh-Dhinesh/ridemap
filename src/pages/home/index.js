@@ -24,7 +24,6 @@ import ScrollBar from '../../components/ScrollBar.js';
 
 //icons
 import MyLocationIcon from '@mui/icons-material/MyLocation';
-import DirectionsBusFilledRoundedIcon from '@mui/icons-material/DirectionsBusFilledRounded';
 import PersonIcon from '@mui/icons-material/Person';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -90,6 +89,8 @@ export default function Home() {
     //Bus data ui
     const [isBusNavShown, setIsBusNavShown] = useState(true);
     const [busData, setBusData] = useState([]);
+    const scrollBarColors = ["border-[#AEF359]", "border-[#eb142ab9]",
+    "border-[#08BCFF]","border-[#C332EA]","border-[#C35F4E]"]
 
     //drawer
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -250,7 +251,7 @@ export default function Home() {
                     )
                 }
 
-                <ToggleBusScroll callback={setIsBusNavShown}/>
+                <ToggleBusScroll callback={setIsBusNavShown} />
             </MapContainer>
             <div className="fixed z-[10000] flex overflow-x-auto bottom-16 w-screen"
                 style={isBusNavShown ? mountedStyle : unmountedStyle}>
@@ -265,6 +266,7 @@ export default function Home() {
                                     }}
                                     busno={parseInt(item.key) + 1}
                                     status={item.data.busdetails.status}
+                                    color={scrollBarColors[parseInt(item.key)]}
                                 />
                             </div>
                         )
@@ -278,20 +280,11 @@ export default function Home() {
                 onClick={() => mapRef.current.flyTo(locationMarker, ZOOM_LVL)}>
                 <MyLocationIcon />
             </div>
-            <div className='overlay top-24 left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
+            <div className='overlay top-14 left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
                 flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
                 onClick={handleLogOut}>
                 <LogoutIcon />
             </div>
-            {
-                !isDrawerOpen && (
-                    <div className='overlay top-14 left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
-                        flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
-                        onClick={() => setIsBusNavShown(!isBusNavShown)}>
-                        <DirectionsBusFilledRoundedIcon />
-                    </div>
-                )
-            }
         </>
     )
 }

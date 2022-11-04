@@ -1,11 +1,11 @@
 import React from 'react';
 
-function ScrollBar({ click , busno , status}) {
+function ScrollBar({ click , busno , status, color}) {
     return (
         // container
-        <div className="bg-gray-800 w-52 m-4 rounded-2xl h-32">
+        <div className="bg-backgroundprimary w-52 m-4 rounded-2xl h-32">
             {/* sub-container */}
-            <div className="border-lime-400 border-l-4 m-2 p-1 flex relative top-2 justify-around rounded-sm">
+            <div className={`${color} border-l-4 m-2 p-1 flex relative top-2 justify-around rounded-sm`}>
                 {/* <!-- left box --> */}
                 <div className="text-white font-bold">
                     Bus NO {busno}<br />

@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 const Navigation = () => {
   const Menus = [
     { name: "Home", icon: "home-outline", dis: "translate-x-0", route: "/home" },
-    { name: "Profile", icon: "person-outline", dis: "translate-x-16", route: "routes" },
-    { name: "Message", icon: "chatbubble-outline", dis: "translate-x-32" ,route:"/notification"},
-    { name: "Photos", icon: "camera-outline", dis: "translate-x-48" ,route:"/profile"},
+    { name: "Profile", icon: "bus-outline", dis: "translate-x-16", route: "routes" },
+    { name: "Message", icon: "notifications-outline", dis: "translate-x-32", route: "/notification" },
+    { name: "Photos", icon: "person-outline", dis: "translate-x-48", route: "/profile" },
   ];
 
   const navigate = useNavigate();
@@ -15,21 +15,15 @@ const Navigation = () => {
 
   useEffect(() => {
     navigate(Menus[active].route);
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, [active])
 
   return (
-    <div className="flex justify-center bg-gray-600 w-full ">
-      <div className="bg-gray-600 max-h-[4.4rem] rounded-t-xl">
+    <div className="flex justify-center bg-backgroundprimary w-full ">
+      <div className="bg-backgroundprimary max-h-[4.4rem] rounded-t-xl">
         <ul className="flex relative">
           <span
-            className={`bg-[#AEF359] duration-500 ${Menus[active].dis} border-4 border-gray-900 h-16 w-16 absolute -top-5 rounded-full`}>
-            <span
-              className="w-3.5 h-3.5 bg-transparent absolute top-4 -left-[18px] rounded-tr-[11px] shadow-md"
-            ></span>
-            <span
-              className="w-3.5 h-3.5 bg-transparent absolute top-4 -right-[18px] rounded-tl-[11px] shadow-myShadow2"
-            ></span>
+            className={`bg-themeprimary duration-500 ${Menus[active].dis} border-[3px] border-gray-800 h-16 w-16 absolute -top-5 rounded-full`}>
           </span>
           {Menus.map((menu, i) => (
             <li key={i} className="w-16">
@@ -42,7 +36,7 @@ const Navigation = () => {
                   className={`text-xl cursor-pointer duration-500 ${i === active && "-mt-6 text-white"
                     }`}
                 >
-                  <ion-icon name={menu.icon}></ion-icon>
+                  <ion-icon name={menu.icon} style={{color:`${i===active?"black":"white"}`}}></ion-icon>
                 </span>
               </a>
             </li>

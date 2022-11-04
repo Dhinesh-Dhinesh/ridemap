@@ -28,9 +28,9 @@ export default function App() {
       <Routes>
         <Route exact path="/" element={<LogIn />} />
         <Route path="/home" element={user ? <Home /> : <Navigate to="/" />} />
-        <Route path="/routes" element={user ? <Profile /> : <Navigate to="/" />} />
+        <Route path="/routes" element={user ? <BusRoutes /> : <Navigate to="/" />} />
         <Route path="/notification" element={user ? <Notification /> : <Navigate to="/" />} />
-        <Route path="/profile" element={user ? <BusRoutes /> : <Navigate to="/" />} />
+        <Route path="/profile" element={user ? <Profile /> : <Navigate to="/" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
