@@ -1,4 +1,4 @@
-import { useState, } from 'react'
+import { useState, useEffect } from 'react'
 
 import { useNavigate, Navigate } from 'react-router-dom';
 import { signIn, useAuth, db, logOut } from '../../firebase/firebase';
@@ -14,6 +14,10 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const [wrongPassword, setWrongPassword] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [notFound,setNotFound] = useState(false);
+
   const user = useAuth();
   let navigate = useNavigate();
 
@@ -24,12 +28,20 @@ export default function Login() {
     renderer: 'svg'
   }
 
+  useEffect(() => {
+    if (sessionStorage.getItem('isLoggedIn')) {
+      setIsLoggedIn(true);
+    }
+  }, [])
+
+
   const checkUserLoggedIn = (id) => {
     get(child(ref(db), `users/${id}/signin`)).then((snapshot) => {
       if (snapshot.exists()) {
         if (snapshot.val() === 1) {
           (async function logOutIfLoggedIn() {
             await logOut();
+            sessionStorage.setItem('isLoggedIn', id);
             navigate('/');
           })();
           console.log('user already signed in')
@@ -58,15 +70,26 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+
+    if (email === '' || password === '') return;
+
     setLoading(true);
-    try {
-      signIn(email, password).then((data) => {
-        checkUserLoggedIn(data.user.uid)
-        setLoading(false);
-      })
-    } catch (e) {
-      console.log(e.message)
-    }
+    signIn(email, password).then((data) => {
+      checkUserLoggedIn(data.user.uid)
+      setLoading(false);
+    }).catch((error) => {
+
+      if (error.code === 'auth/wrong-password') {
+        setWrongPassword(true);
+      }
+
+      if(error.code === 'auth/user-not-found') {
+        setNotFound(true);
+      }
+
+      setLoading(false);
+      console.log(error);
+    })
   }
 
   return (
@@ -76,7 +99,7 @@ export default function Login() {
         <Lottie options={defaultOptionsLottie} height={300} width={300} />
         <p className='absolute right-[7rem] bottom-12 text-gray-400'>Ridemap.in</p>
       </div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="w-[90vw] items-center flex justify-center flex-col">
         <div>
           <label className='flex felx-col py-2 text-xl font-bold'>Email</label>
           <input onChange={(e) => setEmail(e.target.value)} type='email' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
@@ -84,10 +107,11 @@ export default function Login() {
         <div className='mt-6'>
           <label className='flex felx-col py-2 text-xl font-bold'>Password</label>
           <input onChange={(e) => setPassword(e.target.value)} type='password' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
+          <label className={`${wrongPassword ? "flex" : "hidden"} py-2 text-sm text-red-500 w-72 relative`}>The password that you've entered is incorrect.<u className='absolute top-8 right-20 text-blue-500'>Forgotten password?</u></label>
+          <label className={`${isLoggedIn ? "flex" : "hidden"} mt-3 py-2 text-sm text-red-500 w-72 relative left-9`}>User logged in on another device ..</label>
+          <label className={`${notFound ? "flex" : "hidden"} mt-3 py-2 text-sm text-red-500 w-72 relative left-24`}>User not found !..</label>
         </div>
-        <div className='flex justify-center items-center'>
-          <button className='rounded-full border border-themeprimary bg-overlayprimary hover:bg-gray-700 w-8/12 mt-10 p-3 text-themeprimary'>Sign Up</button>
-        </div>
+        <button className='rounded-full border border-themeprimary bg-overlayprimary hover:bg-gray-700 w-56 mt-10 p-3 text-themeprimary'>Sign In</button>
       </form>
       <div className='text-gray-400 bottom-2 absolute text-center text-md'>
         COPYRIGHT © 2022 IGNITE SKYLABS
