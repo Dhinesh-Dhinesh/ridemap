@@ -13,7 +13,7 @@ export default function Profile() {
             </div>
             <div className='bg-overlayprimary w-11/12 p-5 h-40 rounded-3xl mt-5 shadow-2xl'>
                 <div className='flex'>
-                    <img src={require('./assets/route.png')} alt="profile" width={32} height={32}/>
+                    <img src={require('./assets/route.png')} alt="route" width={32} height={32}/>
                     <p className='font-bold text-xl text-themeprimary ml-3 '>Route</p>
                 </div>
                 <p className="mt-3">Select Your Route : Ariyur</p>

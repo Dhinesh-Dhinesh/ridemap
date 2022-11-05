@@ -28,12 +28,10 @@ import PersonIcon from '@mui/icons-material/Person';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import LogoutIcon from '@mui/icons-material/Logout';
 
-//drawer
-import Drawer from 'react-modern-drawer'
-import 'react-modern-drawer/dist/index.css'
+//bottom-sheet
+import { BottomSheet } from "react-spring-bottom-sheet";
+import "react-spring-bottom-sheet/dist/style.css";
 
-//bottom-nav
-// import BottomNav from '../../components/bottomNav'
 
 //full png image for the router markers to hide
 let defaultPngIcon = L.icon({
@@ -90,7 +88,7 @@ export default function Home() {
     const [isBusNavShown, setIsBusNavShown] = useState(true);
     const [busData, setBusData] = useState([]);
     const scrollBarColors = ["border-[#AEF359]", "border-[#eb142ab9]",
-    "border-[#08BCFF]","border-[#C332EA]","border-[#C35F4E]"]
+        "border-[#08BCFF]", "border-[#C332EA]", "border-[#C35F4E]"]
 
     //drawer
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -182,52 +180,51 @@ export default function Home() {
 
     return (
         <>
-            <div className='overlay bottom-0'>
-                <Drawer
-                    open={isDrawerOpen}
-                    onClose={toggleDrawerDefault}
-                    direction='bottom'
-                    overlayOpacity={0.1}
-                    size={300}
-                    className='rounded-t-3xl h-screen'>
-                    <div className="rounded-t-3xl bg-gray-800 h-full text-white">
-                        <div className='p-6 '>
-                            <p className='text-lg font-bold'>Bus NO {busNo}</p>
-                            <p className='text-gray-400 font-bold text-sm'>Arriving at next stop in 20 mins</p>
-                            {/* first div */}
-                            <div className='bg-gray-700 p-2.5 mt-3 rounded-2xl h-15 flex'>
-                                <div className='rounded-full border-2 w-10 h-10 flex justify-center items-center'>
-                                    <PersonIcon />
-                                </div>
-                                <div className='font-bold ml-4'>
-                                    {driverName}<br></br>
-                                    <p className='text-xs text-gray-400'>Driver</p>
-                                </div>
-                                <div className='absolute mt-1 right-14'>
-                                    <a href={`tel:${phoneNumber}`}><LocalPhoneIcon style={{ color: '#AEF359' }} /></a>
-                                </div>
+            <BottomSheet
+                open={isDrawerOpen}
+                onDismiss={() => toggleDrawerDefault()}
+                snapPoints={({ maxHeight }) => [
+                    maxHeight / 2,
+                    maxHeight * 0.9,
+                ]}
+                defaultSnap={({ maxHeight }) => maxHeight / 2}>
+                <div className="h-full text-white">
+                    <div className='p-6 '>
+                        <p className='text-lg font-bold'>Bus NO {busNo}</p>
+                        <p className='text-gray-400 font-bold text-sm'>Arriving at next stop in 20 mins</p>
+                        {/* first div */}
+                        <div className='bg-gray-700 p-2.5 mt-3 rounded-2xl h-15 flex'>
+                            <div className='rounded-full border-2 w-10 h-10 flex justify-center items-center'>
+                                <PersonIcon />
                             </div>
-                        </div>
-                        {/* second div */}
-                        <div className='bg-gray-700 p-2.5 rounded-2xl h-15 mx-6 grid grid-cols-3 gap-4'>
-                            <div className='flex justify-center items-center flex-col'>
-                                <p className='text-xs text-gray-400'>Track No.</p>
-                                <p className='text-sm font-bold'>{trackNo}</p>
+                            <div className='font-bold ml-4'>
+                                {driverName}<br></br>
+                                <p className='text-xs text-gray-400'>Driver</p>
                             </div>
-                            <div className='flex justify-center items-center flex-col border-l-2 border-r-2'>
-                                <p className='text-xs text-gray-400'>Journey time</p>
-                                <p className='text-sm font-bold'>45 Mins</p>
-                            </div>
-                            <div className='flex justify-center items-center flex-col'>
-                                <p className='text-xs text-gray-400'>Total Seats</p>
-                                <p className='text-sm font-bold'>{seats}</p>
+                            <div className='absolute mt-1 right-14'>
+                                <a href={`tel:${phoneNumber}`}><LocalPhoneIcon style={{ color: '#AEF359' }} /></a>
                             </div>
                         </div>
                     </div>
-                </Drawer>
-            </div>
+                    {/* second div */}
+                    <div className='bg-gray-700 p-2.5 rounded-2xl h-15 mx-6 grid grid-cols-3 gap-4'>
+                        <div className='flex justify-center items-center flex-col'>
+                            <p className='text-xs text-gray-400'>Track No.</p>
+                            <p className='text-sm font-bold'>{trackNo}</p>
+                        </div>
+                        <div className='flex justify-center items-center flex-col border-l-2 border-r-2'>
+                            <p className='text-xs text-gray-400'>Journey time</p>
+                            <p className='text-sm font-bold'>45 Mins</p>
+                        </div>
+                        <div className='flex justify-center items-center flex-col'>
+                            <p className='text-xs text-gray-400'>Total Seats</p>
+                            <p className='text-sm font-bold'>{seats}</p>
+                        </div>
+                    </div>
+                </div>
+            </BottomSheet>
             <MapContainer center={center} zoom={ZOOM_LVL} scrollWheelZoom={true}
-                style={{ widht: '100vw', height: '100vh', position: 'relative' }}
+                style={{ widht: '100vw', height: '100vh', zIndex: 0 }}
                 ref={mapRef} zoomControl={false}>
                 <TileLayer
                     url="https://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}"
@@ -287,4 +284,4 @@ export default function Home() {
             </div>
         </>
     )
-}
+}   

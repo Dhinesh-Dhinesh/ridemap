@@ -10,16 +10,16 @@
 }
 
 body {
-  overflow-x: hidden ;
+  overflow-x: hidden;
 }
 
-.overlay {     
+.overlay {
   position: absolute;
   z-index: 10000;
 }
 
-.leaflet-control-attribution,.leaflet-routing-container{
-  display:none;
+.leaflet-control-attribution, .leaflet-routing-container {
+  display: none;
 }
 
 @keyframes inAnimation {
@@ -27,6 +27,7 @@ body {
     opacity: 0;
     visibility: hidden;
   }
+
   100% {
     opacity: 1;
     visibility: visible;
@@ -37,6 +38,7 @@ body {
   0% {
     opacity: 1;
   }
+
   100% {
     opacity: 0;
     visibility: hidden;
@@ -45,7 +47,17 @@ body {
 
 
 :root {
-  --map-tiles-filter:grayscale(100%) invert(90%) contrast(100%) ;
+  --map-tiles-filter: grayscale(100%) invert(90%) contrast(100%);
+
+  /* Bottom Sheet */
+  --rsbs-backdrop-bg: rgba(20, 18, 18, 0.329);
+  --rsbs-bg: #18202c;
+  --rsbs-handle-bg: hsla(0, 15%, 94%, 0.541);
+  --rsbs-max-w: auto;
+  --rsbs-ml: env(safe-area-inset-left);
+  --rsbs-mr: env(safe-area-inset-right);
+  --rsbs-overlay-rounded: 16px;
+
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -55,5 +67,5 @@ body {
 } */
 
 .map-tiles {
-  filter:var(--map-tiles-filter, none);
+  filter: var(--map-tiles-filter, none);
 }
