@@ -52,6 +52,7 @@ export default function Login() {
           signin: 1
         })
       }
+      
     }).catch((error) => {
       console.error(error);
     });
@@ -72,6 +73,11 @@ export default function Login() {
     e.preventDefault()
 
     if (email === '' || password === '') return;
+
+    setWrongPassword(false);
+    setIsLoggedIn(false);
+    setNotFound(false);
+    sessionStorage.setItem('isLoggedIn',false)
 
     setLoading(true);
     signIn(email, password).then((data) => {
@@ -96,7 +102,7 @@ export default function Login() {
 
     <div className='w-screen h-screen flex flex-col justify-center items-center bg-backgroundprimary text-white'>
       <div className='-mt-32 relative'>
-        <Lottie options={defaultOptionsLottie} height={300} width={300} />
+        <Lottie options={defaultOptionsLottie} height={300} width={300} isClickToPauseDisabled={true}/>
         <p className='absolute right-[7rem] bottom-12 text-gray-400'>Ridemap.in</p>
       </div>
       <form onSubmit={handleSubmit} className="w-[90vw] items-center flex justify-center flex-col">
@@ -113,10 +119,6 @@ export default function Login() {
         </div>
         <button className='rounded-full border border-themeprimary bg-overlayprimary hover:bg-gray-700 w-56 mt-10 p-3 text-themeprimary'>Sign In</button>
       </form>
-      <div className='text-gray-400 bottom-2 absolute text-center text-md'>
-        COPYRIGHT © 2022 IGNITE SKYLABS
-        ALL RIGHTS RESERVED
-      </div>
     </div>
   )
 }

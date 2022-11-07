@@ -42,6 +42,7 @@ export function useAuth() {
           if (snapshot.exists()) {
             if (snapshot.val() === 1) {
               async function logOutIfLoggedIn() {
+                sessionStorage.setItem('isLoggedIn', true);
                 await logOut();
                 window.location.reload();
               }
@@ -56,7 +57,12 @@ export function useAuth() {
               onDisconnect(disRef).set(0);
             }
           } else {
-            console.log("No data available");
+            sessionStorage.setItem("uid", user.uid); //!get uid in logout handler
+            set(ref(db, "users/" + user.uid + "/"), {
+              signin: 1
+            })
+            const disRef = ref(db, "users/" + user.uid + "/signin");
+            onDisconnect(disRef).set(0);
           }
         }).catch((error) => {
           console.error(error);
