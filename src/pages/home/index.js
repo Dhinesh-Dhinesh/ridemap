@@ -78,7 +78,8 @@ export default function Home() {
     const [locationMarker, setLocationMarker] = useState(null);
     const ZOOM_LVL = 12;
 
-
+    //!
+    const [vanData, setVanData] = useState({ lat: 11.922635790851622, lng: 79.62689991349808 });
 
     //routing
     const [wayPoints, setwayPoints] = useState([]);
@@ -176,6 +177,14 @@ export default function Home() {
             });
             setBusData(val);
         });
+
+        setInterval(() => {
+            fetch('https://rest-api.tedivtsirnss.com/tracking/data/36ba6040-5769-11ed-a592-fdd284085907?imei=865006046423589')
+            .then(res => res.json()).then(data => {
+                setVanData([data[0].longitude,data[0].latitude])
+            });
+        },3000);
+
     }, []);
 
     return (
@@ -245,6 +254,15 @@ export default function Home() {
                                 </Popup>
                             </Marker>
                         </div>
+                    )
+                }
+                {
+                    vanData && (
+                        <Marker position={vanData} icon={locationIcon}>
+                            <Popup>
+                                vanData
+                            </Popup>
+                        </Marker>
                     )
                 }
 
