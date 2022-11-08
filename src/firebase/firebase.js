@@ -4,6 +4,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 import { getDatabase, set, ref, onDisconnect, child, get } from "firebase/database";
 import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -21,6 +22,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 export const db = getDatabase(app);
 export const firestoreDB = getFirestore(app);
+export const storage = getStorage(app);
 
 export function signIn(email, password) {
   return signInWithEmailAndPassword(auth, email, password);
