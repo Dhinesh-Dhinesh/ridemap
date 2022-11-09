@@ -20,7 +20,7 @@ export default function Routes() {
                     if (metaConst === 1) {
                         getMetadata(itemRef)
                             .then((metadata) => {
-                                setMetadata(new Date(metadata.updated).toLocaleString("en-IN", { timeZone: 'UTC' }).toUpperCase());
+                                setMetadata(new Date(metadata.updated).toLocaleString("en-IN", { timeZone: 'IST' }).toUpperCase());
                             })
                             .catch((error) => {
                                 console.log(`Meta error : ${error}`);
