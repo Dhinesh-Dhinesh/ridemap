@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+
+//context
+import { BottomContext } from "../contexts/bottomNavContext";
 
 const Navigation = () => {
   const Menus = [
@@ -10,8 +13,10 @@ const Navigation = () => {
   ];
 
   const navigate = useNavigate();
-
   const [active, setActive] = useState(0);
+
+  //context
+  const bottomCont = useContext(BottomContext);
 
   useEffect(() => {
     navigate(Menus[active].route);
@@ -19,29 +24,31 @@ const Navigation = () => {
   }, [active])
 
   return (
-    <div className="flex justify-center bg-backgroundprimary w-full ">
-      <div className="bg-backgroundprimary max-h-[4.4rem] rounded-t-xl">
-        <ul className="flex relative">
-          <span
-            className={`bg-themeprimary duration-500 ${Menus[active].dis} border-[3px] border-gray-800 h-16 w-16 absolute -top-5 rounded-full`}>
-          </span>
-          {Menus.map((menu, i) => (
-            <li key={i} className="w-16">
-              {/* eslint-disable-next-line  */}
-              <a
-                className="flex flex-col text-center pt-6"
-                onClick={() => setActive(i)}
-              >
-                <span
-                  className={`text-xl cursor-pointer duration-500 ${i === active && "-mt-6 text-white"
-                    }`}
+    <div className={`fixed z-[1000] bottom-0 w-full ${bottomCont.isBottomNavShown ? "hidden" : "" }`}>
+      <div className="flex justify-center bg-backgroundprimary w-full ">
+        <div className="bg-backgroundprimary max-h-[4.4rem] rounded-t-xl">
+          <ul className="flex relative">
+            <span
+              className={`bg-themeprimary duration-500 ${Menus[active].dis} border-[3px] border-gray-800 h-16 w-16 absolute -top-5 rounded-full`}>
+            </span>
+            {Menus.map((menu, i) => (
+              <li key={i} className="w-16">
+                {/* eslint-disable-next-line  */}
+                <a
+                  className="flex flex-col text-center pt-6"
+                  onClick={() => setActive(i)}
                 >
-                  <ion-icon name={menu.icon} style={{color:`${i===active?"black":"white"}`}}></ion-icon>
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
+                  <span
+                    className={`text-xl cursor-pointer duration-500 ${i === active && "-mt-6 text-white"
+                      }`}
+                  >
+                    <ion-icon name={menu.icon} style={{ color: `${i === active ? "black" : "white"}` }}></ion-icon>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

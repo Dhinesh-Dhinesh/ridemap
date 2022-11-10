@@ -66,7 +66,7 @@ export default function Login() {
 
   if (user) {
     checkUserLoggedIn(user.uid);
-    return <Navigate to='/home' />
+    return <Navigate to='/permissions' />
   }
 
   const handleSubmit = (e) => {

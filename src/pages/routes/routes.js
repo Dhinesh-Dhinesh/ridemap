@@ -52,7 +52,7 @@ export default function Routes() {
             {
                 metadata ? (
                     <div className='font-bold p-3 border-2 border-gray-600 m-2 rounded-lg text-md text-themeprimary'>
-                        Last Updated : {metadata}
+                        Updated On : {metadata}
                     </div>
                 ) : null
             }
