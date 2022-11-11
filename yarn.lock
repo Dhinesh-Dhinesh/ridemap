@@ -5329,7 +5329,7 @@ fresh@0.5.2:
   resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"
   integrity sha512-zJ2mQYM18rEFOudeV4GShTGIQ7RbzA7ozbU9I/XBpm7kqgMywgmylMwXHxZJmkVoYkna9d2pVXVXPdYTP9ej8Q==
 
-fs-extra@^10.0.0:
+fs-extra@^10.0.0, fs-extra@^10.1.0:
   version "10.1.0"
   resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-10.1.0.tgz#02873cfbc4084dde127eaa5f9905eef2325d1abf"
   integrity sha512-oRXApq54ETRj4eMiFzGnHWGy+zo5raudjuxN0b8H7s/RU2oW0Wvsx9O0ACRN/kRq9E8Vu/ReskGB5o3ji+FzHQ==
@@ -8324,6 +8324,14 @@ react-is@^18.0.0, react-is@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
+
+react-leaflet-tracking-marker@^1.0.15:
+  version "1.0.15"
+  resolved "https://registry.yarnpkg.com/react-leaflet-tracking-marker/-/react-leaflet-tracking-marker-1.0.15.tgz#8ca978b70db76f0069d8e742a097bacb31a332ad"
+  integrity sha512-WFPcC/K833hx7TW1hOQuUi11V1g8BOyT+dO8cfH4th8Z5wJw0fhH1ViHsMnb8DNfYrLrOf99cs9hJwda7x8K9Q==
+  dependencies:
+    fs-extra "^10.1.0"
+    rimraf "^3.0.2"
 
 react-leaflet@^4.1.0:
   version "4.1.0"

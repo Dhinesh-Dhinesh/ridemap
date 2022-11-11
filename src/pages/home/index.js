@@ -12,11 +12,13 @@ import L from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import ToggleBusScroll from '../../components/toggleBusScroll';
+import { LeafletTrackingMarker } from 'react-leaflet-tracking-marker'
 
 //Marker Icons
 import markerPng from './assets/fullpng.png';
 import clgIcon from './assets/college.png';
 import circleIcon from './assets/circle.png';
+import busIcon from './assets/bus.png';
 
 //Components
 import RoutingMachine from "../../components/RoutingMachine";
@@ -45,6 +47,12 @@ L.Marker.prototype.options.icon = defaultPngIcon;
 let locationIcon = L.icon({
     iconUrl: circleIcon,
     iconSize: [46, 46],
+    iconAnchor: [22, 26]
+});
+
+let BusIcon = L.icon({
+    iconUrl: busIcon,
+    iconSize: [24, 42],
     iconAnchor: [22, 26]
 });
 
@@ -254,11 +262,13 @@ export default function Home() {
                         }
 
                         return (
-                            <Marker key={index} position={[bus.data.l[0], bus.data.l[1]]} icon={locationIcon}>
+                            <LeafletTrackingMarker key={index} position={[bus.data.l[0], bus.data.l[1]]} 
+                            icon={BusIcon} duration={1000} rotationAngle={bus.data.l[2]} rotationOrigin="center"
+                            >
                                 <Popup>
                                     Sample Bus Data
                                 </Popup>
-                            </Marker>
+                            </LeafletTrackingMarker>
                         )
                     })
                 }
