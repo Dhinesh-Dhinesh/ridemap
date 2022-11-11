@@ -60,7 +60,7 @@ export default function Routes() {
                 urls.map((url, i) => {
                     return (
                         <div key={i} className="mb-1 p-2">
-                            <img src={url} alt='route'/>
+                            <img src={url} alt='route' />
                         </div>
                     )
                 })

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useContext } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Navigate } from 'react-router-dom';
 
 //Firebase
@@ -32,8 +32,6 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
 
-//context
-import { BottomContext } from '../../contexts/bottomNavContext';
 
 //full png image for the router markers to hide
 let defaultPngIcon = L.icon({
@@ -57,10 +55,6 @@ let collegeIcon = L.icon({
 });
 
 export default function Home() {
-
-    //context
-    const botCont = useContext(BottomContext);
-    botCont.setIsBottomNavShown(false);
 
     // Logout 
     const handleLogOut = async (e) => {

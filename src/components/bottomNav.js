@@ -1,8 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-//context
-import { BottomContext } from "../contexts/bottomNavContext";
 
 const Navigation = () => {
   const Menus = [
@@ -15,16 +12,13 @@ const Navigation = () => {
   const navigate = useNavigate();
   const [active, setActive] = useState(0);
 
-  //context
-  const bottomCont = useContext(BottomContext);
-
   useEffect(() => {
     navigate(Menus[active].route);
     // eslint-disable-next-line
   }, [active])
 
   return (
-    <div className={`fixed z-[1000] bottom-0 w-full ${bottomCont.isBottomNavShown ? "hidden" : "" }`}>
+    <div className={`fixed z-[1000] bottom-0 w-full `}>
       <div className="flex justify-center bg-backgroundprimary w-full ">
         <div className="bg-backgroundprimary max-h-[4.4rem] rounded-t-xl">
           <ul className="flex relative">

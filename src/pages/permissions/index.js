@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom';
 
-import ReactLoading from "react-loading";
+//loading
+import Loading from '../../components/Loading';
 
-//context
-import { BottomContext } from '../../contexts/bottomNavContext';
 
 export default function Permissions() {
 
@@ -12,10 +11,6 @@ export default function Permissions() {
     const [isNotification, setIsNotification] = useState(false);
 
     const [isLoading, setIsLoading] = useState(true);
-
-    //context
-    const botCont = useContext(BottomContext);
-    botCont.setIsBottomNavShown(true);
 
     useEffect(() => {
         navigator.permissions.query({ name: 'geolocation' }).then((state) => {
@@ -49,9 +44,7 @@ export default function Permissions() {
     }
 
     if (isLoading) {
-        return <div className="flex justify-center items-center w-screen h-screen bg-backgroundprimary">
-            <ReactLoading type="spinningBubbles" color="#AEF359" />
-        </div>
+        return <Loading />
     }
 
     if (isGeolocation && isNotification) {

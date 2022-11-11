@@ -4,7 +4,7 @@ import { useNavigate, Navigate } from 'react-router-dom';
 import { signIn, useAuth, db, logOut } from '../../firebase/firebase';
 import { ref, get, child, set } from 'firebase/database'
 
-import ReactLoading from "react-loading";
+import Loading from "../../components/Loading";
 import Lottie from 'react-lottie';
 import busAnimation from './bus.json'
 
@@ -16,7 +16,10 @@ export default function Login() {
 
   const [wrongPassword, setWrongPassword] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [notFound,setNotFound] = useState(false);
+  const [notFound, setNotFound] = useState(false);
+
+  const [isGeolocation, setIsGeoLocation] = useState(false);
+  const [isNotification, setIsNotification] = useState(false);
 
   const user = useAuth();
   let navigate = useNavigate();
@@ -31,6 +34,18 @@ export default function Login() {
   useEffect(() => {
     if (sessionStorage.getItem('isLoggedIn')) {
       setIsLoggedIn(true);
+    }
+
+    navigator.permissions.query({ name: 'geolocation' }).then((state) => {
+      if (state.state === "granted") {
+        setIsGeoLocation(true);
+      }
+    })
+
+    if (!("Notification" in window)) {
+      alert("This browser does not support desktop notification");
+    } else if (Notification.permission === "granted") {
+      setIsNotification(true)
     }
   }, [])
 
@@ -52,16 +67,18 @@ export default function Login() {
           signin: 1
         })
       }
-      
+
     }).catch((error) => {
       console.error(error);
     });
   }
 
   if (user === undefined || loading) {
-    return <div className="flex justify-center items-center w-screen h-screen bg-backgroundprimary">
-      <ReactLoading type="spinningBubbles" color="#AEF359" />
-    </div>
+    return <Loading />
+  }
+
+  if ((user) && (isGeolocation && isNotification)) {
+    return <Navigate to="/home" />
   }
 
   if (user) {
@@ -77,7 +94,7 @@ export default function Login() {
     setWrongPassword(false);
     setIsLoggedIn(false);
     setNotFound(false);
-    sessionStorage.setItem('isLoggedIn',false)
+    sessionStorage.setItem('isLoggedIn', false)
 
     setLoading(true);
     signIn(email, password).then((data) => {
@@ -89,7 +106,7 @@ export default function Login() {
         setWrongPassword(true);
       }
 
-      if(error.code === 'auth/user-not-found') {
+      if (error.code === 'auth/user-not-found') {
         setNotFound(true);
       }
 
@@ -102,7 +119,7 @@ export default function Login() {
 
     <div className='w-screen h-screen flex flex-col justify-center items-center bg-backgroundprimary text-white'>
       <div className='-mt-32 relative'>
-        <Lottie options={defaultOptionsLottie} height={300} width={300} isClickToPauseDisabled={true}/>
+        <Lottie options={defaultOptionsLottie} height={300} width={300} isClickToPauseDisabled={true} />
         <p className='absolute right-[7rem] bottom-12 text-gray-400'>Ridemap.in</p>
       </div>
       <form onSubmit={handleSubmit} className="w-[90vw] items-center flex justify-center flex-col">

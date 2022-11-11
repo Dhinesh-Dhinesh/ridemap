@@ -1,44 +1,51 @@
-import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
-//Pages
-import LogIn from './pages/login/index.js';
-import Home from './pages/home/index.js';
-import NotFound from './pages/error/index.js';
-import Profile from './pages/profile/profile';
-import Notification from './pages/notification/notification';
-import BusRoutes from './pages/routes/routes';
-import Permissions from './pages/permissions/index.js';
-//context
-import { BottomContext } from './contexts/bottomNavContext.js';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
+import { Routes, Route, Navigate, useLocation } from "react-router-dom"
+
 //Navbar
 import BottomNav from './components/bottomNav'
 //Auth
 import { useAuth } from './firebase/firebase';
 
+//Loading
+import Loading from './components/Loading'
+
+//Lazy Component Pages
+const LazyLogIn = lazy(() => import('./pages/login/index.js'));
+const LazyHome = lazy(() => import('./pages/home/index.js'));
+const LazyBusRoutes = lazy(() => import('./pages/routes/routes'));
+const LazyNotification = lazy(() => import('./pages/notification/notification'));
+const LazyProfile = lazy(() => import('./pages/profile/profile'));
+const LazyPermissions = lazy(() => import('./pages/permissions/index.js'));
+const LazyNotFound = lazy(() => import('./pages/error/index.js'));
+
 export default function App() {
 
   const user = useAuth();
 
-  const [isBottomNavShown, setIsBottomNavShown] = useState(false);
+  const [locationPath, setLocationPath] = useState("");
+
+  let location = useLocation();
+
+  useEffect(() => {
+    setLocationPath(location.pathname);
+  }, [location]);
 
   return (
-    <BrowserRouter>
-      <BottomContext.Provider value={{ isBottomNavShown, setIsBottomNavShown }} >
-        {
-          user ? (
-            <BottomNav />
-          ) : null
-        }
-        <Routes>
-          <Route exact path="/" element={<LogIn />} />
-          <Route path="/permissions" element={user ? <Permissions /> : <Navigate to="/" />} />
-          <Route path="/home" element={user ? <Home /> : <Navigate to="/" />} />
-          <Route path="/routes" element={user ? <BusRoutes /> : <Navigate to="/" />} />
-          <Route path="/notification" element={user ? <Notification /> : <Navigate to="/" />} />
-          <Route path="/profile" element={user ? <Profile /> : <Navigate to="/" />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BottomContext.Provider>
-    </BrowserRouter>
+    <>
+      {
+        user && locationPath !== '/permissions' ? (
+          <BottomNav />
+        ) : null
+      }
+      <Routes>
+        <Route exact path="/" element={<LazyLogIn />} />
+        <Route exact path="/permissions" element={user ? <Suspense fallback={<Loading />}><LazyPermissions /></Suspense> : <Navigate to="/" />} />
+        <Route exact path="/home" element={user ? <Suspense fallback={<Loading />}><LazyHome /></Suspense> : <Navigate to="/" />} />
+        <Route exact path="/routes" element={user ? <LazyBusRoutes /> : <Navigate to="/" />} />
+        <Route exact path="/notification" element={user ? <Suspense fallback={<Loading />}><LazyNotification /></Suspense> : <Navigate to="/" />} />
+        <Route exact path="/profile" element={user ? <Suspense fallback={<Loading />}><LazyProfile /></Suspense> : <Navigate to="/" />} />
+        <Route exact path="*" element={<Suspense fallback={<Loading />}><LazyNotFound /></Suspense>} />
+      </Routes>
+    </>
   )
 }
