@@ -7,7 +7,7 @@ export default function Profile() {
 
     const [route, setRoute] = useState('Select your route');
     const [isRouteDropDownOpen, setIsRouteDropDownOpen] = useState(false);
-    const [stopname,setStopname] = useState('Select your stop');
+    const [stopname, setStopname] = useState('Select your stop');
     const [stop, setStop] = useState([]);
     const [isStopDropDownOpen, setIsStopDropDownOpen] = useState(false);
 
@@ -39,7 +39,10 @@ export default function Profile() {
             <div className='flex flex-col w-11/12 mt-5 '>
                 <div className='flex flex-row justify-start'>
                     <h1 className='text-md font-bold text-gray-400'>Route : &nbsp;</h1>
-                    <button onClick={() => toggleRouteDropDown()}
+                    <button onClick={() => {
+                        toggleRouteDropDown()
+                        setIsStopDropDownOpen(false)
+                    }}
                         className="text-white w-52 bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">{route}<svg className="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></button>
                 </div>
                 {/* Dropdown */}
@@ -53,6 +56,7 @@ export default function Profile() {
                                             setRoute(item.route)
                                             setStop(item.stops)
                                             toggleRouteDropDown()
+                                            setStopname('Select your stop')
                                         }} className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{item.route}</p>
                                         <hr className='w-auto border-gray-500' />
                                     </li>
@@ -66,7 +70,10 @@ export default function Profile() {
                     route !== 'Select your route' && (
                         <div className='flex flex-row justify-start mt-5'>
                             <h1 className='text-md font-bold text-gray-400'>Stop <span className='pl-2.5'>:</span> &nbsp;</h1>
-                            <button onClick={() => toggleStopDropDown()}
+                            <button onClick={() => {
+                                toggleStopDropDown()
+                                setIsRouteDropDownOpen(false)
+                            }}
                                 className="text-white w-52 bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">{stopname}<svg className="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></button>
                         </div>
                     )
