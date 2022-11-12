@@ -14,6 +14,19 @@ body {
   background-color: #18202c;
 }
 
+#scroll > ::-webkit-scrollbar {
+  width: .2em;
+}
+
+#scroll > ::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+#scroll > ::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+
 .overlay {
   position: absolute;
   z-index: 10000;
