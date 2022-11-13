@@ -36,13 +36,15 @@ export default function Profile() {
                     <img alt="ico" src={require('./assets/info.png')} width={32} height={32} />
                     <p className='font-bold text-2xl text-gray-300'>Info</p>
                 </div>
-                <div className='flex flex-row justify-start'>
-                    <h1 className='text-md font-bold text-gray-400'>Name : &nbsp;</h1>
-                    <h1 className='text-md font-bold text-gray-400'>Dhinesh</h1>
+                <div className='grid grid-cols-3 justify-item-start w-40'>
+                    <h1 className='text-md font-bold text-gray-400'>Name</h1>
+                    <span className='text-gray-400'>:</span>
+                    <h1 className='text-md font-bold text-gray-400 -ml-10'>Dhinesh</h1>
                 </div>
-                <div className='flex flex-row justify-start mt-5'>
-                    <h1 className='text-md font-bold text-gray-400'>Email &nbsp;: &nbsp;</h1>
-                    <h1 className='text-md font-bold text-gray-400'>dhinesh@gmail.com</h1>
+                <div className='grid grid-cols-3 justify-item-start mt-5 w-40'>
+                    <h1 className='text-md font-bold text-gray-400'>Email</h1>
+                    <span className='text-gray-400'>:</span>
+                    <h1 className='text-md font-bold text-gray-400 -ml-10'>dhinesh@gmail.com</h1>
                 </div>
             </div>
             <hr className='w-11/12 mt-2 border-gray-700' />
@@ -52,13 +54,14 @@ export default function Profile() {
                     <img alt="ico" src={require('./assets/route.png')} width={32} height={32} />
                     <p className='font-bold text-2xl text-gray-300'>Routes</p>
                 </div>
-                <div className='flex flex-row justify-start'>
-                    <h1 className='text-md font-bold text-gray-400'>Route : &nbsp;</h1>
+                <div className='grid grid-cols-3 justify-items-start w-24'>
+                    <h1 className='text-md font-bold text-gray-400'>Route</h1>
+                    <span className='text-gray-400 ml-5'>:</span>
                     <button onClick={() => {
                         toggleRouteDropDown()
                         setIsStopDropDownOpen(false)
                     }}
-                        className="text-white w-52 bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">{route}<svg className="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></button>
+                        className="text-white w-60 bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">{route}<svg className="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></button>
                 </div>
                 {/* Dropdown */}
                 <div id='scroll' className={`${isRouteDropDownOpen ? "" : "hidden"} ml-12 mt-16 z-10 w-64 bg-white rounded divide-y divide-gray-100 shadow dark:bg-overlayprimary absolute`}>
@@ -83,13 +86,14 @@ export default function Profile() {
                 </div>
                 {
                     route !== 'Select your route' && (
-                        <div className='flex flex-row justify-start mt-5'>
-                            <h1 className='text-md font-bold text-gray-400'>Stop <span className='pl-2.5'>:</span> &nbsp;</h1>
+                        <div className='grid grid-cols-3 justify-items-start w-24 mt-5'>
+                            <h1 className='text-md font-bold text-gray-400'>Stop</h1>
+                            <span className='text-gray-400 ml-5'>:</span>
                             <button onClick={() => {
                                 toggleStopDropDown()
                                 setIsRouteDropDownOpen(false)
                             }}
-                                className="text-white w-52 bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">{stopname}<svg className="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></button>
+                                className="text-white w-60 bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">{stopname}<svg className="ml-2 w-[11px] h-3" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></button>
                         </div>
                     )
                 }
@@ -119,19 +123,21 @@ export default function Profile() {
                     <img alt="ico" src={require('./assets/settings.png')} width={32} height={32} />
                     <p className='font-bold text-2xl text-gray-300'>Settings</p>
                 </div>
-                <div className='flex flex-row justify-start'>
-                    <h1 className='text-md font-bold text-gray-400'>Notification&nbsp;:&nbsp;</h1>
+                <div className='grid grid-cols-3 justify-items-start w-80 mt-2'>
+                    <h1 className='text-md font-bold text-gray-400'>Notification</h1>
+                    <span className='text-gray-400'>:</span>
                     {/* Toggle bar */}
-                    <label className="inline-flex relative items-center mr-5 cursor-pointer">
+                    <label className="inline-flex relative items-center cursor-pointer -ml-20">
                         <input type="checkbox" value="" id="purple-toggle" className="sr-only peer" />
                         <div className="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-2 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
                         <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">On</span>
                     </label>
                 </div>
-                <div className='flex flex-row justify-start mt-5'>
-                    <h1 className='text-md font-bold text-gray-400'>Map theme :&nbsp;</h1>
+                <div className='grid grid-cols-3 justify-items-start w-80 mt-5'>
+                    <h1 className='text-md font-bold text-gray-400'>Map theme</h1>
+                    <span className='text-gray-400'>:</span>
                     {/* Toggle bar */}
-                    <label className="inline-flex relative items-center mr-5 cursor-pointer">
+                    <label className="inline-flex relative items-center cursor-pointer -ml-20">
                         <input type="checkbox" value="" id="purple-toggle" className="sr-only peer" checked={isThemeChecked?true:false} onChange={() => {
                             localStorage.setItem('isLite', isThemeChecked);
                             setThemeChecked(prevState => !prevState);
@@ -140,6 +146,10 @@ export default function Profile() {
                         <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{isThemeChecked ? "Dark" : "Lite"}</span>
                     </label>
                 </div>
+            </div>
+            {/* this div fixes bottom nav bar */}
+            <div className='mt-8'>
+                &nbsp;
             </div>
         </div>
     )
