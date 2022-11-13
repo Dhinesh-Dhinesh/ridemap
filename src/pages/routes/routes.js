@@ -37,8 +37,6 @@ export default function Routes() {
             });
     }, []);
 
-    console.log(metadata); //!dev
-
     if (urls.length === 0) {
         return (
             <div className="flex justify-center items-center w-screen h-screen bg-backgroundprimary">

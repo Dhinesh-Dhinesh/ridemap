@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 
 //Firebase
@@ -80,6 +80,9 @@ export default function Home() {
             console.log(e.message)
         }
     };
+
+    //theme
+    const [theme, setTheme] = useState('dark');
 
     //leaflet
     const [center] = useState({ lat: 11.922635790851622, lng: 79.62689991349808 })     //college location
@@ -182,8 +185,12 @@ export default function Home() {
             });
             setBusData(val);
         });
-
     }, []);
+
+    useLayoutEffect(() => {
+        //theme
+        localStorage.getItem('isLite') === 'true' ? setTheme('lite') : setTheme('dark');
+    }, [])
 
     return (
         <>
@@ -236,7 +243,7 @@ export default function Home() {
                 <TileLayer
                     url="https://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}"
                     subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
-                    className="map-tiles"
+                    className={theme === 'dark' ? 'map-tiles-theme--dark' : 'map-tiles-theme--lite'}
                 />
                 {/* Routing Machine */}
                 {wayPoints === 0 ? <RoutingMachine coords={routes[0]} /> : null}
@@ -262,8 +269,8 @@ export default function Home() {
                         }
 
                         return (
-                            <LeafletTrackingMarker key={index} position={[bus.data.l[0], bus.data.l[1]]} 
-                            icon={BusIcon} duration={1000} rotationAngle={bus.data.l[2]} rotationOrigin="center"
+                            <LeafletTrackingMarker key={index} position={[bus.data.l[0], bus.data.l[1]]}
+                                icon={BusIcon} duration={1000} rotationAngle={bus.data.l[2]} rotationOrigin="center"
                             >
                                 <Popup>
                                     Sample Bus Data

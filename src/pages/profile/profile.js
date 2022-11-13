@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 //raw data
 import { routeData } from './data';
@@ -10,6 +10,7 @@ export default function Profile() {
     const [stopname, setStopname] = useState('Select your stop');
     const [stop, setStop] = useState([]);
     const [isStopDropDownOpen, setIsStopDropDownOpen] = useState(false);
+    const [isThemeChecked, setThemeChecked] = useState(false);
 
     function toggleRouteDropDown() {
         setIsRouteDropDownOpen((prevState) => !prevState);
@@ -19,13 +20,22 @@ export default function Profile() {
         setIsStopDropDownOpen((prevState) => !prevState);
     }
 
+    useEffect(() => {
+        localStorage.getItem('isLite') === 'true' ? setThemeChecked(false) : setThemeChecked(true);
+    }, []);
+
     return (
         <div className='flex flex-col w-screen h-screen items-center bg-backgroundprimary py-5'>
             <h1 className='text-4xl font-bold text-gray-300 tracking-wider'>Profile</h1>
-            <img src={require('./assets/profile.png')} alt="profile" width={210} height={210} />
+            <img src={require('./assets/profile.png')} alt="profile" width={160} height={160} />
             <h1 className='text-xl font-bold text-themeprimary -mt-5'>Dhinesh</h1>
-            <hr className='w-11/12 mt-2 border-gray-500' />
+            <hr className='w-11/12 mt-2 border-gray-700' />
             <div className='flex flex-col w-11/12 mt-5 '>
+                {/* Info Image */}
+                <div className='flex felx-row justify-start -mt-2 -ml-2 py-2'>
+                    <img alt="ico" src={require('./assets/info.png')} width={32} height={32} />
+                    <p className='font-bold text-2xl text-gray-300'>Info</p>
+                </div>
                 <div className='flex flex-row justify-start'>
                     <h1 className='text-md font-bold text-gray-400'>Name : &nbsp;</h1>
                     <h1 className='text-md font-bold text-gray-400'>Dhinesh</h1>
@@ -35,8 +45,13 @@ export default function Profile() {
                     <h1 className='text-md font-bold text-gray-400'>dhinesh@gmail.com</h1>
                 </div>
             </div>
-            <hr className='w-11/12 mt-2 border-gray-500' />
+            <hr className='w-11/12 mt-2 border-gray-700' />
             <div className='flex flex-col w-11/12 mt-5 '>
+                {/* Info Image */}
+                <div className='flex felx-row justify-start -mt-2 -ml-2 py-2'>
+                    <img alt="ico" src={require('./assets/route.png')} width={32} height={32} />
+                    <p className='font-bold text-2xl text-gray-300'>Routes</p>
+                </div>
                 <div className='flex flex-row justify-start'>
                     <h1 className='text-md font-bold text-gray-400'>Route : &nbsp;</h1>
                     <button onClick={() => {
@@ -58,7 +73,7 @@ export default function Profile() {
                                             toggleRouteDropDown()
                                             setStopname('Select your stop')
                                         }} className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{item.route}</p>
-                                        <hr className='w-auto border-gray-500' />
+                                        <hr className='w-auto border-gray-700' />
                                     </li>
 
                                 )
@@ -89,12 +104,41 @@ export default function Profile() {
                                             toggleStopDropDown()
                                             setStopname(item)
                                         }} className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{item}</p>
-                                        <hr className='w-auto border-gray-500' />
+                                        <hr className='w-auto border-gray-700' />
                                     </li>
                                 )
                             })
                         }
                     </ul>
+                </div>
+            </div>
+            <hr className='w-11/12 mt-4 border-gray-700' />
+            <div className='flex flex-col w-11/12 mt-5 '>
+                {/* Info Image */}
+                <div className='flex felx-row justify-start -mt-2 -ml-2 py-2'>
+                    <img alt="ico" src={require('./assets/settings.png')} width={32} height={32} />
+                    <p className='font-bold text-2xl text-gray-300'>Settings</p>
+                </div>
+                <div className='flex flex-row justify-start'>
+                    <h1 className='text-md font-bold text-gray-400'>Notification&nbsp;:&nbsp;</h1>
+                    {/* Toggle bar */}
+                    <label className="inline-flex relative items-center mr-5 cursor-pointer">
+                        <input type="checkbox" value="" id="purple-toggle" className="sr-only peer" />
+                        <div className="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-2 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
+                        <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">On</span>
+                    </label>
+                </div>
+                <div className='flex flex-row justify-start mt-5'>
+                    <h1 className='text-md font-bold text-gray-400'>Map theme :&nbsp;</h1>
+                    {/* Toggle bar */}
+                    <label className="inline-flex relative items-center mr-5 cursor-pointer">
+                        <input type="checkbox" value="" id="purple-toggle" className="sr-only peer" checked={isThemeChecked?true:false} onChange={() => {
+                            localStorage.setItem('isLite', isThemeChecked);
+                            setThemeChecked(prevState => !prevState);
+                        }} />
+                        <div className="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-2 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
+                        <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{isThemeChecked ? "Dark" : "Lite"}</span>
+                    </label>
                 </div>
             </div>
         </div>
