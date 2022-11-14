@@ -192,6 +192,7 @@ export default function Home() {
         localStorage.getItem('isLite') === 'true' ? setTheme('lite') : setTheme('dark');
     }, [])
 
+
     return (
         <>
             <BottomSheet
@@ -262,14 +263,21 @@ export default function Home() {
                     )
                 }
                 {
-                    busData && (
-                        <LeafletTrackingMarker position={[busData[0].data.data.lat, busData[0].data.data.lng]}
-                            icon={BusIcon} duration={1000} rotationAngle={busData[0].data.data.course} rotationOrigin="center">
-                            <Popup>
-                                Sample Bus Data & Speed:{busData[0].data.data.speed}
-                            </Popup>
-                        </LeafletTrackingMarker>
-                    )
+                    busData.map((bus, index) => {
+
+                        if (index !== 0) {
+                            return null;
+                        }
+
+                        return (
+                            <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
+                                icon={BusIcon} duration={1000} rotationAngle={bus.data.data.course} rotationOrigin="center">
+                                <Popup>
+                                    Sample Bus Data & Speed:{bus.data.data.speed}
+                                </Popup>
+                            </LeafletTrackingMarker>
+                        )
+                    })
                 }
 
                 <ToggleBusScroll callback={setIsBusNavShown} />
