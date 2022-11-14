@@ -84,10 +84,6 @@ export default function Home() {
     //theme
     const [theme, setTheme] = useState('dark');
 
-    //tracking
-    const [token, setToken] = useState(null);
-    const [gpsData, setGpsData] = useState(null);
-
     //leaflet
     const [center] = useState({ lat: 11.922635790851622, lng: 79.62689991349808 })     //college location
     const [locationMarker, setLocationMarker] = useState(null);
@@ -171,15 +167,6 @@ export default function Home() {
         }, 2000);
     }
 
-    //for getting access token
-    useLayoutEffect(() => {
-        let tokenRef = ref(db, 'token')
-        onValue(tokenRef, (snapshot) => {
-            setToken(snapshot.val())
-            console.log(snapshot.val())
-        })
-    }, [])
-
     //firebase data and geolocation
     useEffect(() => {
         getLocation();
@@ -199,23 +186,6 @@ export default function Home() {
             setBusData(val);
         });
     }, []);
-
-    useEffect(() => {
-        setTimeout(() => {
-            fetch(`http://api.protrack365.com/api/track?access_token=${token}&imeis=355710090501789`)
-                .then(res => res.json())
-                .then(data => {
-                    setGpsData({
-                        lat: data.record[0].latitude,
-                        lng: data.record[0].longitude,
-                        speed: data.record[0].speed,
-                        course: data.record[0].course,
-                    })
-                }).catch(err => {
-                    console.log(err);
-                })
-        }, 5000)
-    }, [token])
 
     useLayoutEffect(() => {
         //theme
@@ -292,12 +262,11 @@ export default function Home() {
                     )
                 }
                 {
-                    gpsData && (
-                        <LeafletTrackingMarker position={[gpsData.lat, gpsData.lng]}
-                            icon={BusIcon} duration={1000} rotationAngle={gpsData.course} rotationOrigin="center"
-                        >
+                    busData && (
+                        <LeafletTrackingMarker position={[busData[0].data.data.lat, busData[0].data.data.lng]}
+                            icon={BusIcon} duration={1000} rotationAngle={busData[0].data.data.course} rotationOrigin="center">
                             <Popup>
-                                Sample Bus Data & Speed:{gpsData.speed}
+                                Sample Bus Data & Speed:{busData[0].data.data.speed}
                             </Popup>
                         </LeafletTrackingMarker>
                     )
