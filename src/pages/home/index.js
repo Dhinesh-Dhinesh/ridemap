@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
+import React, { useEffect, useState, useRef, useLayoutEffect, useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 
 //Firebase
@@ -29,11 +29,14 @@ import MyLocationIcon from '@mui/icons-material/MyLocation';
 import PersonIcon from '@mui/icons-material/Person';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import LogoutIcon from '@mui/icons-material/Logout';
+import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 
 //bottom-sheet
 import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
 
+//context
+import { BottomContext } from '../../context/BottomContext'
 
 //full png image for the router markers to hide
 let defaultPngIcon = L.icon({
@@ -81,6 +84,9 @@ export default function Home() {
         }
     };
 
+    //context
+    const bottomCont = useContext(BottomContext);
+
     //theme
     const [theme, setTheme] = useState('dark');
 
@@ -92,6 +98,9 @@ export default function Home() {
     //routing
     const [wayPoints, setwayPoints] = useState([]);
     const [routes, setRoutes] = useState([]);
+
+    //track
+    const [isTrack, setIsTrack] = useState(false);
 
     //Bus data ui
     const [isBusNavShown, setIsBusNavShown] = useState(true);
@@ -192,12 +201,14 @@ export default function Home() {
         localStorage.getItem('isLite') === 'true' ? setTheme('lite') : setTheme('dark');
     }, [])
 
-
     return (
         <>
             <BottomSheet
                 open={isDrawerOpen}
-                onDismiss={() => toggleDrawerDefault()}
+                onDismiss={() => {
+                    toggleDrawerDefault();
+                    bottomCont.setIsDrawerOpen(false);
+                }}
                 snapPoints={({ maxHeight }) => [
                     maxHeight / 2,
                     maxHeight * 0.9,
@@ -271,7 +282,7 @@ export default function Home() {
 
                         return (
                             <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
-                                icon={BusIcon} duration={1000} rotationAngle={bus.data.data.course} rotationOrigin="center">
+                                icon={BusIcon} duration={1000} rotationAngle={bus.data.data.course} rotationOrigin="center" keepAtCenter={isTrack}>
                                 <Popup>
                                     Sample Bus Data & Speed:{bus.data.data.speed}
                                 </Popup>
@@ -292,6 +303,7 @@ export default function Home() {
                                     click={() => {
                                         toggleDrawer(item.data.driverdetail.name, item.data.driverdetail.phone,
                                             parseInt(item.key) + 1, item.data.busdetails.busno, item.data.busdetails.seats);
+                                        bottomCont.setIsDrawerOpen(true);
                                     }}
                                     busno={parseInt(item.key) + 1}
                                     status={item.data.busdetails.status}
@@ -313,6 +325,13 @@ export default function Home() {
                 flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
                 onClick={handleLogOut}>
                 <LogoutIcon />
+            </div>
+            <div className='overlay top-24 left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
+                flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
+                onClick={() => {
+                    setIsTrack((prev) => !prev);
+                }}>
+                <TrackChangesIcon />
             </div>
         </>
     )

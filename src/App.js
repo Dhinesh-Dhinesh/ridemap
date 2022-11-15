@@ -9,6 +9,9 @@ import { useAuth } from './firebase/firebase';
 //Loading
 import Loading from './components/Loading'
 
+//context
+import { BottomContext } from './context/BottomContext';
+
 //Lazy Component Pages
 const LazyLogIn = lazy(() => import('./pages/login/index.js'));
 const LazyHome = lazy(() => import('./pages/home/index.js'));
@@ -23,6 +26,7 @@ export default function App() {
   const user = useAuth();
 
   const [locationPath, setLocationPath] = useState("");
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   let location = useLocation();
 
@@ -32,20 +36,22 @@ export default function App() {
 
   return (
     <>
-      {
-        user && locationPath !== '/permissions' ? (
-          <BottomNav />
-        ) : null
-      }
-      <Routes>
-        <Route exact path="/" element={<LazyLogIn />} />
-        <Route exact path="/permissions" element={user ? <Suspense fallback={<Loading />}><LazyPermissions /></Suspense> : <Navigate to="/" />} />
-        <Route exact path="/home" element={user ? <Suspense fallback={<Loading />}><LazyHome /></Suspense> : <Navigate to="/" />} />
-        <Route exact path="/routes" element={user ? <LazyBusRoutes /> : <Navigate to="/" />} />
-        <Route exact path="/notification" element={user ? <Suspense fallback={<Loading />}><LazyNotification /></Suspense> : <Navigate to="/" />} />
-        <Route exact path="/profile" element={user ? <Suspense fallback={<Loading />}><LazyProfile /></Suspense> : <Navigate to="/" />} />
-        <Route exact path="*" element={<Suspense fallback={<Loading />}><LazyNotFound /></Suspense>} />
-      </Routes>
+      <BottomContext.Provider value={{ isDrawerOpen, setIsDrawerOpen }} >
+        {
+          user && locationPath !== '/permissions' ? (
+            <BottomNav />
+          ) : null
+        }
+        <Routes>
+          <Route exact path="/" element={<LazyLogIn />} />
+          <Route exact path="/permissions" element={user ? <Suspense fallback={<Loading />}><LazyPermissions /></Suspense> : <Navigate to="/" />} />
+          <Route exact path="/home" element={user ? <Suspense fallback={<Loading />}><LazyHome /></Suspense> : <Navigate to="/" />} />
+          <Route exact path="/routes" element={user ? <LazyBusRoutes /> : <Navigate to="/" />} />
+          <Route exact path="/notification" element={user ? <Suspense fallback={<Loading />}><LazyNotification /></Suspense> : <Navigate to="/" />} />
+          <Route exact path="/profile" element={user ? <Suspense fallback={<Loading />}><LazyProfile /></Suspense> : <Navigate to="/" />} />
+          <Route exact path="*" element={<Suspense fallback={<Loading />}><LazyNotFound /></Suspense>} />
+        </Routes>
+      </BottomContext.Provider>
     </>
   )
 }

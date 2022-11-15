@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+
+import { BottomContext } from "../context/BottomContext";
 
 const Navigation = () => {
   const Menus = [
@@ -17,8 +19,10 @@ const Navigation = () => {
     // eslint-disable-next-line
   }, [active])
 
+  const bottomCont = useContext(BottomContext);
+
   return (
-    <div className={`fixed z-[1000] bottom-0 w-full `}>
+    <div className={`fixed z-[1000] bottom-0 w-full ${bottomCont.isDrawerOpen ? "hidden" : "" }`}>
       <div className="flex justify-center bg-backgroundprimary w-full ">
         <div className="bg-backgroundprimary max-h-[4.4rem] rounded-t-xl">
           <ul className="flex relative">
