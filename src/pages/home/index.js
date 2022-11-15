@@ -213,7 +213,9 @@ export default function Home() {
                     maxHeight / 2,
                     maxHeight * 0.9,
                 ]}
-                defaultSnap={({ maxHeight }) => maxHeight / 2}>
+                defaultSnap={({ maxHeight }) => maxHeight / 2}
+                expandOnContentDrag={true}
+                >
                 <div className="h-full text-white">
                     <div className='p-6 '>
                         <p className='text-lg font-bold'>Bus NO {busNo}</p>

@@ -22,7 +22,7 @@ const Navigation = () => {
   const bottomCont = useContext(BottomContext);
 
   return (
-    <div className={`fixed z-[1000] bottom-0 w-full ${bottomCont.isDrawerOpen ? "hidden" : "" }`}>
+    <div className={`fixed z-[100000] bottom-0 w-full ${bottomCont.isDrawerOpen ? "hidden" : "" }`}>
       <div className="flex justify-center bg-backgroundprimary w-full ">
         <div className="bg-backgroundprimary max-h-[4.4rem] rounded-t-xl">
           <ul className="flex relative">
