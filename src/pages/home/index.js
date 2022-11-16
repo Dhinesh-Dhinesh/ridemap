@@ -6,6 +6,7 @@ import { db } from "../../firebase/firebase"
 import { ref, onValue, set } from "firebase/database";
 import { logOut } from '../../firebase/firebase';
 import { changeRoutesFromDb } from '../../data/routes';
+import { requestForToken } from '../../firebase/firebase'
 
 //leaflet
 import L from 'leaflet';
@@ -184,6 +185,8 @@ export default function Home() {
             setRoutes(await changeRoutesFromDb());
         })();
 
+        requestForToken();
+
         const dataRef = ref(db, 'busses');
         onValue(dataRef, (snapshot) => {
             let val = [];
@@ -194,8 +197,9 @@ export default function Home() {
             });
             setBusData(val);
         });
-    }, []);
 
+        
+    }, []);
     useLayoutEffect(() => {
         //theme
         localStorage.getItem('isLite') === 'true' ? setTheme('lite') : setTheme('dark');
@@ -215,7 +219,7 @@ export default function Home() {
                 ]}
                 defaultSnap={({ maxHeight }) => maxHeight / 2}
                 expandOnContentDrag={true}
-                >
+            >
                 <div className="h-full text-white">
                     <div className='p-6 '>
                         <p className='text-lg font-bold'>Bus NO {busNo}</p>
