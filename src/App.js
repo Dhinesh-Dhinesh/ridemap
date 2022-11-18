@@ -18,7 +18,7 @@ const LazyHome = lazy(() => import('./pages/home/index.js'));
 const LazyBusRoutes = lazy(() => import('./pages/routes/routes'));
 const LazyNotification = lazy(() => import('./pages/notification/notification'));
 const LazyProfile = lazy(() => import('./pages/profile/profile'));
-const LazyPermissions = lazy(() => import('./pages/permissions/index.js'));
+// const LazyPermissions = lazy(() => import('./pages/permissions/index.js'));
 const LazyNotFound = lazy(() => import('./pages/error/index.js'));
 
 export default function App() {
@@ -44,7 +44,7 @@ export default function App() {
         }
         <Routes>
           <Route exact path="/" element={<LazyLogIn />} />
-          <Route exact path="/permissions" element={user ? <Suspense fallback={<Loading />}><LazyPermissions /></Suspense> : <Navigate to="/" />} />
+          {/* <Route exact path="/permissions" element={user ? <Suspense fallback={<Loading />}><LazyPermissions /></Suspense> : <Navigate to="/" />} /> */}
           <Route exact path="/home" element={user ? <Suspense fallback={<Loading />}><LazyHome /></Suspense> : <Navigate to="/" />} />
           <Route exact path="/routes" element={user ? <LazyBusRoutes /> : <Navigate to="/" />} />
           <Route exact path="/notification" element={user ? <Suspense fallback={<Loading />}><LazyNotification /></Suspense> : <Navigate to="/" />} />

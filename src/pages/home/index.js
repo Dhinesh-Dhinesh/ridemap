@@ -276,11 +276,7 @@ export default function Home() {
                     )
                 }
                 {
-                    busData.map((bus, index) => {
-
-                        if (index !== 0) {
-                            return null;
-                        }
+                    busData.map((bus) => {
 
                         return (
                             <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
