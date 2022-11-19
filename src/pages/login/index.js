@@ -18,9 +18,6 @@ export default function Login() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [notFound, setNotFound] = useState(false);
 
-  const [isGeolocation, setIsGeoLocation] = useState(false);
-  const [isNotification, setIsNotification] = useState(false);
-
   const user = useAuth();
   let navigate = useNavigate();
 
@@ -36,17 +33,6 @@ export default function Login() {
       setIsLoggedIn(true);
     }
 
-    navigator.permissions.query({ name: 'geolocation' }).then((state) => {
-      if (state.state === "granted") {
-        setIsGeoLocation(true);
-      }
-    })
-
-    if (!("Notification" in window)) {
-      alert("This browser does not support desktop notification");
-    } else if (Notification.permission === "granted") {
-      setIsNotification(true)
-    }
   }, [])
 
 
@@ -77,13 +63,9 @@ export default function Login() {
     return <Loading />
   }
 
-  if ((user) && (isGeolocation && isNotification)) {
-    return <Navigate to="/home" />
-  }
-
   if (user) {
-    checkUserLoggedIn(user.uid);
-    return <Navigate to='/permissions' />
+    checkUserLoggedIn(user.uid)
+    return <Navigate to="/home" />
   }
 
   const handleSubmit = (e) => {

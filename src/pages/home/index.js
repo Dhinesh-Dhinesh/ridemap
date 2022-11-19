@@ -31,6 +31,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import LogoutIcon from '@mui/icons-material/Logout';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
+import AllOutIcon from '@mui/icons-material/AllOut';
 
 //bottom-sheet
 import { BottomSheet } from "react-spring-bottom-sheet";
@@ -108,6 +109,9 @@ export default function Home() {
     const [busData, setBusData] = useState([]);
     const scrollBarColors = ["border-[#AEF359]", "border-[#eb142ab9]",
         "border-[#08BCFF]", "border-[#C332EA]", "border-[#C35F4E]"]
+
+    //show busses
+    const [showAllBus, setShowAllBus] = useState(true);
 
     //drawer
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -205,6 +209,16 @@ export default function Home() {
         localStorage.getItem('isLite') === 'true' ? setTheme('lite') : setTheme('dark');
     }, [])
 
+    //useeffect for fly to bus location when click show map
+    useEffect(() => {
+        for (let i = 0; i < busData.length; i++) {
+            if (busData[i].data.busdetails.no === busNo) {
+                mapRef.current.flyTo([busData[i].data.data.lat, busData[i].data.data.lng], ZOOM_LVL);
+            }
+        }
+        //eslint-disable-next-line
+    }, [busNo])
+
     return (
         <>
             <BottomSheet
@@ -280,11 +294,7 @@ export default function Home() {
                     )
                 }
                 {
-                    busData.map((bus, index) => {
-
-                        if (index !== 0) {
-                            return null;
-                        }
+                    showAllBus && busData.map((bus) => {
 
                         return (
                             <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
@@ -296,7 +306,23 @@ export default function Home() {
                         )
                     })
                 }
+                {
+                    !showAllBus && busData.map((bus) => {
+                        if (bus.data.busdetails.no === busNo) {
 
+                            return (
+                                <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
+                                    icon={BusIcon} duration={1000} rotationAngle={bus.data.data.course} rotationOrigin="center" keepAtCenter={isTrack}>
+                                    <Popup>
+                                        Bus No: {bus.data.busdetails.no} & Speed:{bus.data.data.speed}
+                                    </Popup>
+                                </LeafletTrackingMarker>
+                            )
+                        }
+
+                        return null;
+                    })
+                }
                 <ToggleBusScroll callback={setIsBusNavShown} />
             </MapContainer>
             <div className="fixed z-[10000] flex overflow-x-auto bottom-16 w-screen"
@@ -308,10 +334,11 @@ export default function Home() {
                                 <ScrollBar
                                     click={() => {
                                         toggleDrawer(item.data.driverdetail.name, item.data.driverdetail.phone,
-                                            parseInt(item.key) + 1, item.data.busdetails.busno, item.data.busdetails.seats);
+                                            item.data.busdetails.no, item.data.busdetails.busno, item.data.busdetails.seats);
                                         bottomCont.setIsDrawerOpen(true);
+                                        setShowAllBus(false);
                                     }}
-                                    busno={parseInt(item.key) + 1}
+                                    busno={item.data.busdetails.no}
                                     status={item.data.busdetails.status}
                                     color={scrollBarColors[parseInt(item.key)]}
                                 />
@@ -339,6 +366,15 @@ export default function Home() {
                 }}>
                 <TrackChangesIcon />
             </div>
+            {
+                !showAllBus && (
+                    <div className='overlay top-[8.6rem] left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
+                flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
+                        onClick={() => setShowAllBus(true)}>
+                        <AllOutIcon />
+                    </div>
+                )
+            }
         </>
     )
 }   
