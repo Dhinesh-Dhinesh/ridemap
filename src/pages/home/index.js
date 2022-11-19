@@ -341,6 +341,7 @@ export default function Home() {
                                     busno={item.data.busdetails.no}
                                     status={item.data.busdetails.status}
                                     color={scrollBarColors[parseInt(item.key)]}
+                                    speed={item.data.data.speed}
                                 />
                             </div>
                         )
