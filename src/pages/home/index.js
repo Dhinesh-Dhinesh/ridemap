@@ -6,7 +6,6 @@ import { db } from "../../firebase/firebase"
 import { ref, onValue, set } from "firebase/database";
 import { logOut } from '../../firebase/firebase';
 import { changeRoutesFromDb } from '../../data/routes';
-import { requestForToken } from '../../firebase/firebase'
 
 //leaflet
 import L from 'leaflet';
@@ -38,7 +37,7 @@ import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
 
 //context
-import { BottomContext } from '../../context/BottomContext'
+import { BottomContext } from '../../context/BottomContext';
 
 //full png image for the router markers to hide
 let defaultPngIcon = L.icon({
@@ -189,8 +188,6 @@ export default function Home() {
             setRoutes(await changeRoutesFromDb());
         })();
 
-        requestForToken();
-
         const dataRef = ref(db, 'busses');
         onValue(dataRef, (snapshot) => {
             let val = [];
@@ -202,7 +199,7 @@ export default function Home() {
             setBusData(val);
         });
 
-        
+
     }, []);
     useLayoutEffect(() => {
         //theme

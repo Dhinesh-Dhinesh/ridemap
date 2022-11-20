@@ -26,8 +26,11 @@ export default function App() {
 
   const [locationPath, setLocationPath] = useState("");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
   let location = useLocation();
+
+  //notification
+  const [isNotification, setIsNotification] = useState(false);
+
 
   useEffect(() => {
     setLocationPath(location.pathname);
@@ -35,7 +38,7 @@ export default function App() {
 
   return (
     <>
-      <BottomContext.Provider value={{ isDrawerOpen, setIsDrawerOpen }} >
+      <BottomContext.Provider value={{ isDrawerOpen, setIsDrawerOpen, isNotification, setIsNotification }} >
         {
           user && locationPath !== '/permissions' ? (
             <BottomNav />

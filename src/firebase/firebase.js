@@ -5,7 +5,6 @@ import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from
 import { getDatabase, set, ref, onDisconnect, child, get } from "firebase/database";
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
-import { getMessaging, getToken } from 'firebase/messaging'
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -24,7 +23,6 @@ const auth = getAuth(app);
 export const db = getDatabase(app);
 export const firestoreDB = getFirestore(app);
 export const storage = getStorage(app);
-export const messaging = getMessaging(app);
 
 export function signIn(email, password) {
   return signInWithEmailAndPassword(auth, email, password);
@@ -33,21 +31,6 @@ export function signIn(email, password) {
 export function logOut() {
   return signOut(auth);
 }
-
-export const requestForToken = () => {
-  return getToken(messaging, { vapidKey: process.env.REACT_APP_MESSAGE_KEY })
-    .then((currentToken) => {
-      if (currentToken) {
-        console.log(currentToken);
-      } else {
-        // Show permission request UI
-        console.log('No registration token available. Request permission to generate one.');
-      }
-    })
-    .catch((err) => {
-      console.log('An error occurred while retrieving token. ', err);
-    });
-};
 
 export function useAuth() {
   const [currentUser, setCurrentUser] = useState();
