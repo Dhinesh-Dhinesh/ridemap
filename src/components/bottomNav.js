@@ -30,11 +30,11 @@ const Navigation = () => {
         try {
           await getDoc(notify_status).then((doc) => {
             if (doc.exists()) {
-              setIsNotification(doc.data().notf_read);
+              setIsNotification(doc.data().notf_unread);
             }
           })
         } catch (e) {
-          return null
+          console.log(e)
         }
       }
       notify();

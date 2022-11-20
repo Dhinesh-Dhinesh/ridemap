@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { firestoreDB } from '../../firebase/firebase';
 import { collection, getDocs, query, orderBy, updateDoc, doc } from 'firebase/firestore';
 import Loading from '../../components/Loading';
@@ -16,11 +16,11 @@ export default function Notification() {
             let uid = sessionStorage.getItem('uid');
 
             const notify_ref = collection(firestoreDB, `users/${uid}/notifications`)
-            const notify_status = doc(firestoreDB, `users/${uid}`)
+            const notify_status = doc(firestoreDB, "users", `${uid}`)
 
             try {
                 await updateDoc(notify_status, {
-                    notf_read : false
+                    notf_unread: false
                 });
 
                 var data = [];

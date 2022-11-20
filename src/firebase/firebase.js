@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "firebase/auth";
 import { getDatabase, set, ref, onDisconnect, child, get } from "firebase/database";
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, setDoc, collection } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
@@ -31,6 +31,31 @@ export function signIn(email, password) {
 export function logOut() {
   return signOut(auth);
 }
+
+export async function signUp(email, password, name, route, stop) {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    // Signed in 
+    userCredential.user.updateProfile({
+      displayName: name
+    })
+    const userRef = collection(firestoreDB, 'users');
+    await setDoc(userRef, {
+      name,
+      email,
+      route,
+      stop,
+      notf_unread : false,
+    });
+  } catch (error) {
+    console.log(error);
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(errorCode, errorMessage);
+  }
+}
+
+//-------------
 
 export function useAuth() {
   const [currentUser, setCurrentUser] = useState();

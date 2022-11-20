@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 //raw data
 import { routeData } from './data';
+//user info
 
 export default function Profile() {
 
@@ -33,7 +34,7 @@ export default function Profile() {
         <div className='flex flex-col w-screen h-screen items-center bg-backgroundprimary py-5'>
             <h1 className='text-4xl font-bold text-gray-300 tracking-wider'>Profile</h1>
             <img src={require('./assets/profile.png')} alt="profile" width={160} height={160} className="pointer-events-none" unselectable="on" />
-            <h1 className='text-xl font-bold text-themeprimary -mt-5'>Dhinesh</h1>
+            <h1 className='text-xl font-bold text-themeprimary -mt-5'>asd</h1>
             <hr className='w-11/12 mt-2 border-gray-700' />
             {/* Info*/}
             <div className='flex flex-col w-11/12 mt-5 '>
@@ -44,12 +45,12 @@ export default function Profile() {
                 <div className='grid grid-cols-3 justify-item-start w-40'>
                     <h1 className='text-md font-bold text-gray-400'>Name</h1>
                     <span className='text-gray-400'>:</span>
-                    <h1 className='text-md font-bold text-gray-400 -ml-10'>Dhinesh</h1>
+                    <h1 className='text-md font-bold text-gray-400 -ml-10'>asd</h1>
                 </div>
                 <div className='grid grid-cols-3 justify-item-start mt-5 w-40'>
                     <h1 className='text-md font-bold text-gray-400'>Email</h1>
                     <span className='text-gray-400'>:</span>
-                    <h1 className='text-md font-bold text-gray-400 -ml-10'>dhinesh@gmail.com</h1>
+                    <h1 className='text-md font-bold text-gray-400 -ml-10'>asd</h1>
                 </div>
             </div>
             <hr className='w-11/12 mt-2 border-gray-700' />
