@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 
+import { useNavigate } from 'react-router-dom';
+
 //firebase
 import { signUp } from '../../firebase/firebase';
 
@@ -7,6 +9,8 @@ import { signUp } from '../../firebase/firebase';
 import { routeData } from './data';
 
 export default function SignUp() {
+
+    const navigate = useNavigate();
 
     const [name, setName] = useState('')
     const [email, setEmail] = useState('');
@@ -22,7 +26,7 @@ export default function SignUp() {
     //ui
     const [worngPassword, setWrongPassword] = useState(false);
     const [allFields, setAllFields] = useState(false);
-    const [emailExist,setEmailExist] = useState(false);
+    const [emailExist, setEmailExist] = useState(false);
 
     function toggleRouteDropDown() {
         setIsRouteDropDownOpen((prevState) => !prevState);
@@ -43,13 +47,16 @@ export default function SignUp() {
         if ((email === '') || (password === '') || (name === '') || (route === 'Select your route') || (stopname === 'Select your stop')) {
             setAllFields(true)
         } else {
-            if (password.length <= 8) {
+            if (password.length < 8) {
                 setWrongPassword(true);
                 return;
             }
 
-            await signUp(name,email,password,route,stopname);
-            
+            await signUp(name, email, password, route, stopname).then(
+                (data) => {
+                    navigate('/verify-email');
+                }
+            )
         }
     }
 

@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
-import { useNavigate, Navigate, NavLink } from 'react-router-dom';
-import { signIn, useAuth, db, logOut } from '../../firebase/firebase';
-import { ref, get, child, set } from 'firebase/database'
+import { Navigate, NavLink } from 'react-router-dom';
+import { signIn, useAuth, } from '../../firebase/firebase';
 
 import Loading from "../../components/Loading";
 import Lottie from 'react-lottie';
@@ -15,47 +14,15 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   const [wrongPassword, setWrongPassword] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [notFound, setNotFound] = useState(false);
 
   const user = useAuth();
-  let navigate = useNavigate();
 
   const defaultOptionsLottie = {
     loop: true,
     autoplay: true,
     animationData: busAnimation,
     renderer: 'svg'
-  }
-
-  useEffect(() => {
-    if (sessionStorage.getItem('isLoggedIn')) {
-      setIsLoggedIn(true);
-    }
-  }, [])
-
-
-  const checkUserLoggedIn = (id) => {
-    get(child(ref(db), `users/${id}/signin`)).then((snapshot) => {
-      if (snapshot.exists()) {
-        if (snapshot.val() === 1) {
-          (async function logOutIfLoggedIn() {
-            await logOut();
-            sessionStorage.setItem('isLoggedIn', id);
-            navigate('/');
-          })();
-          console.log('user already signed in')
-          return;
-        }
-      } else {
-        set(ref(db, "users/" + id + "/"), {
-          signin: 1
-        })
-      }
-
-    }).catch((error) => {
-      console.error(error);
-    });
   }
 
   if (user === undefined || loading) {
@@ -66,7 +33,6 @@ export default function Login() {
     if (user.emailVerified === false) {
       return <Navigate to='/verify-email' />;
     }
-    checkUserLoggedIn(user.uid)
     return <Navigate to="/home" />
   }
 
@@ -76,13 +42,11 @@ export default function Login() {
     if (email === '' || password === '') return;
 
     setWrongPassword(false);
-    setIsLoggedIn(false);
     setNotFound(false);
     sessionStorage.setItem('isLoggedIn', false)
 
     setLoading(true);
     signIn(email, password).then((data) => {
-      checkUserLoggedIn(data.user.uid)
       setLoading(false);
     }).catch((error) => {
 
@@ -115,7 +79,6 @@ export default function Login() {
           <label className='flex felx-col py-2 text-xl font-bold'>Password</label>
           <input onChange={(e) => setPassword(e.target.value)} type='password' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
           <label className={`${wrongPassword ? "flex" : "hidden"} py-2 text-sm text-red-500 w-72 relative`}>The password that you've entered is incorrect.<u className='absolute top-8 right-20 text-blue-500'>Forgotten password?</u></label>
-          <label className={`${isLoggedIn ? "flex" : "hidden"} mt-3 py-2 text-sm text-red-500 w-72 relative left-9`}>User logged in on another device ..</label>
           <label className={`${notFound ? "flex" : "hidden"} mt-3 py-2 text-sm text-red-500 w-72 relative left-24`}>User not found !..</label>
         </div>
         <button className='rounded-full border border-themeprimary bg-overlayprimary hover:bg-gray-700 w-56 mt-10 p-3 text-themeprimary'>Sign In</button>

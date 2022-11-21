@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
-import { getDatabase, set, ref, onDisconnect, child, get } from "firebase/database";
+import { getDatabase } from "firebase/database";
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
@@ -69,38 +69,11 @@ export function useAuth() {
       setCurrentUser(user)
 
       if (user) {
-        get(child(ref(db), `users/${user.uid}/signin`)).then((snapshot) => {
-          if (snapshot.exists()) {
-            if (snapshot.val() === 1) {
-              async function logOutIfLoggedIn() {
-                sessionStorage.setItem('isLoggedIn', true);
-                await logOut();
-                window.location.reload();
-              }
-              logOutIfLoggedIn()
-              console.log('user already signed in')
-            } else {
-              sessionStorage.setItem("uid", user.uid); //!get uid in logout handler
-              set(ref(db, "users/" + user.uid + "/"), {
-                signin: 1
-              })
-              const disRef = ref(db, "users/" + user.uid + "/signin");
-              onDisconnect(disRef).set(0);
-            }
-          } else {
-            sessionStorage.setItem("uid", user.uid); //!get uid in logout handler
-            set(ref(db, "users/" + user.uid + "/"), {
-              signin: 1
-            })
-            const disRef = ref(db, "users/" + user.uid + "/signin");
-            onDisconnect(disRef).set(0);
-          }
-        }).catch((error) => {
-          console.error(error);
-        })
-
+        sessionStorage.setItem('isLoggedIn', true);
+        sessionStorage.setItem("uid", user.uid);
       }
-    });
+
+    })
     return unsub;
   }, [])
 

@@ -4,11 +4,11 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logOut } from '../../firebase/firebase';
 
+import Loading from '../../components/Loading';
 
 //firebase
 import { doc, getDoc } from 'firebase/firestore';
-import { firestoreDB, db } from '../../firebase/firebase';
-import { set, ref } from 'firebase/database';
+import { firestoreDB } from '../../firebase/firebase';
 
 export default function Profile() {
 
@@ -44,10 +44,6 @@ export default function Profile() {
     const handleLogOut = async (e) => {
         e.preventDefault();
         try {
-            let user = sessionStorage.getItem('uid');
-            set(ref(db, "users/" + user + "/"), {
-                signin: 0
-            })
             await logOut();
             sessionStorage.removeItem('uid');
             sessionStorage.removeItem('isLoggedIn');
@@ -60,6 +56,10 @@ export default function Profile() {
     useEffect(() => {
         localStorage.getItem('isLite') === 'true' ? setThemeChecked(false) : setThemeChecked(true);
     }, []);
+
+    if(!dstop) {
+        return <Loading />
+    }
 
     return (
         <div className='flex flex-col w-screen h-screen items-center bg-backgroundprimary py-5'>
