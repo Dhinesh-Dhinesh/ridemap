@@ -56,7 +56,7 @@ export default function App() {
     <>
       <BottomContext.Provider value={{ isDrawerOpen, setIsDrawerOpen, isNotification, setIsNotification }} >
         {
-          isUserEmailVerified && locationPath !== '/verify-email' ? (
+          isUserEmailVerified && locationPath !== '/verify-email' && locationPath !== '/' ? (
             <BottomNav />
           ) : null
         }

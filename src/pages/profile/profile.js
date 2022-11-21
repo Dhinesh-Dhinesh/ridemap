@@ -20,7 +20,7 @@ export default function Profile() {
     const [droutes, setdroutes] = useState('');
     const [dstop, setdStop] = useState('')
 
-    const Navigate = useNavigate();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const uid = sessionStorage.getItem('uid');
@@ -47,7 +47,7 @@ export default function Profile() {
             await logOut();
             sessionStorage.removeItem('uid');
             sessionStorage.removeItem('isLoggedIn');
-            Navigate('/')
+            navigate('/')
         } catch (e) {
             console.log(e.message)
         }
