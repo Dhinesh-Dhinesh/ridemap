@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { Navigate, NavLink } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { signIn, useAuth, } from '../../firebase/firebase';
 
 import Loading from "../../components/Loading";
@@ -17,6 +17,7 @@ export default function Login() {
   const [notFound, setNotFound] = useState(false);
 
   const user = useAuth();
+  const navigate = useNavigate();
 
   const defaultOptionsLottie = {
     loop: true,
@@ -34,6 +35,10 @@ export default function Login() {
       return <Navigate to='/verify-email' />;
     }
     return <Navigate to="/home" />
+  }
+
+  const toCreateAccount = () => {
+    navigate('/signup');
   }
 
   const handleSubmit = (e) => {
@@ -83,7 +88,7 @@ export default function Login() {
         </div>
         <button className='rounded-full border border-themeprimary bg-overlayprimary hover:bg-gray-700 w-56 mt-10 p-3 text-themeprimary'>Sign In</button>
       </form>
-      <div className='text-blue-400 relative -bottom-14'><NavLink to="/signup">Create an account</NavLink></div>
+      <div className='text-blue-400 relative -bottom-14 cursor-pointer hover:text-blue-200'><p onClick={()=>toCreateAccount()}>Create an account</p></div>
     </div>
   )
 }

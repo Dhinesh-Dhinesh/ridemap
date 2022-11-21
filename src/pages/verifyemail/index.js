@@ -14,14 +14,17 @@ export default function VerifyEmail() {
   const [isEmailSend, setIsEmailSend] = useState(false);
   const [isShowCheckMail, setIsShowCheckMail] = useState(true);
 
-  function verify() {
+  function verify(e) {
+    e.preventDefault();
 
     if (user) {
+      console.log(user.emailVerified)
       if (user.emailVerified) {
+        console.log("sd")
         return navigate('/home');
       } else {
         sessionStorage.setItem('isShowEmailVerifiedStatus', true);
-        window.location.reload();
+        return navigate('/verify-email');
       }
     }
   }
@@ -36,9 +39,9 @@ export default function VerifyEmail() {
     }
   }
 
-  function backToLogin() {
-    logOut();
-    navigate('/');
+  async function backToLogin() {
+    await logOut();
+    return navigate('/');
   }
 
   return (

@@ -41,13 +41,13 @@ export default function Profile() {
     }
 
     // Logout 
-    const handleLogOut = async (e) => {
-        e.preventDefault();
+    const handleLogOut = async () => {
         try {
-            await logOut();
-            sessionStorage.removeItem('uid');
-            sessionStorage.removeItem('isLoggedIn');
-            navigate('/')
+            await logOut().then(() => {
+                sessionStorage.removeItem('uid');
+                sessionStorage.removeItem('isLoggedIn');
+                navigate('/')
+            });
         } catch (e) {
             console.log(e.message)
         }
@@ -57,7 +57,7 @@ export default function Profile() {
         localStorage.getItem('isLite') === 'true' ? setThemeChecked(false) : setThemeChecked(true);
     }, []);
 
-    if(!dstop) {
+    if (!dstop) {
         return <Loading />
     }
 
@@ -144,7 +144,7 @@ export default function Profile() {
                     <p>Reset Password</p>
                 </div>
                 <div className='text-gray-400 bg-overlayprimary w-40 text-center rounded-xl py-2 font-bold hover:bg-gray-700 mt-3'>
-                    <button onClick={handleLogOut}>Logout</button>
+                    <button onClick={() => handleLogOut()}>Logout</button>
                 </div>
             </div>
             {/* this div fixes bottom nav bar */}
