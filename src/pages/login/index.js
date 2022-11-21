@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate, NavLink } from 'react-router-dom';
 import { signIn, useAuth, db, logOut } from '../../firebase/firebase';
 import { ref, get, child, set } from 'firebase/database'
 
@@ -118,6 +118,7 @@ export default function Login() {
         </div>
         <button className='rounded-full border border-themeprimary bg-overlayprimary hover:bg-gray-700 w-56 mt-10 p-3 text-themeprimary'>Sign In</button>
       </form>
+      <div><NavLink to="/signup">Sign up</NavLink></div>
     </div>
   )
 }

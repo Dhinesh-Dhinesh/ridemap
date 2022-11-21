@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import { getDatabase, set, ref, onDisconnect, child, get } from "firebase/database";
-import { getFirestore, setDoc, collection } from 'firebase/firestore';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
+
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -32,31 +33,34 @@ export function logOut() {
   return signOut(auth);
 }
 
-export async function signUp(email, password, name, route, stop) {
+export async function signUp(name, email, password, route, stop) {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     // Signed in 
-    userCredential.user.updateProfile({
+
+    const { user } = userCredential;
+
+    await updateProfile(user, {
       displayName: name
     })
-    const userRef = collection(firestoreDB, 'users');
+
+    const userRef = doc(firestoreDB, "users", userCredential.user.uid);
     await setDoc(userRef, {
       name,
       email,
       route,
       stop,
-      notf_unread : false,
+      notf_unread: false,
     });
+
+    await sendEmailVerification(user);
+
   } catch (error) {
-    console.log(error);
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    console.log(errorCode, errorMessage);
+    console.log(error)
   }
 }
 
 //-------------
-
 export function useAuth() {
   const [currentUser, setCurrentUser] = useState();
 

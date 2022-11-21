@@ -1,10 +1,8 @@
 import React, { useEffect, useState, useRef, useLayoutEffect, useContext } from 'react';
-import { Navigate } from 'react-router-dom';
 
 //Firebase
 import { db } from "../../firebase/firebase"
-import { ref, onValue, set } from "firebase/database";
-import { logOut } from '../../firebase/firebase';
+import { ref, onValue } from "firebase/database";
 import { changeRoutesFromDb } from '../../data/routes';
 
 //leaflet
@@ -28,7 +26,7 @@ import ScrollBar from '../../components/ScrollBar.js';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import PersonIcon from '@mui/icons-material/Person';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
-import LogoutIcon from '@mui/icons-material/Logout';
+// import LogoutIcon from '@mui/icons-material/Logout';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import AllOutIcon from '@mui/icons-material/AllOut';
 
@@ -67,23 +65,6 @@ let collegeIcon = L.icon({
 });
 
 export default function Home() {
-
-    // Logout 
-    const handleLogOut = async (e) => {
-        e.preventDefault();
-        try {
-            let user = sessionStorage.getItem('uid');
-            set(ref(db, "users/" + user + "/"), {
-                signin: 0
-            })
-            await logOut();
-            sessionStorage.removeItem('uid');
-            sessionStorage.removeItem('isLoggedIn');
-            return <Navigate to="/" />
-        } catch (e) {
-            console.log(e.message)
-        }
-    };
 
     //context
     const bottomCont = useContext(BottomContext);
@@ -354,11 +335,6 @@ export default function Home() {
             </div>
             <div className='overlay top-14 left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
                 flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
-                onClick={handleLogOut}>
-                <LogoutIcon />
-            </div>
-            <div className='overlay top-24 left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
-                flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
                 onClick={() => {
                     setIsTrack((prev) => !prev);
                 }}>
@@ -366,7 +342,7 @@ export default function Home() {
             </div>
             {
                 !showAllBus && (
-                    <div className='overlay top-[8.6rem] left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
+                    <div className='overlay top-24 left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
                 flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
                         onClick={() => setShowAllBus(true)}>
                         <AllOutIcon />

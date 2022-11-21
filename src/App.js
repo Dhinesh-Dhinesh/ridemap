@@ -1,5 +1,5 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react';
-import { Routes, Route, Navigate, useLocation } from "react-router-dom"
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom"
 
 //Navbar
 import BottomNav from './components/bottomNav'
@@ -11,6 +11,9 @@ import Loading from './components/Loading'
 
 //context
 import { BottomContext } from './context/BottomContext';
+
+import SignUp from './pages/signup/index'
+import EmailVerify from './pages/verifyemail/index'
 
 //Lazy Component Pages
 const LazyLogIn = lazy(() => import('./pages/login/index.js'));
@@ -24,6 +27,8 @@ export default function App() {
 
   const user = useAuth();
 
+  const Navigate = useNavigate();
+
   const [locationPath, setLocationPath] = useState("");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   let location = useLocation();
@@ -31,6 +36,11 @@ export default function App() {
   //notification
   const [isNotification, setIsNotification] = useState(false);
 
+  if (user) {
+    if (user.emailVerified === false) {
+      Navigate("/verify-email");
+    }
+  }
 
   useEffect(() => {
     setLocationPath(location.pathname);
@@ -40,12 +50,14 @@ export default function App() {
     <>
       <BottomContext.Provider value={{ isDrawerOpen, setIsDrawerOpen, isNotification, setIsNotification }} >
         {
-          user && locationPath !== '/permissions' ? (
+          user && locationPath !== '/verify-email' ? (
             <BottomNav />
           ) : null
         }
         <Routes>
           <Route exact path="/" element={<LazyLogIn />} />
+          <Route exact path="/signup" element={<SignUp />} />
+          <Route exact path="/verify-email" element={<EmailVerify />} />
           <Route exact path="/home" element={user ? <Suspense fallback={<Loading />}><LazyHome /></Suspense> : <Navigate to="/" />} />
           <Route exact path="/routes" element={user ? <LazyBusRoutes /> : <Navigate to="/" />} />
           <Route exact path="/notification" element={user ? <Suspense fallback={<Loading />}><LazyNotification /></Suspense> : <Navigate to="/" />} />

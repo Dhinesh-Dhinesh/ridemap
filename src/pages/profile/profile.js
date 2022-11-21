@@ -1,30 +1,61 @@
 import React, { useEffect, useState } from 'react';
 
-//raw data
-import { routeData } from './data';
-//user info
+
+import { useNavigate } from 'react-router-dom';
+import { logOut } from '../../firebase/firebase';
+
+
+//firebase
+import { doc, getDoc } from 'firebase/firestore';
+import { firestoreDB, db } from '../../firebase/firebase';
+import { set, ref } from 'firebase/database';
 
 export default function Profile() {
 
-    const [route, setRoute] = useState('Select your route');
-    const [isRouteDropDownOpen, setIsRouteDropDownOpen] = useState(false);
-    const [stopname, setStopname] = useState('Select your stop');
-    const [stop, setStop] = useState([]);
-    const [isStopDropDownOpen, setIsStopDropDownOpen] = useState(false);
     const [isThemeChecked, setThemeChecked] = useState(false);
     const [isNotificationOn, setNotificationOn] = useState(true);
 
-    function toggleRouteDropDown() {
-        setIsRouteDropDownOpen((prevState) => !prevState);
-    }
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [droutes, setdroutes] = useState('');
+    const [dstop, setdStop] = useState('')
 
-    function toggleStopDropDown() {
-        setIsStopDropDownOpen((prevState) => !prevState);
-    }
+    const Navigate = useNavigate();
+
+    useEffect(() => {
+        const uid = sessionStorage.getItem('uid');
+        const userRef = doc(firestoreDB, "users", `${uid}`)
+
+        getDoc(userRef).then((doc) => {
+            if (doc.exists()) {
+                setName(doc.data().name);
+                setEmail(doc.data().email);
+                setdroutes(doc.data().route)
+                setdStop(doc.data().stop)
+            }
+        })
+    }, [])
 
     function toggleNotification() {
         setNotificationOn((prevState) => !prevState);
     }
+
+    // Logout 
+    const handleLogOut = async (e) => {
+        e.preventDefault();
+        try {
+            let user = sessionStorage.getItem('uid');
+            set(ref(db, "users/" + user + "/"), {
+                signin: 0
+            })
+            await logOut();
+            sessionStorage.removeItem('uid');
+            sessionStorage.removeItem('isLoggedIn');
+            Navigate('/')
+        } catch (e) {
+            console.log(e.message)
+        }
+    };
 
     useEffect(() => {
         localStorage.getItem('isLite') === 'true' ? setThemeChecked(false) : setThemeChecked(true);
@@ -34,7 +65,7 @@ export default function Profile() {
         <div className='flex flex-col w-screen h-screen items-center bg-backgroundprimary py-5'>
             <h1 className='text-4xl font-bold text-gray-300 tracking-wider'>Profile</h1>
             <img src={require('./assets/profile.png')} alt="profile" width={160} height={160} className="pointer-events-none" unselectable="on" />
-            <h1 className='text-xl font-bold text-themeprimary -mt-5'>asd</h1>
+            <h1 className='text-xl font-bold text-themeprimary -mt-5'>{name}</h1>
             <hr className='w-11/12 mt-2 border-gray-700' />
             {/* Info*/}
             <div className='flex flex-col w-11/12 mt-5 '>
@@ -45,12 +76,12 @@ export default function Profile() {
                 <div className='grid grid-cols-3 justify-item-start w-40'>
                     <h1 className='text-md font-bold text-gray-400'>Name</h1>
                     <span className='text-gray-400'>:</span>
-                    <h1 className='text-md font-bold text-gray-400 -ml-10'>asd</h1>
+                    <h1 className='text-md font-bold text-gray-400 -ml-10'>{name}</h1>
                 </div>
                 <div className='grid grid-cols-3 justify-item-start mt-5 w-40'>
                     <h1 className='text-md font-bold text-gray-400'>Email</h1>
                     <span className='text-gray-400'>:</span>
-                    <h1 className='text-md font-bold text-gray-400 -ml-10'>asd</h1>
+                    <h1 className='text-md font-bold text-gray-400 -ml-10'>{email}</h1>
                 </div>
             </div>
             <hr className='w-11/12 mt-2 border-gray-700' />
@@ -63,63 +94,12 @@ export default function Profile() {
                 <div className='grid grid-cols-3 justify-items-start w-24'>
                     <h1 className='text-md font-bold text-gray-400'>Route</h1>
                     <span className='text-gray-400 ml-5'>:</span>
-                    <button onClick={() => {
-                        toggleRouteDropDown()
-                        setIsStopDropDownOpen(false)
-                    }}
-                        className="text-white w-60 bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">{route}<svg className="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></button>
+                    <p className='text-white w-56'>{droutes}</p>
                 </div>
-                {/* Dropdown */}
-                <div id='scroll' className={`${isRouteDropDownOpen ? "" : "hidden"} ml-12 mt-16 z-10 w-64 bg-white rounded divide-y divide-gray-100 shadow dark:bg-overlayprimary absolute`}>
-                    <ul className="overflow-y-auto h-48 py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefault">
-                        {
-                            routeData.map((item) => {
-                                return (
-                                    <li key={item.id}>
-                                        <p onClick={() => {
-                                            setRoute(item.route)
-                                            setStop(item.stops)
-                                            toggleRouteDropDown()
-                                            setStopname('Select your stop')
-                                        }} className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{item.route}</p>
-                                        <hr className='w-auto border-gray-700' />
-                                    </li>
-
-                                )
-                            })
-                        }
-                    </ul>
-                </div>
-                {
-                    route !== 'Select your route' && (
-                        <div className='grid grid-cols-3 justify-items-start w-24 mt-5'>
-                            <h1 className='text-md font-bold text-gray-400'>Stop</h1>
-                            <span className='text-gray-400 ml-5'>:</span>
-                            <button onClick={() => {
-                                toggleStopDropDown()
-                                setIsRouteDropDownOpen(false)
-                            }}
-                                className="text-white w-60 bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">{stopname}<svg className="ml-2 w-[11px] h-3" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></button>
-                        </div>
-                    )
-                }
-                {/* Dropdown */}
-                <div id='scroll' className={`${isStopDropDownOpen ? "" : "hidden"} ml-12 mt-36 z-10 w-64 bg-white rounded divide-y divide-gray-100 shadow dark:bg-overlayprimary absolute`}>
-                    <ul className="overflow-y-auto h-32 py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefault">
-                        {
-                            stop && stop.map((item) => {
-                                return (
-                                    <li key={item}>
-                                        <p onClick={() => {
-                                            toggleStopDropDown()
-                                            setStopname(item)
-                                        }} className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{item}</p>
-                                        <hr className='w-auto border-gray-700' />
-                                    </li>
-                                )
-                            })
-                        }
-                    </ul>
+                <div className='grid grid-cols-3 justify-items-start w-24 mt-5'>
+                    <h1 className='text-md font-bold text-gray-400'>Stop</h1>
+                    <span className='text-gray-400 ml-5'>:</span>
+                    <p className='text-white w-56'>{dstop}</p>
                 </div>
             </div>
             <hr className='w-11/12 mt-4 border-gray-700' />
@@ -164,7 +144,7 @@ export default function Profile() {
                     <p>Reset Password</p>
                 </div>
                 <div className='text-gray-400 bg-overlayprimary w-40 text-center rounded-xl py-2 font-bold hover:bg-gray-700 mt-3'>
-                    <p>Logout</p>
+                    <button onClick={handleLogOut}>Logout</button>
                 </div>
             </div>
             {/* this div fixes bottom nav bar */}
