@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+
+import Loading from '../../components/Loading';
 
 //firebase
 import { signUp } from '../../firebase/firebase';
@@ -28,6 +30,11 @@ export default function SignUp() {
     const [allFields, setAllFields] = useState(false);
     const [emailExist, setEmailExist] = useState(false);
 
+    const [confirmPassword,setConfirmPassword] = useState('');
+    const [isSamePassword,setIsSamePassword] = useState(false);
+
+    const [isLoading,setLoading] = useState(false);
+
     function toggleRouteDropDown() {
         setIsRouteDropDownOpen((prevState) => !prevState);
     }
@@ -40,25 +47,41 @@ export default function SignUp() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        setLoading(true);
+
         setWrongPassword(false);
-        setAllFields(false)
-        setEmailExist(false)
+        setAllFields(false);
+        setEmailExist(false);
+        setIsSamePassword(false);
 
         if ((email === '') || (password === '') || (name === '') || (route === 'Select your route') || (stopname === 'Select your stop')) {
             setAllFields(true)
+            setLoading(false);
         } else {
             if (password.length < 8) {
                 setWrongPassword(true);
+                setLoading(false);
+                return;
+            }
+            if (password !== confirmPassword) {
+                setIsSamePassword(true);
+                setLoading(false);
                 return;
             }
 
             await signUp(name, email, password, route, stopname).then(
                 (data) => {
+                    setLoading(false);
                     navigate('/verify-email');
                 }
             )
         }
     }
+
+    if(isLoading){
+        return <Loading />
+    }
+
 
     return (
         <div className='h-screen w-screen text-white flex flex-col justify-center items-center'>
@@ -75,6 +98,10 @@ export default function SignUp() {
                 <div>
                     <label className='flex felx-col py-2 text-xl font-bold'>Password</label>
                     <input onChange={(e) => setPassword(e.target.value)} type='password' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
+                </div>
+                <div>
+                    <label className='flex felx-col py-2 text-xl font-bold'>Confirm Password</label>
+                    <input onChange={(e) => setConfirmPassword(e.target.value)} type='password' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
                 </div>
                 <div className='flex flex-col'>
                     <div className='py-2 text-xl font-bold'>Route</div>
@@ -141,7 +168,7 @@ export default function SignUp() {
                     }
                 </div>
                 {
-                    worngPassword && (<div className='text-xs mt-2 text-red-500'>Password must be atleast 8 characters long</div>)
+                    worngPassword && (<div className='text-xs mt-2 text-red-500'>Password must be at least 8 characters long</div>)
                 }
                 {
                     allFields && (<div className='text-xs mt-2 text-yellow-400'>* All fields required</div>)
@@ -149,7 +176,11 @@ export default function SignUp() {
                 {
                     emailExist && (<div className='text-xs mt-2 text-yellow-400'>Email already exist</div>)
                 }
+                {
+                    isSamePassword && (<div className='text-xs mt-2 text-yellow-400'>Password mismatch</div>)
+                }
                 <button className='rounded-full border border-themeprimary bg-overlayprimary hover:bg-gray-700 w-56 mt-10 p-3 text-themeprimary'>Create account</button>
+                <p className='mt-4 text-xs'>Already have an account <NavLink to='/' className='underline underline-offset-2 cursor-pointer'>Sign in</NavLink></p>
             </form>
         </div>
     )

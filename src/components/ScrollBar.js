@@ -29,7 +29,7 @@ function ScrollBar({ click, busno, status, color, speed }) {
                 <div className="text-white font-bold">
                     Bus NO {busno}<br />
                     <p className="text-xs text-gray-400">ETA</p>
-                    7:40 AM
+                    -- : --
                 </div>
                 {/* <!-- Right box --> */}
                 <div className=" text-white mt-6 font-bold">
@@ -41,7 +41,7 @@ function ScrollBar({ click, busno, status, color, speed }) {
                         <p className={`text-xs relative top-[.47rem] left-2 ${colors[speedColor]}`}>{speed} km/h</p>
                     </div>
                     <p className="text-xs text-gray-400">Status</p>
-                    {status ? "On Route" : "In College"}
+                    {status ? "On Route" : "Stopped"}
                 </div>
             </div>
             {/* <!-- sub-container 2--> */}

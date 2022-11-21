@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef, useLayoutEffect, useContext } from 
 //Firebase
 import { db } from "../../firebase/firebase"
 import { ref, onValue } from "firebase/database";
-import { changeRoutesFromDb } from '../../data/routes';
+// import { changeRoutesFromDb } from '../../data/routes';
 
 //leaflet
 import L from 'leaflet';
@@ -19,15 +19,13 @@ import circleIcon from './assets/circle.png';
 import busIcon from './assets/bus.png';
 
 //Components
-import RoutingMachine from "../../components/RoutingMachine";
+// import RoutingMachine from "../../components/RoutingMachine";
 import ScrollBar from '../../components/ScrollBar.js';
 
 //icons
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import PersonIcon from '@mui/icons-material/Person';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
-// import LogoutIcon from '@mui/icons-material/Logout';
-import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import AllOutIcon from '@mui/icons-material/AllOut';
 
 //bottom-sheet
@@ -78,11 +76,8 @@ export default function Home() {
     const ZOOM_LVL = 12;
 
     //routing
-    const [wayPoints, setwayPoints] = useState([]);
-    const [routes, setRoutes] = useState([]);
-
-    //track
-    const [isTrack, setIsTrack] = useState(false);
+    // const [wayPoints, setwayPoints] = useState([]);
+    // const [routes, setRoutes] = useState([]);
 
     //Bus data ui
     const [isBusNavShown, setIsBusNavShown] = useState(true);
@@ -101,7 +96,7 @@ export default function Home() {
     const [trackNo, setTrackNo] = useState(null);
     const [seats, setSeats] = useState(null);
 
-    const toggleDrawer = (driver, phone, busno, trackno, seats) => {
+    const toggleDrawer = (driver, phone, busno, trackno, seats, waypoint) => {
         setIsDrawerOpen((prevState) => !prevState);
         setIsBusNavShown((prevState) => !prevState);
         setBusNo(busno)
@@ -111,7 +106,7 @@ export default function Home() {
         setSeats(seats);
 
         //sets routes with index of the showmap bars 
-        setwayPoints(busno - 1);
+        // setwayPoints(waypoint);
     }
     const toggleDrawerDefault = () => {
         setIsDrawerOpen((prevState) => !prevState);
@@ -165,9 +160,9 @@ export default function Home() {
     useEffect(() => {
         getLocation();
 
-        (async function getRoutes() {
-            setRoutes(await changeRoutesFromDb());
-        })();
+        // (async function getRoutes() {
+        //     setRoutes(await changeRoutesFromDb());
+        // })();
 
         const dataRef = ref(db, 'busses');
         onValue(dataRef, (snapshot) => {
@@ -215,7 +210,7 @@ export default function Home() {
                 <div className="h-full text-white">
                     <div className='p-6 '>
                         <p className='text-lg font-bold'>Bus NO {busNo}</p>
-                        <p className='text-gray-400 font-bold text-sm'>Arriving at next stop in 20 mins</p>
+                        {/* <p className='text-gray-400 font-bold text-sm'>Arriving at next stop in 20 mins</p> */}
                         {/* first div */}
                         <div className='bg-gray-700 p-2.5 mt-3 rounded-2xl h-15 flex'>
                             <div className='rounded-full border-2 w-10 h-10 flex justify-center items-center'>
@@ -256,8 +251,11 @@ export default function Home() {
                     className={theme === 'dark' ? 'map-tiles-theme--dark' : 'map-tiles-theme--lite'}
                 />
                 {/* Routing Machine */}
-                {wayPoints === 0 ? <RoutingMachine coords={routes[0]} /> : null}
-                {wayPoints === 1 ? <RoutingMachine coords={routes[1]} /> : null}
+                {/* {wayPoints === 1 ? <RoutingMachine coords={routes[0]} /> : null}
+                {wayPoints === 2 ? <RoutingMachine coords={routes[1]} /> : null}
+                {wayPoints === 3 ? <RoutingMachine coords={routes[2]} /> : null}
+                {wayPoints === 4 ? <RoutingMachine coords={routes[3]} /> : null}
+                {wayPoints === 5 ? <RoutingMachine coords={routes[4]} /> : null} */}
 
                 {/* Location Marker */}
                 {
@@ -276,9 +274,9 @@ export default function Home() {
 
                         return (
                             <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
-                                icon={BusIcon} duration={1000} rotationAngle={bus.data.data.course} rotationOrigin="center" keepAtCenter={isTrack}>
+                                icon={BusIcon} duration={1000} rotationAngle={bus.data.data.course} rotationOrigin="center">
                                 <Popup>
-                                    Sample Bus Data & Speed:{bus.data.data.speed}
+                                    Bus No: {bus.data.busdetails.no} & Speed:{bus.data.data.speed}
                                 </Popup>
                             </LeafletTrackingMarker>
                         )
@@ -290,7 +288,7 @@ export default function Home() {
 
                             return (
                                 <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
-                                    icon={BusIcon} duration={1000} rotationAngle={bus.data.data.course} rotationOrigin="center" keepAtCenter={isTrack}>
+                                    icon={BusIcon} duration={1000} rotationAngle={bus.data.data.course} rotationOrigin="center">
                                     <Popup>
                                         Bus No: {bus.data.busdetails.no} & Speed:{bus.data.data.speed}
                                     </Popup>
@@ -312,12 +310,12 @@ export default function Home() {
                                 <ScrollBar
                                     click={() => {
                                         toggleDrawer(item.data.driverdetail.name, item.data.driverdetail.phone,
-                                            item.data.busdetails.no, item.data.busdetails.busno, item.data.busdetails.seats);
+                                            item.data.busdetails.no, item.data.busdetails.busno, item.data.busdetails.seats, parseInt(item.key));
                                         bottomCont.setIsDrawerOpen(true);
                                         setShowAllBus(false);
                                     }}
                                     busno={item.data.busdetails.no}
-                                    status={item.data.busdetails.status}
+                                    status={item.data.data.accstatus}
                                     color={scrollBarColors[parseInt(item.key)]}
                                     speed={item.data.data.speed}
                                 />
@@ -333,16 +331,9 @@ export default function Home() {
                 onClick={() => mapRef.current.flyTo(locationMarker, ZOOM_LVL)}>
                 <MyLocationIcon />
             </div>
-            <div className='overlay top-14 left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
-                flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
-                onClick={() => {
-                    setIsTrack((prev) => !prev);
-                }}>
-                <TrackChangesIcon />
-            </div>
             {
                 !showAllBus && (
-                    <div className='overlay top-24 left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
+                    <div className='overlay top-14 left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
                 flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
                         onClick={() => setShowAllBus(true)}>
                         <AllOutIcon />

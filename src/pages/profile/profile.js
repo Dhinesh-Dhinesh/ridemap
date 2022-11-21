@@ -94,12 +94,12 @@ export default function Profile() {
                 <div className='grid grid-cols-3 justify-items-start w-24'>
                     <h1 className='text-md font-bold text-gray-400'>Route</h1>
                     <span className='text-gray-400 ml-5'>:</span>
-                    <p className='text-white w-56'>{droutes}</p>
+                    <p className='text-gray-400 font-bold w-56'>{droutes}</p>
                 </div>
                 <div className='grid grid-cols-3 justify-items-start w-24 mt-5'>
                     <h1 className='text-md font-bold text-gray-400'>Stop</h1>
                     <span className='text-gray-400 ml-5'>:</span>
-                    <p className='text-white w-56'>{dstop}</p>
+                    <p className='text-gray-400 font-bold w-56'>{dstop}</p>
                 </div>
             </div>
             <hr className='w-11/12 mt-4 border-gray-700' />
@@ -129,7 +129,7 @@ export default function Profile() {
                             setThemeChecked(prevState => !prevState);
                         }} />
                         <div className="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-2 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
-                        <span className="ml-3 text-sm font-medium text-gray-400">{isThemeChecked ? "Dark" : "Lite"}</span>
+                        <span className="ml-3 text-sm font-medium text-gray-400">{isThemeChecked ? "Dark" : "Light"}</span>
                     </label>
                 </div>
             </div>
