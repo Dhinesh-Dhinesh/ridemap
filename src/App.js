@@ -36,12 +36,6 @@ export default function App() {
   //notification
   const [isNotification, setIsNotification] = useState(false);
 
-  if (user) {
-    if (user.emailVerified === false) {
-      Navigate("/verify-email");
-    }
-  }
-
   useEffect(() => {
     setLocationPath(location.pathname);
   }, [location]);

@@ -32,7 +32,6 @@ export default function Login() {
     if (sessionStorage.getItem('isLoggedIn')) {
       setIsLoggedIn(true);
     }
-
   }, [])
 
 
@@ -64,6 +63,9 @@ export default function Login() {
   }
 
   if (user) {
+    if (user.emailVerified === false) {
+      return <Navigate to='/verify-email' />;
+    }
     checkUserLoggedIn(user.uid)
     return <Navigate to="/home" />
   }
@@ -118,7 +120,7 @@ export default function Login() {
         </div>
         <button className='rounded-full border border-themeprimary bg-overlayprimary hover:bg-gray-700 w-56 mt-10 p-3 text-themeprimary'>Sign In</button>
       </form>
-      <div><NavLink to="/signup">Sign up</NavLink></div>
+      <div className='text-blue-400 relative -bottom-14'><NavLink to="/signup">Create an account</NavLink></div>
     </div>
   )
 }
