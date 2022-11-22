@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { BottomContext } from "../context/BottomContext";
 
 import { getDoc, doc } from 'firebase/firestore';
-import { firestoreDB } from '../firebase/firebase';
+import { firestoreDB , useAuth} from '../firebase/firebase';
 
 const Navigation = () => {
   const Menus = [
@@ -21,25 +21,29 @@ const Navigation = () => {
 
   const location = useLocation();
 
-  useEffect(() => {
-    if (location.pathname !== "/routes" || "/profile") {
-      async function notify() {
-        const uid = sessionStorage.getItem('uid');
-        const notify_status = doc(firestoreDB, `users/${uid}`)
+  const user = useAuth();
 
-        try {
-          await getDoc(notify_status).then((doc) => {
-            if (doc.exists()) {
-              setIsNotification(doc.data().notf_unread);
-            }
-          })
-        } catch (e) {
-          console.log(e)
+  useEffect(() => {
+    if (user) {
+      if (location.pathname !== "/routes" || "/profile") {
+        async function notify() {
+          const uid = sessionStorage.getItem('uid');
+          const notify_status = doc(firestoreDB, `users/${uid}`)
+
+          try {
+            await getDoc(notify_status).then((doc) => {
+              if (doc.exists()) {
+                setIsNotification(doc.data().notf_unread);
+              }
+            })
+          } catch (e) {
+            console.log(e)
+          }
         }
+        notify();
       }
-      notify();
     }
-  }, [location])
+  }, [location,user])
 
   useEffect(() => {
     navigate(Menus[active].route);

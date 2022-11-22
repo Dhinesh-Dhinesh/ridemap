@@ -46,6 +46,7 @@ export default function Profile() {
             await logOut().then(() => {
                 sessionStorage.removeItem('uid');
                 sessionStorage.removeItem('isLoggedIn');
+                sessionStorage.setItem('hideCreateAccount',true);
                 navigate('/')
             });
         } catch (e) {

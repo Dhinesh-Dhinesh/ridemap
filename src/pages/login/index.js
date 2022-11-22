@@ -19,6 +19,8 @@ export default function Login() {
   const user = useAuth();
   const navigate = useNavigate();
 
+  const isHideCreateAccount = sessionStorage.getItem('hideCreateAccount');
+
   const defaultOptionsLottie = {
     loop: true,
     autoplay: true,
@@ -88,7 +90,9 @@ export default function Login() {
         </div>
         <button className='rounded-full border border-themeprimary bg-overlayprimary hover:bg-gray-700 w-56 mt-10 p-3 text-themeprimary'>Sign In</button>
       </form>
-      <div className='text-blue-400 relative -bottom-14 cursor-pointer hover:text-blue-200'><p onClick={()=>toCreateAccount()}>Create an account</p></div>
+      {
+        isHideCreateAccount === 'true' ? null : <div className='text-blue-400 relative -bottom-14 cursor-pointer hover:text-blue-200'><p onClick={()=>toCreateAccount()}>Create an account</p></div>
+      }
     </div>
   )
 }

@@ -10,30 +10,12 @@ export default function VerifyEmail() {
   const user = useAuth();
   const navigate = useNavigate();
 
-  const isShowEmailVerifiedStatus = sessionStorage.getItem('isShowEmailVerifiedStatus');
   const [isEmailSend, setIsEmailSend] = useState(false);
-  const [isShowCheckMail, setIsShowCheckMail] = useState(true);
-
-  function verify(e) {
-    e.preventDefault();
-
-    if (user) {
-      console.log(user.emailVerified)
-      if (user.emailVerified) {
-        console.log("sd")
-        return navigate('/home');
-      } else {
-        sessionStorage.setItem('isShowEmailVerifiedStatus', true);
-        return navigate('/verify-email');
-      }
-    }
-  }
 
   function sendVerificationEmail() {
     if (user) {
       sessionStorage.removeItem('isShowEmailVerifiedStatus', false);
       sendEmailVerification(user).then(() => {
-        setIsShowCheckMail(false);
         setIsEmailSend(true);
       })
     }
@@ -47,22 +29,14 @@ export default function VerifyEmail() {
   return (
     <div className='w-screen h-screen text-2xl text-themeprimary flex flex-col justify-center items-center'>
       <p>Verify your email!</p>
-      <p onClick={backToLogin} className='text-sm mt-1 text-gray-400 underline underline-offset-2 cursor-pointer'>Back to Login</p>
       {
-        isShowCheckMail && (
-          <p className='text-sm mt-5 text-gray-400'>Check your mail and verify..</p>
-        )
+        isEmailSend === false && <p className='text-sm mt-5 text-gray-400'>If your mail was not delivered, <span className='underline underline-offset-2 cursor-pointer' onClick={sendVerificationEmail}>Resend Mail</span></p>
       }
       {
-        isShowEmailVerifiedStatus && (
-          <p className='text-sm mt-5 text-gray-400'>Email not verified yet, Please verify | <span className='underline underline-offset-2 cursor-pointer' onClick={sendVerificationEmail}>Resend Mail</span></p>
-        )
-      }{
-        isEmailSend && (
-          <p className='text-sm mt-5 text-gray-400'>Email sent, Please check your Mail</p>
-        )
+        isEmailSend && <p className='text-sm mt-5 text-gray-400'>Email Send</p>
       }
-      <p onClick={verify} className="py-2 border-2 border-themeprimary px-10 mt-4 rounded-full hover:bg-gray-700">Verify</p>
+      <p className='text-sm mt-5 text-gray-400'>If your mail has been verified, return to Login.</p>
+      <p onClick={backToLogin} className='text-base mt-5 border-2 border-themeprimary px-4 py-3 rounded-full text-gray-400 cursor-pointer'>Back to Login</p>
     </div>
   )
 }
