@@ -129,13 +129,14 @@ export default function Home() {
         setTimeout(() => {
             const { current = {} } = mapRef;
 
+            L.marker([11.922635790851622, 79.62689991349808], { icon: collegeIcon }).addTo(mapRef.current).bindPopup("College");
+
             const successCallback = (position) => {
                 let latlng = [position.coords.latitude, position.coords.longitude];
                 setLocationMarker(latlng);
                 current.flyTo(latlng, ZOOM_LVL);
 
                 //marker for college icon
-                L.marker([11.922635790851622, 79.62689991349808], { icon: collegeIcon }).addTo(mapRef.current).bindPopup("College");
 
             };
 
@@ -233,7 +234,7 @@ export default function Home() {
                         </div>
                         <div className='flex justify-center items-center flex-col border-l-2 border-r-2'>
                             <p className='text-xs text-gray-400'>Journey time</p>
-                            <p className='text-sm font-bold'>45 Mins</p>
+                            <p className='text-sm font-bold'>1 Hour</p>
                         </div>
                         <div className='flex justify-center items-center flex-col'>
                             <p className='text-xs text-gray-400'>Total Seats</p>
@@ -274,9 +275,9 @@ export default function Home() {
 
                         return (
                             <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
-                                icon={BusIcon} duration={1000} rotationAngle={bus.data.data.course} rotationOrigin="center">
+                                icon={BusIcon} duration={5000} rotationAngle={bus.data.data.course} rotationOrigin="center">
                                 <Popup>
-                                    Bus No: {bus.data.busdetails.no} & Speed:{bus.data.data.speed}
+                                    Bus No: {bus.data.busdetails.no}
                                 </Popup>
                             </LeafletTrackingMarker>
                         )
@@ -288,9 +289,9 @@ export default function Home() {
 
                             return (
                                 <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
-                                    icon={BusIcon} duration={1000} rotationAngle={bus.data.data.course} rotationOrigin="center">
+                                    icon={BusIcon} duration={5000} rotationAngle={bus.data.data.course} rotationOrigin="center">
                                     <Popup>
-                                        Bus No: {bus.data.busdetails.no} & Speed:{bus.data.data.speed}
+                                        Bus No: {bus.data.busdetails.no}
                                     </Popup>
                                 </LeafletTrackingMarker>
                             )
@@ -318,6 +319,7 @@ export default function Home() {
                                     status={item.data.data.accstatus}
                                     color={scrollBarColors[parseInt(item.key)]}
                                     speed={item.data.data.speed}
+                                    eta={item.data.data.eta}
                                 />
                             </div>
                         )

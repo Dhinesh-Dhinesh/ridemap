@@ -2,7 +2,7 @@ import React,{useEffect, useState} from 'react';
 
 import SpeedIcon from '@mui/icons-material/Speed';
 
-function ScrollBar({ click, busno, status, color, speed }) {
+function ScrollBar({ click, busno, status, color, speed, eta }) {
     
     const [speedColor,setSpeedColor] = useState(0)
     
@@ -29,7 +29,7 @@ function ScrollBar({ click, busno, status, color, speed }) {
                 <div className="text-white font-bold">
                     Bus NO {busno}<br />
                     <p className="text-xs text-gray-400">ETA</p>
-                    -- : --
+                    {eta}
                 </div>
                 {/* <!-- Right box --> */}
                 <div className=" text-white mt-6 font-bold">
