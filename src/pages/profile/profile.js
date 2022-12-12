@@ -46,13 +46,18 @@ export default function Profile() {
             await logOut().then(() => {
                 sessionStorage.removeItem('uid');
                 sessionStorage.removeItem('isLoggedIn');
-                sessionStorage.setItem('hideCreateAccount',true);
+                sessionStorage.setItem('hideCreateAccount', true);
                 navigate('/')
             });
         } catch (e) {
             console.log(e.message)
         }
     };
+
+    //reset password
+    const resetPassword = () => {
+        navigate('/reset-password');
+    }
 
     useEffect(() => {
         localStorage.getItem('isLite') === 'true' ? setThemeChecked(false) : setThemeChecked(true);
@@ -77,7 +82,7 @@ export default function Profile() {
                 <div className='grid grid-cols-3 justify-item-start w-40'>
                     <h1 className='text-md font-bold text-gray-400'>Name</h1>
                     <span className='text-gray-400'>:</span>
-                    <h1 className='text-md font-bold text-gray-400 -ml-10'>{name}</h1>
+                    <h1 className='text-md font-bold text-gray-400 -ml-10 w-60'>{name}</h1>
                 </div>
                 <div className='grid grid-cols-3 justify-item-start mt-5 w-40'>
                     <h1 className='text-md font-bold text-gray-400'>Email</h1>
@@ -86,6 +91,7 @@ export default function Profile() {
                 </div>
             </div>
             <hr className='w-11/12 mt-2 border-gray-700' />
+
             {/* Routes */}
             <div className='flex flex-col w-11/12 mt-5 '>
                 <div className='flex felx-row justify-start -mt-2 -ml-2 py-2'>
@@ -141,17 +147,17 @@ export default function Profile() {
                     <img alt="ico" src={require('./assets/auth.png')} width={32} height={32} />
                     <p className='font-bold text-2xl text-gray-300'>Auth</p>
                 </div>
-                <div className='text-gray-400 bg-overlayprimary w-40 text-center rounded-xl py-2 font-bold hover:bg-gray-700'>
-                    <p>Reset Password</p>
-                </div>
-                <div className='text-gray-400 bg-overlayprimary w-40 text-center rounded-xl py-2 font-bold hover:bg-gray-700 mt-3'>
-                    <button onClick={() => handleLogOut()}>Logout</button>
-                </div>
+                <div onClick={()=>resetPassword()} className='text-gray-400 bg-overlayprimary w-40 text-center rounded-xl py-2 font-bold hover:bg-gray-700 cursor-pointer'>
+                <p>Reset Password</p>
             </div>
-            {/* this div fixes bottom nav bar */}
-            <div className='mt-8'>
-                &nbsp;
+            <div onClick={() => handleLogOut()} className='text-gray-400 bg-overlayprimary w-40 text-center rounded-xl py-2 font-bold hover:bg-gray-700 mt-3 cursor-pointer'>
+                <p>Logout</p>
             </div>
         </div>
+            {/* this div fixes bottom nav bar */ }
+    <div className='mt-8'>
+        &nbsp;
+    </div>
+        </div >
     )
 }

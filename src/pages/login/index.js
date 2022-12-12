@@ -43,6 +43,10 @@ export default function Login() {
     navigate('/signup');
   }
 
+  const forgotPassword = () => {
+    navigate('/reset-password');
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
 
@@ -85,7 +89,7 @@ export default function Login() {
         <div className='mt-6'>
           <label className='flex felx-col py-2 text-xl font-bold'>Password</label>
           <input onChange={(e) => setPassword(e.target.value)} type='password' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
-          <label className={`${wrongPassword ? "flex" : "hidden"} py-2 text-sm text-red-500 w-72 relative`}>The password that you've entered is incorrect.<u className='absolute top-8 right-20 text-blue-500'>Forgotten password?</u></label>
+          <label className={`${wrongPassword ? "flex" : "hidden"} py-2 text-sm text-red-500 w-72 relative`}>The password that you've entered is incorrect.<u onClick={()=>forgotPassword()} className='absolute top-8 right-20 text-blue-500 cursor-pointer'>Forgotten password?</u></label>
           <label className={`${notFound ? "flex" : "hidden"} mt-3 py-2 text-sm text-red-500 w-72 relative left-24`}>User not found !..</label>
         </div>
         <button className='rounded-full border border-themeprimary bg-overlayprimary hover:bg-gray-700 w-56 mt-10 p-3 text-themeprimary'>Sign In</button>

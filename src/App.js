@@ -21,7 +21,8 @@ const LazyHome = lazy(() => import('./pages/home/index.js'));
 const LazyBusRoutes = lazy(() => import('./pages/routes/routes'));
 const LazyNotification = lazy(() => import('./pages/notification/notification'));
 const LazyProfile = lazy(() => import('./pages/profile/profile'));
-const LazyNotFound = lazy(() => import('./pages/error/index.js'));
+const LazyResetPassword = lazy(()=> import('./pages/reset_password/index'));
+
 
 export default function App() {
 
@@ -64,11 +65,11 @@ export default function App() {
           <Route exact path="/" element={<LazyLogIn />} />
           <Route exact path="/signup" element={<SignUp />} />
           <Route exact path="/verify-email" element={<EmailVerify />} />
+          <Route exact path="/reset-password" element={<Suspense fallback={<Loading />}><LazyResetPassword /></Suspense>} />
           <Route exact path="/home" element={isUserEmailVerified ? <Suspense fallback={<Loading />}><LazyHome /></Suspense> : <Navigate to="/" />} />
           <Route exact path="/routes" element={isUserEmailVerified ? <LazyBusRoutes /> : <Navigate to="/" />} />
           <Route exact path="/notification" element={isUserEmailVerified ? <Suspense fallback={<Loading />}><LazyNotification /></Suspense> : <Navigate to="/" />} />
           <Route exact path="/profile" element={isUserEmailVerified ? <Suspense fallback={<Loading />}><LazyProfile /></Suspense> : <Navigate to="/" />} />
-          <Route exact path="*" element={<Suspense fallback={<Loading />}><LazyNotFound /></Suspense>} />
         </Routes>
       </BottomContext.Provider>
     </>
