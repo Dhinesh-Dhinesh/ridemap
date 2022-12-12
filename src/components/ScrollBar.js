@@ -29,7 +29,7 @@ function ScrollBar({ click, busno, status, color, speed, eta }) {
                 <div className="text-white font-bold">
                     Bus NO {busno}<br />
                     <p className="text-xs text-gray-400">ETA</p>
-                    {eta}
+                    {status === 1 ? eta : '-- : --'}
                 </div>
                 {/* <!-- Right box --> */}
                 <div className=" text-white mt-6 font-bold">
