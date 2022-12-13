@@ -225,8 +225,8 @@ export default function Profile() {
                     )
                 }
                 {
-                    isEdit ? null : <div className='relative'>
-                        <p onClick={() => setIsEdit(true)} className='font-bold text-sm text-gray-400  text-center py-1 w-20 border-gray-600 border-2 rounded-xl hover:bg-gray-400 hover:text-gray-800 absolute left-72 -top-7'>Edit</p>
+                    isEdit ? null : <div className='relative mt-3'>
+                        <p onClick={() => setIsEdit(true)} className='text-gray-400 bg-overlayprimary w-20 text-center rounded-xl py-2 font-bold hover:bg-gray-700 cursor-pointer'>Edit</p>
                     </div>
                 }
             </div>

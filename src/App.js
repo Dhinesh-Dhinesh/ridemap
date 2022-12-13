@@ -12,19 +12,23 @@ import Loading from './components/Loading'
 //context
 import { BottomContext } from './context/BottomContext';
 
-import SignUp from './pages/signup/index'
-import EmailVerify from './pages/verifyemail/index'
+// import SignUp from 
+import Home from './pages/home/index.js'
+import BusRoutes from './pages/routes/routes';
+import Profile from './pages/profile/profile';
 
 //Lazy Component Pages
 const LazyLogIn = lazy(() => import('./pages/login/index.js'));
-const LazyHome = lazy(() => import('./pages/home/index.js'));
-const LazyBusRoutes = lazy(() => import('./pages/routes/routes'));
+// const LazyHome = lazy(() => import('./pages/home/index.js'));
+// const LazyBusRoutes = lazy(() => import('./pages/routes/routes'));
 const LazyNotification = lazy(() => import('./pages/notification/notification'));
-const LazyProfile = lazy(() => import('./pages/profile/profile'));
+// const LazyProfile = lazy(() => import('./pages/profile/profile'));
 const LazyResetPassword = lazy(()=> import('./pages/reset_password/index'));
-
+const LazySignUp = lazy(() => import('./pages/signup/index'));
+const LazyEmailVerify = lazy(() => import('./pages/verifyemail/index'));
 
 export default function App() {
+  
 
   const user = useAuth();
 
@@ -63,13 +67,13 @@ export default function App() {
         }
         <Routes>
           <Route exact path="/" element={<LazyLogIn />} />
-          <Route exact path="/signup" element={<SignUp />} />
-          <Route exact path="/verify-email" element={<EmailVerify />} />
+          <Route exact path="/signup" element={<Suspense fallback={<Loading />}><LazySignUp /></Suspense>} />
+          <Route exact path="/verify-email" element={<Suspense fallback={<Loading />}><LazyEmailVerify/></Suspense>} />
           <Route exact path="/reset-password" element={<Suspense fallback={<Loading />}><LazyResetPassword /></Suspense>} />
-          <Route exact path="/home" element={isUserEmailVerified ? <Suspense fallback={<Loading />}><LazyHome /></Suspense> : <Navigate to="/" />} />
-          <Route exact path="/routes" element={isUserEmailVerified ? <LazyBusRoutes /> : <Navigate to="/" />} />
+          <Route exact path="/home" element={isUserEmailVerified ? <Home /> : <Navigate to="/" />} />
+          <Route exact path="/routes" element={isUserEmailVerified ? <BusRoutes /> : <Navigate to="/" />} />
           <Route exact path="/notification" element={isUserEmailVerified ? <Suspense fallback={<Loading />}><LazyNotification /></Suspense> : <Navigate to="/" />} />
-          <Route exact path="/profile" element={isUserEmailVerified ? <Suspense fallback={<Loading />}><LazyProfile /></Suspense> : <Navigate to="/" />} />
+          <Route exact path="/profile" element={isUserEmailVerified ? <Profile/> : <Navigate to="/" />} />
         </Routes>
       </BottomContext.Provider>
     </>

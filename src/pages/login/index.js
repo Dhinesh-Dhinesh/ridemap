@@ -81,7 +81,7 @@ export default function Login() {
         <Lottie options={defaultOptionsLottie} height={300} width={300} isClickToPauseDisabled={true} />
         <p className='absolute right-[7rem] bottom-12 text-gray-400'>Ridemap.in</p>
       </div>
-      <form onSubmit={handleSubmit} className="w-[90vw] items-center flex justify-center flex-col">
+      <div className="w-[90vw] items-center flex justify-center flex-col">
         <div>
           <label className='flex felx-col py-2 text-xl font-bold'>Email</label>
           <input onChange={(e) => setEmail(e.target.value)} type='email' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
@@ -92,8 +92,8 @@ export default function Login() {
           <label className={`${wrongPassword ? "flex" : "hidden"} py-2 text-sm text-red-500 w-72 relative`}>The password that you've entered is incorrect.<u onClick={()=>forgotPassword()} className='absolute top-8 right-20 text-blue-500 cursor-pointer'>Forgotten password?</u></label>
           <label className={`${notFound ? "flex" : "hidden"} mt-3 py-2 text-sm text-red-500 w-72 relative left-24`}>User not found !..</label>
         </div>
-        <button className='rounded-full border border-themeprimary bg-overlayprimary hover:bg-gray-700 w-56 mt-10 p-3 text-themeprimary'>Sign In</button>
-      </form>
+        <button onClick={handleSubmit} className='rounded-full border border-themeprimary bg-overlayprimary hover:bg-gray-700 w-56 mt-10 p-3 text-themeprimary'>Sign In</button>
+      </div>
       {
         isHideCreateAccount === 'true' ? null : <div className='text-blue-400 relative -bottom-14 cursor-pointer hover:text-blue-200'><p onClick={()=>toCreateAccount()}>Create an account</p></div>
       }
