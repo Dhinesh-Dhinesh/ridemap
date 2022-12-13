@@ -7,7 +7,7 @@ import { ref, onValue } from "firebase/database";
 
 //leaflet
 import L from 'leaflet';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, Tooltip } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import ToggleBusScroll from '../../components/toggleBusScroll';
 import { LeafletTrackingMarker } from 'react-leaflet-tracking-marker'
@@ -23,10 +23,10 @@ import busIcon from './assets/bus.png';
 import ScrollBar from '../../components/ScrollBar.js';
 
 //icons
-import MyLocationIcon from '@mui/icons-material/MyLocation';
+import NearMeIcon from '@mui/icons-material/NearMe';
 import PersonIcon from '@mui/icons-material/Person';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
-import AllOutIcon from '@mui/icons-material/AllOut';
+import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
 
 //bottom-sheet
 import { BottomSheet } from "react-spring-bottom-sheet";
@@ -275,9 +275,9 @@ export default function Home() {
                         return (
                             <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
                                 icon={BusIcon} duration={5000} rotationAngle={bus.data.data.course} rotationOrigin="center">
-                                <Popup>
-                                    Bus No: {bus.data.busdetails.no}
-                                </Popup>
+                                <Tooltip permanent direction="bottom" offset={[0, 20]} opacity={1} key={bus.key} >
+                                    Bus {bus.data.busdetails.no}
+                                </Tooltip>
                             </LeafletTrackingMarker>
                         )
                     })
@@ -289,9 +289,9 @@ export default function Home() {
                             return (
                                 <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
                                     icon={BusIcon} duration={5000} rotationAngle={bus.data.data.course} rotationOrigin="center">
-                                    <Popup>
-                                        Bus No: {bus.data.busdetails.no}
-                                    </Popup>
+                                    <Tooltip permanent direction="bottom" offset={[0, 20]} opacity={1} key={bus.key}>
+                                        Bus {bus.data.busdetails.no}
+                                    </Tooltip>
                                 </LeafletTrackingMarker>
                             )
                         }
@@ -327,17 +327,21 @@ export default function Home() {
             </div>
 
             {/* Layer icons */}
-            <div className='overlay top-4 left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
-                    flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
+            <div className='overlay top-4 left-2 bg-gray-900 w-8 h-8 drop-shadow-2xl
+                    flex justify-center items-center rounded-full cursor-pointer p-6'
                 onClick={() => mapRef.current.flyTo(locationMarker, ZOOM_LVL)}>
-                <MyLocationIcon />
+                <NearMeIcon sx={{
+                    color: "#AEF359",
+                }} />
             </div>
             {
                 !showAllBus && (
-                    <div className='overlay top-14 left-2 bg-slate-200 w-8 h-8 drop-shadow-2xl
-                flex justify-center items-center rounded-full cursor-pointer hover:bg-slate-300'
+                    <div className='overlay top-[4.5rem] left-2 bg-gray-900 w-8 h-8 drop-shadow-2xl
+                flex justify-center items-center rounded-full cursor-pointer p-6'
                         onClick={() => setShowAllBus(true)}>
-                        <AllOutIcon />
+                        <DirectionsBusIcon sx={{
+                            color: "#AEF359",
+                        }} />
                     </div>
                 )
             }
