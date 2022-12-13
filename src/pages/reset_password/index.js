@@ -15,14 +15,22 @@ export default function Index() {
 
     const [email, setEmail] = useState('');
     const [showMailSend, setShowMailSend] = useState(false);
+    const [showError, setShowError] = useState(false);
+
+    const mountedStyle = { animation: "inAnimation 250ms ease-in" };
+    const unmountedStyle = {
+        animation: "outAnimation 270ms ease-out",
+        animationFillMode: "forwards"
+    };
 
     const sendResetMail = () => {
+        setShowError(false);
         if (email !== '') {
-            sendPasswordResetEmail(auth,email).then(() => {
-                alert('mail send');
+            sendPasswordResetEmail(auth, email).then(() => {
+                setShowError(false);
                 setShowMailSend(true);
             }).catch((e) => {
-                console.log(e);
+                setShowError(true);
             });
         }
     }
@@ -39,11 +47,16 @@ export default function Index() {
                                 <label className='flex felx-col py-2 text-xl font-bold'>Email</label>
                                 <input onChange={(e) => setEmail(e.target.value)} type='email' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
                             </div>
-                            <button onClick={() => sendResetMail()} className='rounded-full border border-themeprimary bg-overlayprimary hover:bg-gray-700 w-56 mt-10 p-3 text-themeprimary'>Reset password</button>
+                            {
+                                showError && <div className='text-center text-red-500 mt-4 italic'>
+                                    It seems that the mail is either incorrect or not registered.
+                                </div>
+                            }
+                            <button style={showMailSend ? unmountedStyle : mountedStyle } onClick={() => sendResetMail()} className='rounded-full border border-themeprimary bg-overlayprimary hover:bg-gray-700 w-56 mt-10 p-3 text-themeprimary'>Reset password</button>
                         </div>
                     </>
                 ) : (
-                    <div className='flex justify-center items-center flex-col'>
+                    <div style={showMailSend ? mountedStyle : unmountedStyle } className='flex justify-center items-center flex-col'>
                         <Lottie options={defaultOptionsLottie} height={300} width={300} isClickToPauseDisabled={true} />
                         <p>Reset mail has been sent.</p>
                     </div>

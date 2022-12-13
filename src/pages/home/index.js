@@ -129,14 +129,13 @@ export default function Home() {
         setTimeout(() => {
             const { current = {} } = mapRef;
 
+            //clg icon marker
             L.marker([11.922635790851622, 79.62689991349808], { icon: collegeIcon }).addTo(mapRef.current).bindPopup("College");
 
             const successCallback = (position) => {
                 let latlng = [position.coords.latitude, position.coords.longitude];
                 setLocationMarker(latlng);
                 current.flyTo(latlng, ZOOM_LVL);
-
-                //marker for college icon
 
             };
 
