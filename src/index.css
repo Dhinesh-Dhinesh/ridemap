@@ -32,7 +32,8 @@ body {
   z-index: 10000;
 }
 
-.leaflet-control-attribution, .leaflet-routing-container {
+.leaflet-control-attribution,
+.leaflet-routing-container {
   display: none;
 }
 
@@ -59,6 +60,11 @@ body {
   }
 }
 
+.tel-class {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important;
+  -webkit-focus-ring-color: rgba(255, 255, 255, 0) !important;
+  outline: none !important;
+}
 
 :root {
   --map-tiles-filter: grayscale(100%) invert(90%) contrast(100%);

@@ -221,7 +221,7 @@ export default function Home() {
                                 <p className='text-xs text-gray-400'>Driver</p>
                             </div>
                             <div className='absolute mt-1 right-14'>
-                                <a href={`tel:${phoneNumber}`}><LocalPhoneIcon style={{ color: '#AEF359' }} /></a>
+                                <a className='tel-class' href={`tel:${phoneNumber}`}><LocalPhoneIcon style={{ color: '#AEF359' }} /></a>
                             </div>
                         </div>
                     </div>
