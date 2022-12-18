@@ -126,6 +126,7 @@ export default function Home() {
 
     //Reference to MapContainer
     const mapRef = useRef();
+    const scrollRef = useRef();
 
     //Get current location when page loads )and( update location for every 1 seconds
     const getLocation = () => {
@@ -179,7 +180,13 @@ export default function Home() {
             setBusData(val);
         });
 
-
+        setTimeout(()=>{
+            let busNo = parseInt(localStorage.getItem('busNoKey'));
+            if(!busNo){
+                return;
+            }
+            scrollRef.current.scrollLeft += (240 * busNo - 1);
+        },2000)
     }, []);
     useLayoutEffect(() => {
         //theme
@@ -305,7 +312,7 @@ export default function Home() {
                 }
                 <ToggleBusScroll callback={setIsBusNavShown} />
             </MapContainer>
-            <div className="fixed z-[10000] flex overflow-x-auto bottom-16 w-screen"
+            <div className="fixed z-[10000] flex overflow-x-auto bottom-16 w-screen scroll-smooth" ref={scrollRef}
                 style={isBusNavShown ? mountedStyle : unmountedStyle}>
                 {
                     busData.map((item) => {
@@ -317,6 +324,7 @@ export default function Home() {
                                             item.data.busdetails.no, item.data.busdetails.busno, item.data.busdetails.seats, parseInt(item.key));
                                         bottomCont.setIsDrawerOpen(true);
                                         setShowAllBus(false);
+                                        localStorage.setItem('busNoKey', item.key);
                                     }}
                                     busno={item.data.busdetails.no}
                                     status={item.data.data.accstatus}
