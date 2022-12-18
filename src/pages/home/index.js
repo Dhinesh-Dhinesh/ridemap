@@ -83,7 +83,11 @@ export default function Home() {
     const [isBusNavShown, setIsBusNavShown] = useState(true);
     const [busData, setBusData] = useState([]);
     const scrollBarColors = ["border-[#AEF359]", "border-[#eb142ab9]",
-        "border-[#08BCFF]", "border-[#C332EA]", "border-[#C35F4E]"]
+        "border-[#08BCFF]", "border-[#C332EA]", "border-[#C35F4E]","border-[#9e0059]","border-[#ff5400]","border-[#ffbb00ce]",
+        "border-[#90f1ef]","border-[#c71450d8]","border-[#00b259]","border-[#e6beae]","border-[#cb9cf2]","border-[#05340b]",
+        "border-[#e12b5b]","border-[#AEF359]", "border-[#eb142ab9]","border-[#08BCFF]", "border-[#C332EA]", "border-[#C35F4E]",
+        "border-[#9e0059]","border-[#ff5400]","border-[#ffbb00ce]"
+    ]
 
     //show busses
     const [showAllBus, setShowAllBus] = useState(true);
