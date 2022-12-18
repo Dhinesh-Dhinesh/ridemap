@@ -83,10 +83,10 @@ export default function Home() {
     const [isBusNavShown, setIsBusNavShown] = useState(true);
     const [busData, setBusData] = useState([]);
     const scrollBarColors = ["border-[#AEF359]", "border-[#eb142ab9]",
-        "border-[#08BCFF]", "border-[#C332EA]", "border-[#C35F4E]","border-[#9e0059]","border-[#ff5400]","border-[#ffbb00ce]",
-        "border-[#90f1ef]","border-[#c71450d8]","border-[#00b259]","border-[#e6beae]","border-[#cb9cf2]","border-[#05340b]",
-        "border-[#e12b5b]","border-[#AEF359]", "border-[#eb142ab9]","border-[#08BCFF]", "border-[#C332EA]", "border-[#C35F4E]",
-        "border-[#9e0059]","border-[#ff5400]","border-[#ffbb00ce]"
+        "border-[#08BCFF]", "border-[#C332EA]", "border-[#C35F4E]","border-[#9e0059]","border-clr1","border-clr2",
+        "border-clr3","border-clr4","border-clr5","border-clr6","border-clr7","border-clr8",
+        "border-clr9","border-[#AEF359]", "border-[#eb142ab9]","border-[#08BCFF]", "border-[#C332EA]", "border-[#C35F4E]",
+        "border-[#9e0059]","border-clr1","border-clr2"
     ]
 
     //show busses
