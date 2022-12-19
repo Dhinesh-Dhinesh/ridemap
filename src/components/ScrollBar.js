@@ -38,7 +38,7 @@ function ScrollBar({ click, busno, status, color, speed, eta }) {
                         <div className='relative top-[.1rem] left-[.1rem] text-gray-400'>
                             <SpeedIcon fontSize='5px' />
                         </div>
-                        <p className={`text-xs relative top-[.47rem] left-2 ${colors[speedColor]}`}>{speed} km/h</p>
+                        <p className={`text-xs relative top-[.47rem] left-2 ${status === 1 ? colors[speedColor] : ''}`}>{status === 1 ? speed : 0} km/h</p>
                     </div>
                     <p className="text-xs text-gray-400">Status</p>
                     {status ? "On Route" : "Stopped"}
