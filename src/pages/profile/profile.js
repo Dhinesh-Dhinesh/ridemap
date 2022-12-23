@@ -128,7 +128,7 @@ export default function Profile() {
                     <h1 className='text-md font-bold text-gray-400 -ml-10'>{email}</h1>
                 </div>
             </div>
-            <hr className='w-11/12 mt-2 border-gray-700' />
+            <hr className='w-11/12 mt-4 border-gray-700' />
 
             {/* Routes */}
             <div className='flex flex-col w-11/12 mt-5 '>
@@ -261,12 +261,12 @@ export default function Profile() {
                     </label>
                 </div>
             </div>
-            <hr className='w-11/12 mt-2 border-gray-700' />
+            <hr className='w-11/12 mt-4 border-gray-700' />
             {/* Auth */}
             <div className='flex flex-col w-11/12 mt-5 '>
                 <div className='flex felx-row justify-start -mt-2 -ml-2 py-2'>
                     <img alt="ico" src={require('./assets/auth.png')} width={32} height={32} />
-                    <p className='font-bold text-2xl text-gray-300'>Auth</p>
+                    <p className='font-bold text-2xl text-gray-300'>Account</p>
                 </div>
                 <div onClick={() => resetPassword()} className='text-gray-400 bg-overlayprimary w-40 text-center rounded-xl py-2 font-bold hover:bg-gray-700 cursor-pointer'>
                     <p>Reset Password</p>

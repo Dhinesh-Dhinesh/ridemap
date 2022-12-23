@@ -83,10 +83,10 @@ export default function Home() {
     const [isBusNavShown, setIsBusNavShown] = useState(true);
     const [busData, setBusData] = useState([]);
     const scrollBarColors = ["border-[#AEF359]", "border-[#eb142ab9]",
-        "border-[#08BCFF]", "border-[#C332EA]", "border-[#C35F4E]","border-[#9e0059]","border-clr1","border-clr2",
-        "border-clr3","border-clr4","border-clr5","border-clr6","border-clr7","border-clr8",
-        "border-clr9","border-[#AEF359]", "border-[#eb142ab9]","border-[#08BCFF]", "border-[#C332EA]", "border-[#C35F4E]",
-        "border-[#9e0059]","border-clr1","border-clr2"
+        "border-[#08BCFF]", "border-[#C332EA]", "border-[#C35F4E]", "border-[#9e0059]", "border-clr1", "border-clr2",
+        "border-clr3", "border-clr4", "border-clr5", "border-clr6", "border-clr7", "border-clr8",
+        "border-clr9", "border-[#AEF359]", "border-[#eb142ab9]", "border-[#08BCFF]", "border-[#C332EA]", "border-[#C35F4E]",
+        "border-[#9e0059]", "border-clr1", "border-clr2"
     ]
 
     //show busses
@@ -180,13 +180,13 @@ export default function Home() {
             setBusData(val);
         });
 
-        setTimeout(()=>{
+        setTimeout(() => {
             let busNo = parseInt(localStorage.getItem('busNoKey'));
-            if(!busNo){
+            if (!busNo) {
                 return;
             }
             scrollRef.current.scrollLeft += (240 * busNo - 1);
-        },2000)
+        }, 2000)
     }, []);
     useLayoutEffect(() => {
         //theme
@@ -217,6 +217,14 @@ export default function Home() {
                 ]}
                 defaultSnap={({ maxHeight }) => maxHeight / 2}
                 expandOnContentDrag={true}
+                footer={
+                    <>
+                        <hr className='w-full border-gray-700 p-1'/>
+                        <div className='bg-themeprimary rounded-2xl font-bold text-black text-center py-4 cursor-pointer hover:bg-[#6f983ee4]'>
+                            Report an issue
+                        </div>
+                    </>
+                }
             >
                 <div className="h-full text-white">
                     <div className='p-6 '>
@@ -297,6 +305,8 @@ export default function Home() {
                     !showAllBus && busData.map((bus) => {
                         if (bus.data.busdetails.no === busNo) {
 
+                            // mapRef.current.setView([bus.data.data.lat, bus.data.data.lng]);
+
                             return (
                                 <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
                                     icon={BusIcon} duration={5000} rotationAngle={bus.data.data.course} rotationOrigin="center">
@@ -340,7 +350,7 @@ export default function Home() {
 
             {/* Layer icons */}
             <div className='overlay top-4 left-2 bg-gray-900 w-8 h-8 drop-shadow-2xl
-                    flex justify-center items-center rounded-full cursor-pointer p-6'
+                    flex justify-center items-center rounded-full cursor-pointer p-6 hover:bg-gray-800'
                 onClick={() => mapRef.current.flyTo(locationMarker, ZOOM_LVL)}>
                 <NearMeIcon sx={{
                     color: "#AEF359",
@@ -349,7 +359,7 @@ export default function Home() {
             {
                 !showAllBus && (
                     <div className='overlay top-[4.5rem] left-2 bg-gray-900 w-8 h-8 drop-shadow-2xl
-                flex justify-center items-center rounded-full cursor-pointer p-6'
+                flex justify-center items-center rounded-full cursor-pointer p-6 hover:bg-gray-600'
                         onClick={() => setShowAllBus(true)}>
                         <DirectionsBusIcon sx={{
                             color: "#AEF359",
