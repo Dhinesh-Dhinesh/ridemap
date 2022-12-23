@@ -203,7 +203,7 @@ export default function Profile() {
                                 )
                             }
                             <div>
-                                <button onClick={() => setIsEdit(false)} className='text-gray-400 border-2 w-16 text-center border-gray-700 hover:bg-gray-600  rounded-xl mt-4'>Cancle</button>
+                                <button onClick={() => setIsEdit(false)} className='text-gray-400 border-2 w-16 text-center border-gray-700 hover:bg-gray-600  rounded-xl mt-4'>Cancel</button>
                                 {
                                     stopname !== 'Select your stop' ? <button onClick={() => updateRoutes()} className='text-green-400 border-2 w-14 text-center border-green-700 hover:bg-green-900 rounded-xl mt-4 ml-3'>Save</button> : null
                                 }

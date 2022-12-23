@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useLayoutEffect, useContext } from 'react';
-
+import { useNavigate, createSearchParams } from "react-router-dom"
 //Firebase
 import { db } from "../../firebase/firebase"
 import { ref, onValue } from "firebase/database";
@@ -74,6 +74,8 @@ export default function Home() {
     const [center] = useState({ lat: 11.922635790851622, lng: 79.62689991349808 })     //college location
     const [locationMarker, setLocationMarker] = useState(null);
     const ZOOM_LVL = 12;
+
+    const navigate = useNavigate();
 
     //routing
     // const [wayPoints, setwayPoints] = useState([]);
@@ -219,8 +221,18 @@ export default function Home() {
                 expandOnContentDrag={true}
                 footer={
                     <>
-                        <hr className='w-full border-gray-700 p-1'/>
-                        <div className='bg-themeprimary rounded-2xl font-bold text-black text-center py-4 cursor-pointer hover:bg-[#6f983ee4]'>
+                        <hr className='w-full border-gray-700 p-1' />
+                        <div className='bg-themeprimary rounded-2xl font-bold text-black text-center py-4 cursor-pointer hover:bg-[#6f983ee4]'
+                            onClick={() => {
+                                toggleDrawerDefault();
+                                navigate({
+                                    pathname: "/issue",
+                                    search: createSearchParams({
+                                        busNo: busNo
+                                    }).toString()
+                                });
+                            }}
+                        >
                             Report an issue
                         </div>
                     </>
