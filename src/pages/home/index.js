@@ -21,6 +21,8 @@ import busIcon from './assets/bus.png';
 //Components
 // import RoutingMachine from "../../components/RoutingMachine";
 import ScrollBar from '../../components/ScrollBar.js';
+import { ScrollContainer } from 'react-indiana-drag-scroll';
+import 'react-indiana-drag-scroll/dist/style.css'
 
 //icons
 import NearMeIcon from '@mui/icons-material/NearMe';
@@ -187,7 +189,9 @@ export default function Home() {
             if (!busNo) {
                 return;
             }
+            scrollRef.current.classList.add('scroll-smooth')
             scrollRef.current.scrollLeft += (240 * busNo - 1);
+            scrollRef.current.classList.remove('scroll-smooth')
         }, 2000)
     }, []);
     useLayoutEffect(() => {
@@ -334,7 +338,7 @@ export default function Home() {
                 }
                 <ToggleBusScroll callback={setIsBusNavShown} />
             </MapContainer>
-            <div className="fixed z-[10000] flex overflow-x-auto bottom-16 w-screen scroll-smooth" ref={scrollRef}
+            <ScrollContainer className="fixed z-[1000] flex bottom-16 w-screen" ref={scrollRef}
                 style={isBusNavShown ? mountedStyle : unmountedStyle}>
                 {
                     busData.map((item) => {
@@ -358,7 +362,7 @@ export default function Home() {
                         )
                     })
                 }
-            </div>
+            </ScrollContainer>
 
             {/* Layer icons */}
             <div className='overlay top-4 left-2 bg-gray-900 w-8 h-8 drop-shadow-2xl

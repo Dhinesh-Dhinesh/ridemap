@@ -45,7 +45,7 @@ function ScrollBar({ click, busno, status, color, speed, eta }) {
                 </div>
             </div>
             {/* <!-- sub-container 2--> */}
-            <div className="border flex justify-center items-center m-3 text-white rounded-lg 
+            <div className="border flex justify-center items-center m-3 text-white rounded-lg cursor-pointer
             text-sm font-bold h-8 mt-4 hover:bg-slate-100 hover:text-slate-600" onClick={() => click()}>
                 Show Map
             </div>

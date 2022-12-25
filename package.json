@@ -15,6 +15,7 @@
     "leaflet-routing-machine": "^3.2.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-indiana-drag-scroll": "^3.0.3-alpha",
     "react-leaflet": "^4.1.0",
     "react-leaflet-tracking-marker": "^1.0.15",
     "react-loading": "^2.0.3",
