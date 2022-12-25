@@ -28,7 +28,11 @@ import 'react-indiana-drag-scroll/dist/style.css'
 import NearMeIcon from '@mui/icons-material/NearMe';
 import PersonIcon from '@mui/icons-material/Person';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
-import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
+import ShareLocationIcon from '@mui/icons-material/ShareLocation';
+import WestIcon from '@mui/icons-material/West';
+
+import IconButton from '@mui/material/IconButton';
+import { Tooltip as MTooltip } from '@mui/material';
 
 //bottom-sheet
 import { BottomSheet } from "react-spring-bottom-sheet";
@@ -95,6 +99,7 @@ export default function Home() {
 
     //show busses
     const [showAllBus, setShowAllBus] = useState(true);
+    const [isTrack, setIsTrack] = useState(true);
 
     //drawer
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -181,6 +186,8 @@ export default function Home() {
                 let childData = childSnapshot.val();
                 val.push({ "key": key, "data": childData });
             });
+            //sort the data
+            val.sort((a, b) => a.data.busdetails.no - b.data.busdetails.no)
             setBusData(val);
         });
 
@@ -203,7 +210,7 @@ export default function Home() {
     useEffect(() => {
         for (let i = 0; i < busData.length; i++) {
             if (busData[i].data.busdetails.no === busNo) {
-                mapRef.current.flyTo([busData[i].data.data.lat, busData[i].data.data.lng], ZOOM_LVL);
+                mapRef.current.flyTo([busData[i].data.data.lat, busData[i].data.data.lng], 16);
             }
         }
         //eslint-disable-next-line
@@ -253,7 +260,7 @@ export default function Home() {
                             </div>
                             <div className='font-bold ml-4'>
                                 {driverName}<br></br>
-                                <p className='text-xs text-gray-400'>Driver</p>
+                                <p className='text-xs text-gray-400'>Staff Incharge</p>
                             </div>
                             <div className='absolute mt-1 right-14'>
                                 <a className='tel-class' href={`tel:${phoneNumber}`}><LocalPhoneIcon style={{ color: '#AEF359' }} /></a>
@@ -321,7 +328,9 @@ export default function Home() {
                     !showAllBus && busData.map((bus) => {
                         if (bus.data.busdetails.no === busNo) {
 
-                            // mapRef.current.setView([bus.data.data.lat, bus.data.data.lng]);
+                            if (isTrack) {
+                                mapRef.current.setView([bus.data.data.lat, bus.data.data.lng]);
+                            }
 
                             return (
                                 <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
@@ -368,18 +377,41 @@ export default function Home() {
             <div className='overlay top-4 left-2 bg-gray-900 w-8 h-8 drop-shadow-2xl
                     flex justify-center items-center rounded-full cursor-pointer p-6 hover:bg-gray-800'
                 onClick={() => mapRef.current.flyTo(locationMarker, ZOOM_LVL)}>
-                <NearMeIcon sx={{
-                    color: "#AEF359",
-                }} />
+                <MTooltip title="Location" placement="right-start" arrow>
+                    <IconButton>
+                        <NearMeIcon sx={{
+                            color: "#AEF359",
+                        }} />
+                    </IconButton>
+                </MTooltip>
             </div>
             {
                 !showAllBus && (
                     <div className='overlay top-[4.5rem] left-2 bg-gray-900 w-8 h-8 drop-shadow-2xl
                 flex justify-center items-center rounded-full cursor-pointer p-6 hover:bg-gray-600'
+                        onClick={() => setIsTrack(pre => !pre)}>
+                        <MTooltip title="Track" placement="right-start" arrow>
+                            <IconButton>
+                                <ShareLocationIcon sx={{
+                                    color: `${isTrack ? '#AEF359' : '#ffff'}`,
+                                }} />
+                            </IconButton>
+                        </MTooltip>
+                    </div>
+                )
+            }
+            {
+                !showAllBus && (
+                    <div className='overlay top-[8rem] left-2 bg-gray-900 w-8 h-8 drop-shadow-2xl
+                flex justify-center items-center rounded-full cursor-pointer p-6 hover:bg-gray-600'
                         onClick={() => setShowAllBus(true)}>
-                        <DirectionsBusIcon sx={{
-                            color: "#AEF359",
-                        }} />
+                        <MTooltip title="Exit" placement="right-start" arrow>
+                            <IconButton>
+                                <WestIcon sx={{
+                                    color: "#AEF359",
+                                }} />
+                            </IconButton>
+                        </MTooltip>
                     </div>
                 )
             }
