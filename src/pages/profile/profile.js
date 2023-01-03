@@ -1,4 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+
+//! dev
+import { BottomContext } from '../../context/BottomContext';
 
 
 import { useNavigate } from 'react-router-dom';
@@ -24,6 +27,8 @@ export default function Profile() {
 
     const [uid, setUid] = useState(null);
 
+    //! dev
+    const bottomCont = useContext(BottomContext);
 
     //for edit routes
     const [isEdit, setIsEdit] = useState(false);
@@ -67,7 +72,7 @@ export default function Profile() {
             const userRef = doc(firestoreDB, "users", uid);
             await updateDoc(userRef, {
                 route,
-                stop : stopname
+                stop: stopname
             });
             setdroutes(route);
             setdStop(stopname);
@@ -275,6 +280,7 @@ export default function Profile() {
                     <p>Logout</p>
                 </div>
             </div>
+            <p>{bottomCont.notfToken}</p>
             {/* this div fixes bottom nav bar */}
             <div className='mt-8'>
                 &nbsp;

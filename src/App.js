@@ -1,5 +1,5 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react';
-import { Routes, Route, useLocation, useNavigate } from "react-router-dom"
+import { Routes, Route, useLocation, useNavigate, useSearchParams } from "react-router-dom"
 
 //Navbar
 import BottomNav from './components/bottomNav'
@@ -26,7 +26,7 @@ const LazyEmailVerify = lazy(() => import('./pages/verifyemail/index'));
 const LazyIssue = lazy(() => import('./pages/issue/index'));
 
 export default function App() {
-
+  const [searchParams] = useSearchParams();
 
   const user = useAuth();
 
@@ -34,6 +34,7 @@ export default function App() {
 
   const [locationPath, setLocationPath] = useState("");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [notfToken, setNotfToken] = useState('');
   let location = useLocation();
 
   //notification
@@ -43,6 +44,14 @@ export default function App() {
 
   useEffect(() => {
     setLocationPath(location.pathname);
+    if (location.pathname === '/') {
+      var token = searchParams.get("token");
+
+      if (token) {
+        setNotfToken(token);
+      }
+    }
+    //eslint-disable-next-line
   }, [location]);
 
   useEffect(() => {
@@ -57,7 +66,7 @@ export default function App() {
 
   return (
     <>
-      <BottomContext.Provider value={{ isDrawerOpen, setIsDrawerOpen, isNotification, setIsNotification }} >
+      <BottomContext.Provider value={{ isDrawerOpen, setIsDrawerOpen, isNotification, setIsNotification, notfToken }} >
         {
           isUserEmailVerified && locationPath !== '/verify-email' && locationPath !== '/' ? (
             <BottomNav />
@@ -65,10 +74,10 @@ export default function App() {
         }
         <Routes>
           <Route exact path="/" element={<LazyLogIn />} />
+          <Route exact path="/home" element={isUserEmailVerified ? <Home /> : <Navigate to="/" />} />
           <Route exact path="/signup" element={<Suspense fallback={<Loading />}><LazySignUp /></Suspense>} />
           <Route exact path="/verify-email" element={<Suspense fallback={<Loading />}><LazyEmailVerify /></Suspense>} />
           <Route exact path="/reset-password" element={<Suspense fallback={<Loading />}><LazyResetPassword /></Suspense>} />
-          <Route exact path="/home" element={isUserEmailVerified ? <Home /> : <Navigate to="/" />} />
           <Route exact path="/routes" element={isUserEmailVerified ? <BusRoutes /> : <Navigate to="/" />} />
           <Route exact path="/notification" element={isUserEmailVerified ? <Suspense fallback={<Loading />}><LazyNotification /></Suspense> : <Navigate to="/" />} />
           <Route exact path="/profile" element={isUserEmailVerified ? <Profile /> : <Navigate to="/" />} />
