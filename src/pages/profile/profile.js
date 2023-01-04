@@ -1,8 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
-
-//! dev
-import { BottomContext } from '../../context/BottomContext';
-
+import React, { useEffect, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 import { logOut } from '../../firebase/firebase';
@@ -26,9 +22,6 @@ export default function Profile() {
     const [dstop, setdStop] = useState('')
 
     const [uid, setUid] = useState(null);
-
-    //! dev
-    const bottomCont = useContext(BottomContext);
 
     //for edit routes
     const [isEdit, setIsEdit] = useState(false);
@@ -280,7 +273,6 @@ export default function Profile() {
                     <p>Logout</p>
                 </div>
             </div>
-            <p>{bottomCont.notfToken}</p>
             {/* this div fixes bottom nav bar */}
             <div className='mt-8'>
                 &nbsp;
