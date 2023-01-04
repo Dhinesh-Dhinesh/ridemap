@@ -24,6 +24,7 @@ const LazyResetPassword = lazy(() => import('./pages/reset_password/index'));
 const LazySignUp = lazy(() => import('./pages/signup/index'));
 const LazyEmailVerify = lazy(() => import('./pages/verifyemail/index'));
 const LazyIssue = lazy(() => import('./pages/issue/index'));
+const LazyDocs = lazy(() => import('./pages/howto/index'));
 
 export default function App() {
 
@@ -73,6 +74,7 @@ export default function App() {
           <Route exact path="/notification" element={isUserEmailVerified ? <Suspense fallback={<Loading />}><LazyNotification /></Suspense> : <Navigate to="/" />} />
           <Route exact path="/profile" element={isUserEmailVerified ? <Profile /> : <Navigate to="/" />} />
           <Route exact path="/issue" element={isUserEmailVerified ? <Suspense fallback={<Loading />}><LazyIssue /></Suspense> : <Navigate to="/" />} />
+          <Route exact path="/docs" element={isUserEmailVerified ? <Suspense fallback={<Loading />}><LazyDocs /></Suspense> : <Navigate to="/" />} />
         </Routes>
       </BottomContext.Provider>
     </>

@@ -14,7 +14,7 @@ import { firestoreDB } from '../../firebase/firebase';
 export default function Profile() {
 
     const [isThemeChecked, setThemeChecked] = useState(false);
-    const [isNotificationOn, setNotificationOn] = useState(true);
+    const [isTrack, setIsTrack] = useState(false);
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -47,8 +47,8 @@ export default function Profile() {
         })
     }, [])
 
-    function toggleNotification() {
-        setNotificationOn((prevState) => !prevState);
+    function toggleTrack() {
+        setIsTrack((prevState) => !prevState);
     }
 
     function toggleRouteDropDown() {
@@ -94,8 +94,14 @@ export default function Profile() {
         navigate('/reset-password');
     }
 
+    //navigate to docs
+    const navigateToDocs = () => {
+        navigate('/docs');
+    }
+
     useEffect(() => {
         localStorage.getItem('isLite') === 'true' ? setThemeChecked(false) : setThemeChecked(true);
+        localStorage.getItem('isTrack') === 'false' ? setIsTrack(false) : setIsTrack(true);;
         setUid(sessionStorage.getItem('uid'));
     }, []);
 
@@ -177,7 +183,7 @@ export default function Profile() {
                                                 toggleStopDropDown()
                                                 setIsRouteDropDownOpen(false)
                                             }}
-                                                className="text-white w-72 bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">{stopname}<svg className="ml-2 w-[11px] h-3" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></button>
+                                                className="text-white w-72 bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center" type="button">{stopname}<svg className="ml-2 w-[11px] h-3" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></button>
                                         </div>
                                         {/* Dropdown */}
                                         <div id='scroll' className={`${isStopDropDownOpen ? "" : "hidden"} ml-12 mt-36 z-10 w-64 bg-white rounded divide-y divide-gray-100 shadow dark:bg-overlayprimary absolute`}>
@@ -236,13 +242,16 @@ export default function Profile() {
                     <p className='font-bold text-2xl text-gray-300'>Settings</p>
                 </div>
                 <div className='grid grid-cols-3 justify-items-start w-80 mt-2'>
-                    <h1 className='text-md font-bold text-gray-400'>Notification</h1>
+                    <h1 className='text-md font-bold text-gray-400'>Track Marker</h1>
                     <span className='text-gray-400'>:</span>
                     {/* Toggle bar */}
                     <label className="inline-flex relative items-center cursor-pointer -ml-20">
-                        <input type="checkbox" value="" id="purple-toggle" className="sr-only peer" defaultChecked onChange={() => toggleNotification()} />
+                        <input type="checkbox" value="" id="purple-toggle" className="sr-only peer" checked={isTrack ? true : false} onChange={() => {
+                            toggleTrack();
+                            localStorage.setItem('isTrack', !isTrack);
+                        }} />
                         <div className="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-2 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
-                        <span className="ml-3 text-sm font-medium text-gray-400">{isNotificationOn ? "On" : "Off"}</span>
+                        <span className="ml-3 text-sm font-medium text-gray-400">{isTrack ? "On" : "Off"}</span>
                     </label>
                 </div>
                 <div className='grid grid-cols-3 justify-items-start w-80 mt-5'>
@@ -272,6 +281,18 @@ export default function Profile() {
                 <div onClick={() => handleLogOut()} className='text-gray-400 bg-overlayprimary w-40 text-center rounded-xl py-2 font-bold hover:bg-gray-700 mt-3 cursor-pointer'>
                     <p>Logout</p>
                 </div>
+            </div>
+            <hr className='w-11/12 mt-4 border-gray-700' />
+            {/* docs */}
+            <div className='w-11/12'>
+                <button onClick={navigateToDocs} className='mt-3 text-gray-400 bg-overlayprimary w-40 text-center rounded-xl py-2 font-bold hover:bg-gray-700 cursor-pointer'>
+                    How to use
+                </button>
+            </div>
+            <hr className='w-11/12 mt-4 border-gray-700' />
+            {/* version */}
+            <div className='w-11/12'>
+                <p className='text-gray-400 text-sm mt-1'>Version 1.0.0 (Beta)</p>
             </div>
             {/* this div fixes bottom nav bar */}
             <div className='mt-8'>

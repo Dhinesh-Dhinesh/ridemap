@@ -204,6 +204,7 @@ export default function Home() {
     useLayoutEffect(() => {
         //theme
         localStorage.getItem('isLite') === 'true' ? setTheme('lite') : setTheme('dark');
+        localStorage.getItem('isTrack') === 'false' ? setIsTrack(false) : setIsTrack(true);;
     }, [])
 
     //useeffect for fly to bus location when click show map
