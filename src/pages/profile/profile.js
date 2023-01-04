@@ -106,13 +106,13 @@ export default function Profile() {
     return (
         <div className='flex flex-col w-screen h-screen items-center bg-backgroundprimary py-5'>
             <h1 className='text-4xl font-bold text-gray-300 tracking-wider'>Profile</h1>
-            <img src={require('./assets/profile.png')} alt="profile" width={160} height={160} className="pointer-events-none" unselectable="on" />
+            <img src={require('./assets/profile.webp')} alt="profile" width={160} height={160} className="pointer-events-none" unselectable="on" />
             <h1 className='text-xl font-bold text-themeprimary -mt-5'>{name}</h1>
             <hr className='w-11/12 mt-2 border-gray-700' />
             {/* Info*/}
             <div className='flex flex-col w-11/12 mt-5 '>
                 <div className='flex felx-row justify-start -mt-2 -ml-2 py-2'>
-                    <img alt="ico" src={require('./assets/info.png')} width={32} height={32} />
+                    <img alt="ico" src={require('./assets/info.webp')} width={32} height={32} />
                     <p className='font-bold text-2xl text-gray-300'>Info</p>
                 </div>
                 <div className='grid grid-cols-3 justify-item-start w-40'>
@@ -131,7 +131,7 @@ export default function Profile() {
             {/* Routes */}
             <div className='flex flex-col w-11/12 mt-5 '>
                 <div className='flex felx-row justify-start -mt-2 -ml-2 py-2'>
-                    <img alt="ico" src={require('./assets/route.png')} width={32} height={32} />
+                    <img alt="ico" src={require('./assets/route.webp')} width={32} height={32} />
                     <p className='font-bold text-2xl text-gray-300'>Routes</p>
                 </div>
 
@@ -232,7 +232,7 @@ export default function Profile() {
             {/*settings*/}
             <div className='flex flex-col w-11/12 mt-5 '>
                 <div className='flex felx-row justify-start -mt-2 -ml-2 py-2'>
-                    <img alt="ico" src={require('./assets/settings.png')} width={32} height={32} />
+                    <img alt="ico" src={require('./assets/settings.webp')} width={32} height={32} />
                     <p className='font-bold text-2xl text-gray-300'>Settings</p>
                 </div>
                 <div className='grid grid-cols-3 justify-items-start w-80 mt-2'>
@@ -263,7 +263,7 @@ export default function Profile() {
             {/* Auth */}
             <div className='flex flex-col w-11/12 mt-5 '>
                 <div className='flex felx-row justify-start -mt-2 -ml-2 py-2'>
-                    <img alt="ico" src={require('./assets/auth.png')} width={32} height={32} />
+                    <img alt="ico" src={require('./assets/auth.webp')} width={32} height={32} />
                     <p className='font-bold text-2xl text-gray-300'>Account</p>
                 </div>
                 <div onClick={() => resetPassword()} className='text-gray-400 bg-overlayprimary w-40 text-center rounded-xl py-2 font-bold hover:bg-gray-700 cursor-pointer'>

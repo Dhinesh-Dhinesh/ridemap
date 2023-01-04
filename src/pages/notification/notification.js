@@ -52,7 +52,7 @@ export default function Notification() {
         return (
             <div className="flex flex-col w-screen h-screen items-center bg-backgroundprimary text-white justify-center">
                 <div className=' w-72 bg-overlayprimary rounded-full p-8 shadow-2xl -mt-4'>
-                    <img src={require('./assets/nonotify.png')} alt='nonotification' className="pointer-events-none" unselectable="on" />
+                    <img src={require('./assets/nonotify.webp')} alt='nonotification' className="pointer-events-none" unselectable="on" />
                 </div>
                 <p className='text-xl mt-3 text-gray-500'>No notification yet !..</p>
             </div>

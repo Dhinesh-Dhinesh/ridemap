@@ -13,10 +13,10 @@ import ToggleBusScroll from '../../components/toggleBusScroll';
 import { LeafletTrackingMarker } from 'react-leaflet-tracking-marker'
 
 //Marker Icons
-import markerPng from './assets/fullpng.png';
-import clgIcon from './assets/college.png';
-import circleIcon from './assets/circle.png';
-import busIcon from './assets/bus.png';
+import markerPng from './assets/fullpng.webp';
+import clgIcon from './assets/college.webp';
+import circleIcon from './assets/circle.webp';
+import busIcon from './assets/bus.webp';
 
 //Components
 // import RoutingMachine from "../../components/RoutingMachine";
