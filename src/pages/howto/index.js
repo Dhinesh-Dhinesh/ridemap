@@ -72,7 +72,7 @@ export default function Index() {
           <div className='text-white font-bold text-xl'><BugReportIcon sx={{
             color: "#AEF359",
           }} />&nbsp;REPORT AN ISSUE</div>
-          <div className='bg-themeprimary rounded-2xl font-bold text-black text-center py-1 m-4 cursor-pointer hover:bg-[#6f983ee4]'>
+          <div className='bg-themeprimary rounded-2xl font-bold text-black text-center py-1 m-4 cursor-pointer'>
             Report an issue
           </div>
           <p className='text-white mt-2'>It is used to report problems with our app or the bus tracking system (such as inaccurate tracking or occasionally broken fields in the display map interface).</p>

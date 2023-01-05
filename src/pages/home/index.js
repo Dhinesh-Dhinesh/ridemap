@@ -74,7 +74,7 @@ export default function Home() {
     const bottomCont = useContext(BottomContext);
 
     //theme
-    const [theme, setTheme] = useState('dark');
+    const [theme, setTheme] = useState('lite');
 
     //leaflet
     const [center] = useState({ lat: 11.922635790851622, lng: 79.62689991349808 })     //college location
@@ -149,7 +149,7 @@ export default function Home() {
             const successCallback = (position) => {
                 let latlng = [position.coords.latitude, position.coords.longitude];
                 setLocationMarker(latlng);
-                current.flyTo(latlng, ZOOM_LVL);
+                current.flyTo(latlng, 15);
 
             };
 
@@ -203,7 +203,7 @@ export default function Home() {
     }, []);
     useLayoutEffect(() => {
         //theme
-        localStorage.getItem('isLite') === 'true' ? setTheme('lite') : setTheme('dark');
+        localStorage.getItem('isLite') === 'false' ? setTheme('dark') : setTheme('lite');
         localStorage.getItem('isTrack') === 'false' ? setIsTrack(false) : setIsTrack(true);;
     }, [])
 
@@ -306,7 +306,7 @@ export default function Home() {
                         <div>
                             <Marker position={locationMarker} icon={locationIcon}>
                                 <Popup>
-                                    you are here
+                                    You are here
                                 </Popup>
                             </Marker>
                         </div>

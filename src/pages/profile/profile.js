@@ -100,7 +100,7 @@ export default function Profile() {
     }
 
     useEffect(() => {
-        localStorage.getItem('isLite') === 'true' ? setThemeChecked(false) : setThemeChecked(true);
+        localStorage.getItem('isLite') === 'false' ? setThemeChecked(false) : setThemeChecked(true);
         localStorage.getItem('isTrack') === 'false' ? setIsTrack(false) : setIsTrack(true);;
         setUid(sessionStorage.getItem('uid'));
     }, []);
@@ -153,8 +153,8 @@ export default function Profile() {
                                     className="text-white w-72 bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">{route}<svg className="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></button>
                             </div>
                             {/* Dropdown */}
-                            <div id='scroll' className={`${isRouteDropDownOpen ? "" : "hidden"} ml-12 mt-16 z-10 w-64 bg-white rounded divide-y divide-gray-100 shadow dark:bg-overlayprimary absolute`}>
-                                <ul className="overflow-y-auto h-48 py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefault">
+                            <div id='scroll' className={`${isRouteDropDownOpen ? "" : "hidden"} ml-12 mt-16 z-10 w-64  rounded divide-y divide-gray-100 shadow bg-overlayprimary absolute`}>
+                                <ul className="overflow-y-auto h-48 py-1 text-sm text-gray-200" aria-labelledby="dropdownDefault">
                                     {
                                         routeData.map((item) => {
                                             return (
@@ -164,7 +164,7 @@ export default function Profile() {
                                                         setStop(item.stops)
                                                         toggleRouteDropDown()
                                                         setStopName('Select your stop')
-                                                    }} className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{item.route}</p>
+                                                    }} className="block py-2 px-4 hover:bg-gray-600 text-white">{item.route}</p>
                                                     <hr className='w-auto border-gray-700' />
                                                 </li>
 
@@ -260,11 +260,11 @@ export default function Profile() {
                     {/* Toggle bar */}
                     <label className="inline-flex relative items-center cursor-pointer -ml-20">
                         <input type="checkbox" value="" id="purple-toggle" className="sr-only peer" checked={isThemeChecked ? true : false} onChange={() => {
-                            localStorage.setItem('isLite', isThemeChecked);
+                            localStorage.setItem('isLite', !isThemeChecked);
                             setThemeChecked(prevState => !prevState);
                         }} />
                         <div className="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-2 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
-                        <span className="ml-3 text-sm font-medium text-gray-400">{isThemeChecked ? "Dark" : "Light"}</span>
+                        <span className="ml-3 text-sm font-medium text-gray-400">{isThemeChecked ? "Light" : "Dark"}</span>
                     </label>
                 </div>
             </div>
