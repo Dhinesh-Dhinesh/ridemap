@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { ref, getDownloadURL, listAll, getMetadata } from "firebase/storage";
 import { storage } from "../../firebase/firebase";
 
-import ReactLoading from "react-loading";
+// Skeleton Loading
+import RoutesSkeleton from '../../components/skeleton/busroutes'
 
 export default function Routes() {
 
@@ -39,9 +40,7 @@ export default function Routes() {
 
     if (urls.length === 0) {
         return (
-            <div className="flex justify-center items-center w-screen h-screen bg-backgroundprimary">
-                <ReactLoading type="spinningBubbles" color="#AEF359" />
-            </div>
+            <RoutesSkeleton/>
         )
     }
 

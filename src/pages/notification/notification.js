@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { firestoreDB } from '../../firebase/firebase';
 import { collection, getDocs, query, orderBy, updateDoc, doc } from 'firebase/firestore';
-import Loading from '../../components/Loading';
 
+// skeleton loading
+import NotificationSkeleton from '../../components/skeleton/notification';
 
 export default function Notification() {
 
@@ -45,7 +46,7 @@ export default function Notification() {
     }, []);
 
     if (isLoading) {
-        return <Loading />
+        return <NotificationSkeleton />
     }
 
     if (!isNotifications) {
