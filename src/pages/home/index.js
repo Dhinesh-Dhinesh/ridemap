@@ -182,18 +182,20 @@ export default function Home() {
         onValue(dataRef, (snapshot) => {
             let val = [];
             snapshot.forEach((childSnapshot) => {
-                let key = childSnapshot.key;
                 let childData = childSnapshot.val();
-                val.push({ "key": key, "data": childData });
+                val.push({"data": childData });
             });
             //sort the data
             val.sort((a, b) => a.data.busdetails.no - b.data.busdetails.no)
+            for(let i = 0; i < val.length; i++) {
+                val[i].key = i;
+            }
             setBusData(val);
         });
 
         setTimeout(() => {
             let busNo = parseInt(localStorage.getItem('busNoKey'));
-            if (!busNo) {
+            if (!busNo || busNo === 1) {
                 return;
             }
             scrollRef.current.classList.add('scroll-smooth')

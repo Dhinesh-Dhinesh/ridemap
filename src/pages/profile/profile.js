@@ -195,7 +195,7 @@ export default function Profile() {
                                                                 <p onClick={() => {
                                                                     toggleStopDropDown()
                                                                     setStopName(item)
-                                                                }} className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{item}</p>
+                                                                }} className="block py-2 px-4 hover:bg-gray-600 text-white">{item}</p>
                                                                 <hr className='w-auto border-gray-700' />
                                                             </li>
                                                         )
@@ -290,10 +290,6 @@ export default function Profile() {
                 </button>
             </div>
             <hr className='w-11/12 mt-4 border-gray-700' />
-            {/* version */}
-            <div className='w-11/12'>
-                <p className='text-gray-400 text-sm mt-1'>Version 1.0.0 (Beta)</p>
-            </div>
             {/* this div fixes bottom nav bar */}
             <div className='mt-8'>
                 &nbsp;
