@@ -135,7 +135,7 @@ export default function Home() {
 
     //Reference to MapContainer
     const mapRef = useRef();
-    const scrollRef = useRef();
+    const scrollRef = useRef(null);
 
     //Get current location when page loads )and( update location for every 1 seconds
     const getLocation = () => {
@@ -183,16 +183,20 @@ export default function Home() {
             let val = [];
             snapshot.forEach((childSnapshot) => {
                 let childData = childSnapshot.val();
-                val.push({"data": childData });
+                val.push({ "data": childData });
             });
             //sort the data
             val.sort((a, b) => a.data.busdetails.no - b.data.busdetails.no)
-            for(let i = 0; i < val.length; i++) {
+            for (let i = 0; i < val.length; i++) {
                 val[i].key = i;
             }
             setBusData(val);
         });
 
+    }, []);
+
+    // Scroll Left when scroll bar is loaded
+    useEffect(() => {
         setTimeout(() => {
             let busNo = parseInt(localStorage.getItem('busNoKey'));
             if (!busNo || busNo === 1) {
@@ -202,7 +206,8 @@ export default function Home() {
             scrollRef.current.scrollLeft += (240 * busNo - 1);
             scrollRef.current.classList.remove('scroll-smooth')
         }, 2000)
-    }, []);
+    }, [scrollRef]);
+
     useLayoutEffect(() => {
         //theme
         localStorage.getItem('isLite') === 'false' ? setTheme('dark') : setTheme('lite');
