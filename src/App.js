@@ -1,6 +1,10 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom"
 
+//Firebase
+import { firestoreDB } from './firebase/firebase';
+import { updateDoc, doc } from 'firebase/firestore';
+
 //Navbar
 import BottomNav from './components/bottomNav'
 //Auth
@@ -44,6 +48,7 @@ export default function App() {
 
   useEffect(() => {
     setLocationPath(location.pathname);
+
   }, [location]);
 
   useEffect(() => {
@@ -55,6 +60,24 @@ export default function App() {
       }
     }
   }, [user]);
+
+  useEffect(() => {
+    var token = window?.fcmToken?.getFcmToken();
+
+    if (user) {
+      if (location.pathname === "/home" && token) {
+        if (sessionStorage.getItem("isHomeLoad") === null) {
+          // setToken in firebase firebase firestore
+          let notfToken = doc(firestoreDB, "users", `${user.uid}`)
+          updateDoc(notfToken, {
+            token
+          });
+          alert("Token set in firebase");
+          sessionStorage.setItem("isHomeLoad", true);
+        }
+      }
+    }
+  }, [user, location]);
 
   return (
     <>

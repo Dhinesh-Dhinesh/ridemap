@@ -58,8 +58,8 @@ let locationIcon = L.icon({
 
 let BusIcon = L.icon({
     iconUrl: busIcon,
-    iconSize: [24, 42],
-    iconAnchor: [22, 26]
+    iconSize: [30, 30],
+    iconAnchor: [22, 22]
 });
 
 let collegeIcon = L.icon({
@@ -325,7 +325,7 @@ export default function Home() {
                         return (
                             <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
                                 icon={BusIcon} duration={5000} rotationAngle={bus.data.data.course} rotationOrigin="center">
-                                <Tooltip permanent direction="bottom" offset={[0, 20]} opacity={1} key={bus.key} >
+                                <Tooltip permanent direction="bottom" offset={[0, 10]} opacity={1} key={bus.key} >
                                     Bus {bus.data.busdetails.no}
                                 </Tooltip>
                             </LeafletTrackingMarker>
@@ -343,7 +343,7 @@ export default function Home() {
                             return (
                                 <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
                                     icon={BusIcon} duration={5000} rotationAngle={bus.data.data.course} rotationOrigin="center">
-                                    <Tooltip permanent direction="bottom" offset={[0, 20]} opacity={1} key={bus.key}>
+                                    <Tooltip permanent direction="bottom" offset={[0, 10]} opacity={1} key={bus.key}>
                                         Bus {bus.data.busdetails.no}
                                     </Tooltip>
                                 </LeafletTrackingMarker>
