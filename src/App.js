@@ -72,7 +72,6 @@ export default function App() {
           updateDoc(notfToken, {
             token: arrayUnion(token)
           })
-          alert("Token set in firebase");
           sessionStorage.setItem("isHomeLoad", true);
         }
       }
