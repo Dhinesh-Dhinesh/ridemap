@@ -3,7 +3,7 @@ import { Routes, Route, useLocation, useNavigate } from "react-router-dom"
 
 //Firebase
 import { firestoreDB } from './firebase/firebase';
-import { updateDoc, doc } from 'firebase/firestore';
+import { updateDoc, doc, arrayUnion } from 'firebase/firestore';
 
 //Navbar
 import BottomNav from './components/bottomNav'
@@ -70,8 +70,8 @@ export default function App() {
           // setToken in firebase firebase firestore
           let notfToken = doc(firestoreDB, "users", `${user.uid}`)
           updateDoc(notfToken, {
-            token
-          });
+            token: arrayUnion(token)
+          })
           alert("Token set in firebase");
           sessionStorage.setItem("isHomeLoad", true);
         }
