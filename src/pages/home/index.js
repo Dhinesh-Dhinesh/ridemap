@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef, useLayoutEffect, useContext } from 'react';
+import React, { useEffect, useState, useRef, useLayoutEffect, useContext, useCallback } from 'react';
 import { useNavigate, createSearchParams } from "react-router-dom"
 //Firebase
 import { db } from "../../firebase/firebase"
-import { ref, onValue } from "firebase/database";
+import { ref, onValue, off } from "firebase/database";
 // import { changeRoutesFromDb } from '../../data/routes';
 
 //leaflet
@@ -41,6 +41,9 @@ import "react-spring-bottom-sheet/dist/style.css";
 //context
 import { BottomContext } from '../../context/BottomContext';
 
+//hooks
+import useGeolocation from '../../hooks/useGeolocation'
+
 //full png image for the router markers to hide
 let defaultPngIcon = L.icon({
     iconUrl: markerPng,
@@ -61,7 +64,7 @@ let BusIcon = L.icon({
     iconSize: [30, 30],
     iconAnchor: [22, 22]
 });
-
+//eslint-disable-next-line
 let collegeIcon = L.icon({
     iconUrl: clgIcon,
     iconSize: [35, 46],
@@ -78,7 +81,8 @@ export default function Home() {
 
     //leaflet
     const [center] = useState({ lat: 11.922635790851622, lng: 79.62689991349808 })     //college location
-    const [locationMarker, setLocationMarker] = useState(null);
+    const position = useGeolocation();
+    const [locationMarkerPosition, setLocationMarkerPosition] = useState(null);
     const ZOOM_LVL = 12;
 
     const navigate = useNavigate();
@@ -90,12 +94,6 @@ export default function Home() {
     //Bus data ui
     const [isBusNavShown, setIsBusNavShown] = useState(true);
     const [busData, setBusData] = useState([]);
-    const scrollBarColors = ["border-[#AEF359]", "border-[#eb142ab9]",
-        "border-[#08BCFF]", "border-[#C332EA]", "border-[#C35F4E]", "border-[#9e0059]", "border-clr1", "border-clr2",
-        "border-clr3", "border-clr4", "border-clr5", "border-clr6", "border-clr7", "border-clr8",
-        "border-clr9", "border-[#AEF359]", "border-[#eb142ab9]", "border-[#08BCFF]", "border-[#C332EA]", "border-[#C35F4E]",
-        "border-[#9e0059]", "border-clr1", "border-clr2"
-    ]
 
     //show busses
     const [showAllBus, setShowAllBus] = useState(true);
@@ -137,49 +135,27 @@ export default function Home() {
     const mapRef = useRef();
     const scrollRef = useRef(null);
 
-    //Get current location when page loads )and( update location for every 1 seconds
-    const getLocation = () => {
+    useEffect(() => {
+        if (position.latitude && position.longitude) {
+            setLocationMarkerPosition([position.latitude, position.longitude]);
+        }
+    }, [position.latitude, position.longitude]);
 
-        setTimeout(() => {
-            const { current = {} } = mapRef;
-
-            //clg icon marker
-            L.marker([11.922635790851622, 79.62689991349808], { icon: collegeIcon }).addTo(mapRef.current).bindPopup("College");
-
-            const successCallback = (position) => {
-                let latlng = [position.coords.latitude, position.coords.longitude];
-                setLocationMarker(latlng);
-                current.flyTo(latlng, 15);
-
-            };
-
-            const errorCallback = (error) => {
-                console.log(error);
-            };
-
-            navigator.geolocation.getCurrentPosition(successCallback, errorCallback)
-
-            //udpate location for every 5 seconds
-            setInterval(() => {
-                navigator.geolocation.getCurrentPosition(options => {
-                    let latlng = [options.coords.latitude, options.coords.longitude];
-                    setLocationMarker(latlng);
-                })
-            }, 1000);
-
-        }, 2000);
-    }
+    //Get current location when page loads )and( updates location of every 20 sec 
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         const { current = {} } = mapRef;
+    //         L.marker([11.922635790851622, 79.62689991349808], { icon: collegeIcon }).addTo(mapRef.current).bindPopup("College");
+    //         current.flyTo(locationMarkerPosition, 16);
+    //     }, 3000)
+        
+    // }, [locationMarkerPosition])
 
     //firebase data and geolocation
     useEffect(() => {
-        getLocation();
 
-        // (async function getRoutes() {
-        //     setRoutes(await changeRoutesFromDb());
-        // })();
 
-        const dataRef = ref(db, 'busses');
-        onValue(dataRef, (snapshot) => {
+        const handleData = (snapshot) => {
             let val = [];
             snapshot.forEach((childSnapshot) => {
                 let childData = childSnapshot.val();
@@ -191,13 +167,25 @@ export default function Home() {
                 val[i].key = i;
             }
             setBusData(val);
-        });
+        }
+
+        const dataRef = ref(db, 'busses');
+        onValue(dataRef, handleData);
+
+        return () => {
+            off(dataRef, handleData)
+        }
 
     }, []);
+
 
     // Scroll Left when scroll bar is loaded
     useEffect(() => {
         setTimeout(() => {
+            // adding college marker
+            L.marker([11.922635790851622, 79.62689991349808], { icon: collegeIcon }).addTo(mapRef.current).bindPopup("College");
+            
+            // scroll to last visit bus
             let busNo = parseInt(localStorage.getItem('busNoKey'));
             if (!busNo || busNo === 1) {
                 return;
@@ -223,6 +211,70 @@ export default function Home() {
         }
         //eslint-disable-next-line
     }, [busNo])
+
+    // callbacks
+    const showAllBusMap = useCallback(() => {
+        return busData.map((bus) => (
+            <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
+                icon={BusIcon} duration={5000} rotationAngle={bus.data.data.course} rotationOrigin="center">
+                <Tooltip permanent direction="bottom" offset={[0, 10]} opacity={1} key={bus.key} >
+                    Bus {bus.data.busdetails.no}
+                </Tooltip>
+            </LeafletTrackingMarker>
+        ));
+    }, [busData])
+
+    const showSpecificBus = useCallback(() => {
+        return busData.map((bus) => {
+            if (bus.data.busdetails.no === busNo) {
+
+                if (isTrack) {
+                    mapRef.current.setView([bus.data.data.lat, bus.data.data.lng]);
+                }
+
+                return (
+                    <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
+                        icon={BusIcon} duration={5000} rotationAngle={bus.data.data.course} rotationOrigin="center">
+                        <Tooltip permanent direction="bottom" offset={[0, 10]} opacity={1} key={bus.key}>
+                            Bus {bus.data.busdetails.no}
+                        </Tooltip>
+                    </LeafletTrackingMarker>
+                )
+            }
+
+            return null;
+        });
+    }, [busData, busNo, isTrack])
+
+    const showScrollBar = useCallback(() => {
+        const scrollBarColors = ["border-[#AEF359]", "border-[#eb142ab9]",
+            "border-[#08BCFF]", "border-[#C332EA]", "border-[#C35F4E]", "border-[#9e0059]", "border-clr1", "border-clr2",
+            "border-clr3", "border-clr4", "border-clr5", "border-clr6", "border-clr7", "border-clr8",
+            "border-clr9", "border-[#AEF359]", "border-[#eb142ab9]", "border-[#08BCFF]", "border-[#C332EA]", "border-[#C35F4E]",
+            "border-[#9e0059]", "border-clr1", "border-clr2"
+        ]
+
+        return busData.map((item) => (
+            <div key={item.key}>
+                <ScrollBar
+                    click={() => {
+                        toggleDrawer(item.data.driverdetail.name, item.data.driverdetail.phone,
+                            item.data.busdetails.no, item.data.busdetails.busno, item.data.busdetails.seats, parseInt(item.key));
+                        bottomCont.setIsDrawerOpen(true);
+                        setShowAllBus(false);
+                        localStorage.setItem('busNoKey', item.key);
+                    }}
+                    busno={item.data.busdetails.no}
+                    status={item.data.data.accstatus}
+                    color={scrollBarColors[parseInt(item.key)]}
+                    speed={item.data.data.speed}
+                    eta={item.data.data.eta}
+                />
+            </div>
+        ))
+    }, [busData, bottomCont])
+
+    console.log("hi")
 
     return (
         <>
@@ -309,82 +361,30 @@ export default function Home() {
 
                 {/* Location Marker */}
                 {
-                    locationMarker && (
-                        <div>
-                            <Marker position={locationMarker} icon={locationIcon}>
-                                <Popup>
-                                    You are here
-                                </Popup>
-                            </Marker>
-                        </div>
-                    )
+                    locationMarkerPosition && <Marker position={locationMarkerPosition} icon={locationIcon}>
+                        <Popup>
+                            You are here
+                        </Popup>
+                    </Marker>
                 }
                 {
-                    showAllBus && busData.map((bus) => {
-
-                        return (
-                            <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
-                                icon={BusIcon} duration={5000} rotationAngle={bus.data.data.course} rotationOrigin="center">
-                                <Tooltip permanent direction="bottom" offset={[0, 10]} opacity={1} key={bus.key} >
-                                    Bus {bus.data.busdetails.no}
-                                </Tooltip>
-                            </LeafletTrackingMarker>
-                        )
-                    })
+                    showAllBus && showAllBusMap()
                 }
                 {
-                    !showAllBus && busData.map((bus) => {
-                        if (bus.data.busdetails.no === busNo) {
-
-                            if (isTrack) {
-                                mapRef.current.setView([bus.data.data.lat, bus.data.data.lng]);
-                            }
-
-                            return (
-                                <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
-                                    icon={BusIcon} duration={5000} rotationAngle={bus.data.data.course} rotationOrigin="center">
-                                    <Tooltip permanent direction="bottom" offset={[0, 10]} opacity={1} key={bus.key}>
-                                        Bus {bus.data.busdetails.no}
-                                    </Tooltip>
-                                </LeafletTrackingMarker>
-                            )
-                        }
-
-                        return null;
-                    })
+                    !showAllBus && showSpecificBus()
                 }
                 <ToggleBusScroll callback={setIsBusNavShown} />
             </MapContainer>
+            {/* scroll container */}
             <ScrollContainer className="fixed z-[1000] flex bottom-16 w-screen" ref={scrollRef}
                 style={isBusNavShown ? mountedStyle : unmountedStyle}>
-                {
-                    busData.map((item) => {
-                        return (
-                            <div key={item.key}>
-                                <ScrollBar
-                                    click={() => {
-                                        toggleDrawer(item.data.driverdetail.name, item.data.driverdetail.phone,
-                                            item.data.busdetails.no, item.data.busdetails.busno, item.data.busdetails.seats, parseInt(item.key));
-                                        bottomCont.setIsDrawerOpen(true);
-                                        setShowAllBus(false);
-                                        localStorage.setItem('busNoKey', item.key);
-                                    }}
-                                    busno={item.data.busdetails.no}
-                                    status={item.data.data.accstatus}
-                                    color={scrollBarColors[parseInt(item.key)]}
-                                    speed={item.data.data.speed}
-                                    eta={item.data.data.eta}
-                                />
-                            </div>
-                        )
-                    })
-                }
+                {showScrollBar()}
             </ScrollContainer>
 
             {/* Layer icons */}
             <div className='overlay top-4 left-2 bg-gray-900 w-8 h-8 drop-shadow-2xl
                     flex justify-center items-center rounded-full cursor-pointer p-6 hover:bg-gray-800'
-                onClick={() => mapRef.current.flyTo(locationMarker, ZOOM_LVL)}>
+                onClick={() => mapRef.current.flyTo(locationMarkerPosition, ZOOM_LVL)}>
                 <MTooltip title="Location" placement="right-start" arrow>
                     <IconButton>
                         <NearMeIcon sx={{
