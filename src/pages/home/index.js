@@ -251,7 +251,7 @@ export default function Home() {
             "border-[#08BCFF]", "border-[#C332EA]", "border-[#C35F4E]", "border-[#9e0059]", "border-clr1", "border-clr2",
             "border-clr3", "border-clr4", "border-clr5", "border-clr6", "border-clr7", "border-clr8",
             "border-clr9", "border-[#AEF359]", "border-[#eb142ab9]", "border-[#08BCFF]", "border-[#C332EA]", "border-[#C35F4E]",
-            "border-[#9e0059]", "border-clr1", "border-clr2"
+            "border-[#9e0059]", "border-clr1", "border-clr2","border-[#C332EA]","border-[#08BCFF]"
         ]
 
         return busData.map((item) => (
@@ -273,8 +273,6 @@ export default function Home() {
             </div>
         ))
     }, [busData, bottomCont])
-
-    console.log("hi")
 
     return (
         <>

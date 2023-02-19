@@ -56,6 +56,9 @@ export async function signUp(name, email, password, route, stop) {
     await sendEmailVerification(user);
 
   } catch (error) {
+    if(error.code === "auth/email-already-in-use") {
+      return false;
+    }
     console.log(error)
   }
 }
