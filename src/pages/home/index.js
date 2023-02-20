@@ -22,6 +22,7 @@ import busIcon from './assets/bus.webp';
 // import RoutingMachine from "../../components/RoutingMachine";
 import ScrollBar from '../../components/ScrollBar.js';
 import { ScrollContainer } from 'react-indiana-drag-scroll';
+import OfflineScroll from '../../components/OfflineScroll';
 import 'react-indiana-drag-scroll/dist/style.css'
 
 //icons
@@ -148,7 +149,7 @@ export default function Home() {
     //         L.marker([11.922635790851622, 79.62689991349808], { icon: collegeIcon }).addTo(mapRef.current).bindPopup("College");
     //         current.flyTo(locationMarkerPosition, 16);
     //     }, 3000)
-        
+
     // }, [locationMarkerPosition])
 
     //firebase data and geolocation
@@ -184,7 +185,7 @@ export default function Home() {
         setTimeout(() => {
             // adding college marker
             L.marker([11.922635790851622, 79.62689991349808], { icon: collegeIcon }).addTo(mapRef.current).bindPopup("College");
-            
+
             // scroll to last visit bus
             let busNo = parseInt(localStorage.getItem('busNoKey'));
             if (!busNo || busNo === 1) {
@@ -251,27 +252,37 @@ export default function Home() {
             "border-[#08BCFF]", "border-[#C332EA]", "border-[#C35F4E]", "border-[#9e0059]", "border-clr1", "border-clr2",
             "border-clr3", "border-clr4", "border-clr5", "border-clr6", "border-clr7", "border-clr8",
             "border-clr9", "border-[#AEF359]", "border-[#eb142ab9]", "border-[#08BCFF]", "border-[#C332EA]", "border-[#C35F4E]",
-            "border-[#9e0059]", "border-clr1", "border-clr2","border-[#C332EA]","border-[#08BCFF]"
+            "border-[#9e0059]", "border-clr1", "border-clr2", "border-[#C332EA]", "border-[#08BCFF]"
         ]
 
-        return busData.map((item) => (
-            <div key={item.key}>
-                <ScrollBar
-                    click={() => {
-                        toggleDrawer(item.data.driverdetail.name, item.data.driverdetail.phone,
-                            item.data.busdetails.no, item.data.busdetails.busno, item.data.busdetails.seats, parseInt(item.key));
-                        bottomCont.setIsDrawerOpen(true);
-                        setShowAllBus(false);
-                        localStorage.setItem('busNoKey', item.key);
-                    }}
-                    busno={item.data.busdetails.no}
-                    status={item.data.data.accstatus}
-                    color={scrollBarColors[parseInt(item.key)]}
-                    speed={item.data.data.speed}
-                    eta={item.data.data.eta}
-                />
-            </div>
-        ))
+        return busData.map((item) => {
+            if (item.data.data.datastatus === 4) {
+                return (
+                    <div key={item.key}>
+                        <OfflineScroll busno={item.data.busdetails.no}/>
+                    </div>
+                )
+            } else {
+                return (
+                    <div key={item.key}>
+                        <ScrollBar
+                            click={() => {
+                                toggleDrawer(item.data.driverdetail.name, item.data.driverdetail.phone,
+                                    item.data.busdetails.no, item.data.busdetails.busno, item.data.busdetails.seats, parseInt(item.key));
+                                bottomCont.setIsDrawerOpen(true);
+                                setShowAllBus(false);
+                                localStorage.setItem('busNoKey', item.key);
+                            }}
+                            busno={item.data.busdetails.no}
+                            status={item.data.data.accstatus}
+                            color={scrollBarColors[parseInt(item.key)]}
+                            speed={item.data.data.speed}
+                            eta={item.data.data.eta}
+                        />
+                    </div>
+                )
+            }
+        })
     }, [busData, bottomCont])
 
     return (

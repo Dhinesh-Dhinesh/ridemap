@@ -207,7 +207,7 @@ export default function SignUp() {
                     !isEmailAllowed && (<div className='text-xs mt-2 text-red-500'>This email is not permitted, Request that your transportation department add your email address to ridemap.</div>)
                 }
                 {
-                    !isValidEmail && (<div className='text-xs mt-2 text-red-500'>incorrect email, Only your organization's email is acceptable</div>)
+                    !isValidEmail && (<div className='text-xs mt-2 text-red-500'>incorrect email, Only your organization's email is acceptable (Eg:@mvit.edu.in)</div>)
                 }
                 {
                     allFields && (<div className='text-xs mt-2 text-yellow-400'>* All fields required</div>)
