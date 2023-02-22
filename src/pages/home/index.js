@@ -17,6 +17,7 @@ import markerPng from './assets/fullpng.webp';
 import clgIcon from './assets/college.webp';
 import circleIcon from './assets/circle.webp';
 import busIcon from './assets/bus.webp';
+import busMovIcon from './assets/busmov.webp';
 
 //Components
 // import RoutingMachine from "../../components/RoutingMachine";
@@ -65,7 +66,13 @@ let BusIcon = L.icon({
     iconSize: [30, 30],
     iconAnchor: [22, 22]
 });
-//eslint-disable-next-line
+
+let BusMovIcon = L.icon({
+    iconUrl: busMovIcon,
+    iconSize: [30, 30],
+    iconAnchor: [22, 22]
+});
+
 let collegeIcon = L.icon({
     iconUrl: clgIcon,
     iconSize: [35, 46],
@@ -215,14 +222,21 @@ export default function Home() {
 
     // callbacks
     const showAllBusMap = useCallback(() => {
-        return busData.map((bus) => (
-            <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
-                icon={BusIcon} duration={5000} rotationAngle={bus.data.data.course} rotationOrigin="center">
-                <Tooltip permanent direction="bottom" offset={[0, 10]} opacity={1} key={bus.key} >
-                    Bus {bus.data.busdetails.no}
-                </Tooltip>
-            </LeafletTrackingMarker>
-        ));
+        return busData.map((bus) => {
+            if (bus.data.data.datastatus === 4) {
+                return null;
+            } else {
+                return (
+                    <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
+                        icon={bus.data.data.accstatus === 1 || bus.data.data.speed > 0 ? BusMovIcon : BusIcon} duration={5000}
+                        rotationAngle={bus.data.data.course} rotationOrigin="center">
+                        <Tooltip permanent direction="bottom" offset={[0, 10]} opacity={1} key={bus.key} >
+                            Bus {bus.data.busdetails.no}
+                        </Tooltip>
+                    </LeafletTrackingMarker>
+                )
+            }
+        });
     }, [busData])
 
     const showSpecificBus = useCallback(() => {
@@ -259,7 +273,7 @@ export default function Home() {
             if (item.data.data.datastatus === 4) {
                 return (
                     <div key={item.key}>
-                        <OfflineScroll busno={item.data.busdetails.no}/>
+                        <OfflineScroll busno={item.data.busdetails.no} />
                     </div>
                 )
             } else {
