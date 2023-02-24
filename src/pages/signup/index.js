@@ -75,7 +75,7 @@ export default function SignUp() {
             //Checks if the mail is in db or not and then checks if the email is allowed or not
             if (email) {
                 async function checkEmail() {
-                    await fetch(`https://us-central1-ridemap-11f0c.cloudfunctions.net/checkemail?email=${email.trim()}`)
+                    await fetch(`https://us-central1-ridemap-11f0c.cloudfunctions.net/api/email?email=${email.trim()}`)
                         .then(res => res.json())
                         .then(data => {
                             if (data.isEmailAllowed === true) {
