@@ -33,7 +33,7 @@ export function logOut() {
   return signOut(auth);
 }
 
-export async function signUp(name, email, password, route, stop) {
+export async function signUp(name, email, password) {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     // Signed in 
@@ -48,15 +48,13 @@ export async function signUp(name, email, password, route, stop) {
     await setDoc(userRef, {
       name,
       email,
-      route,
-      stop,
       notf_unread: false,
     });
 
     await sendEmailVerification(user);
 
   } catch (error) {
-    if(error.code === "auth/email-already-in-use") {
+    if (error.code === "auth/email-already-in-use") {
       return false;
     }
     console.log(error)

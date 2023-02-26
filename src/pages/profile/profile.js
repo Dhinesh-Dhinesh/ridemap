@@ -3,13 +3,15 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logOut } from '../../firebase/firebase';
 
+import { SpinLoading } from '../../components/Loading';
 import Loading from '../../components/Loading';
 
-import { routeData } from '../signup/data.js';
+import { routeData } from './data.js';
 
 //firebase
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { firestoreDB } from '../../firebase/firebase';
+import { useLayoutEffect } from 'react';
 
 export default function Profile() {
 
@@ -18,61 +20,98 @@ export default function Profile() {
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [droutes, setdroutes] = useState('');
-    const [dstop, setdStop] = useState('')
-
     const [uid, setUid] = useState(null);
 
-    //for edit routes
+    //Routes data
+    const [route, setRoute] = useState("Select your route");
+    const [stop, setStop] = useState("Select your stop");
+    // backend
+    const [stopArray, setStopArray] = useState([]);
+    const [isHaveRoutes, setIsHaveRoutes] = useState(false);
+    const [routeAndStop, setRouteAndStop] = useState({});
+    // ui
+    const [isRouteDropShown, setIsRouteDropShown] = useState(false);
+    const [isStopDropShown, setIsStopDropShown] = useState(false);
+    const [routeLoading, setRouteLoading] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
-    const [isRouteDropDownOpen, setIsRouteDropDownOpen] = useState(false);
-    const [isStopDropDownOpen, setIsStopDropDownOpen] = useState(false);
-    const [stopname, setStopName] = useState('Select your stop');
-    const [route, setRoute] = useState('Select your route');
-    const [stop, setStop] = useState('');
 
     const navigate = useNavigate();
 
     useEffect(() => {
         const uid = sessionStorage.getItem('uid');
-        const userRef = doc(firestoreDB, "users", `${uid}`)
+        const userRef = doc(firestoreDB, "users", uid)
 
         getDoc(userRef).then((doc) => {
             if (doc.exists()) {
                 setName(doc.data().name);
                 setEmail(doc.data().email);
-                setdroutes(doc.data().route)
-                setdStop(doc.data().stop)
+                if (doc.data().route && doc.data().stop) {
+                    setRoute(doc.data().route);
+                    setStop(doc.data().stop);
+                    setRouteAndStop({ route: doc.data().route, stop: doc.data().stop });
+                    setIsHaveRoutes(true);
+                }
             }
         })
     }, [])
 
+    // save routes
+    function saveRoute() {
+        if (route === routeAndStop.route && stop === routeAndStop.stop) {
+            setIsEdit(false);
+            return;
+        }
+        if (route === "Select your route" || stop === "Select your stop") {
+            return;
+        }
+
+        setRouteLoading(true);
+        const userRef = doc(firestoreDB, "users", uid)
+        updateDoc(userRef, {
+            route: route,
+            stop: stop
+        }).then(() => {
+            console.log("Updated");
+        })
+
+        if (isHaveRoutes) {
+            // !unsub
+            let unsubTopic = routeAndStop.route.split(/-+/)[0].replace(/[^a-zA-Z]/g, '') + '-' + routeAndStop.stop.replace(/[^a-zA-Z]/g, '')
+            console.log("Unsubscribing", unsubTopic);
+            fetch("https://us-central1-ridemap-11f0c.cloudfunctions.net/api/unsubscribe", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    'access-key': process.env.REACT_APP_CF_API_KEY
+                },
+                body: JSON.stringify({
+                    topicName: unsubTopic,
+                    uid
+                })
+            })
+        }
+
+        let subTopic = route.split(/-+/)[0].replace(/[^a-zA-Z]/g, '') + '-' + stop.replace(/[^a-zA-Z]/g, '')
+        fetch("https://us-central1-ridemap-11f0c.cloudfunctions.net/api/subscribe", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'access-key': process.env.REACT_APP_CF_API_KEY
+            },
+            body: JSON.stringify({
+                topicName: subTopic,
+                uid
+            })
+        }).then(() => {
+            setIsEdit(false);
+            setRouteLoading(false);
+            setRouteAndStop({ route, stop });
+            setIsHaveRoutes(true);
+        })
+    }
+
     function toggleTrack() {
         setIsTrack((prevState) => !prevState);
-    }
-
-    function toggleRouteDropDown() {
-        setIsRouteDropDownOpen((prevState) => !prevState);
-    }
-
-    function toggleStopDropDown() {
-        setIsStopDropDownOpen((prevState) => !prevState);
-    }
-
-    //routes update
-    const updateRoutes = async () => {
-        try {
-            const userRef = doc(firestoreDB, "users", uid);
-            await updateDoc(userRef, {
-                route,
-                stop: stopname
-            });
-            setdroutes(route);
-            setdStop(stopname);
-            setIsEdit(false);
-        } catch (e) {
-            console.log(e);
-        }
     }
 
     // Logout 
@@ -99,13 +138,13 @@ export default function Profile() {
         navigate('/docs');
     }
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         localStorage.getItem('isLite') === 'false' ? setThemeChecked(false) : setThemeChecked(true);
         localStorage.getItem('isTrack') === 'false' ? setIsTrack(false) : setIsTrack(true);;
         setUid(sessionStorage.getItem('uid'));
     }, []);
 
-    if (!dstop) {
+    if (!email) {
         return <Loading />
     }
 
@@ -133,105 +172,125 @@ export default function Profile() {
                 </div>
             </div>
             <hr className='w-11/12 mt-4 border-gray-700' />
-
+            
             {/* Routes */}
             <div className='flex flex-col w-11/12 mt-5 '>
                 <div className='flex felx-row justify-start -mt-2 -ml-2 py-2'>
                     <img alt="ico" src={require('./assets/route.webp')} width={32} height={32} />
                     <p className='font-bold text-2xl text-gray-300'>Routes</p>
                 </div>
-
                 {
-                    isEdit ? (
-                        <div className='flex flex-col'>
-                            <div className='py-2 text-xl font-bold text-gray-400'>Route</div>
-                            <div className='w-72'>
-                                <button onClick={() => {
-                                    toggleRouteDropDown()
-                                    setIsStopDropDownOpen(false)
-                                }}
-                                    className="text-white w-72 bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">{route}<svg className="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></button>
-                            </div>
-                            {/* Dropdown */}
-                            <div id='scroll' className={`${isRouteDropDownOpen ? "" : "hidden"} ml-12 mt-16 z-10 w-64  rounded divide-y divide-gray-100 shadow bg-overlayprimary absolute`}>
-                                <ul className="overflow-y-auto h-48 py-1 text-sm text-gray-200" aria-labelledby="dropdownDefault">
-                                    {
-                                        routeData.map((item) => {
-                                            return (
-                                                <li key={item.id}>
-                                                    <p onClick={() => {
-                                                        setRoute(item.route)
-                                                        setStop(item.stops)
-                                                        toggleRouteDropDown()
-                                                        setStopName('Select your stop')
-                                                    }} className="block py-2 px-4 hover:bg-gray-600 text-white">{item.route}</p>
-                                                    <hr className='w-auto border-gray-700' />
-                                                </li>
-
-                                            )
-                                        })
-                                    }
-                                </ul>
-                            </div>
-                            {/* stops */}
-                            {
-                                stop && (
-                                    <>
-                                        <div className='py-2 text-xl font-bold text-gray-400'>Stop</div>
-                                        <div className='w-24 mt-1'>
-                                            <button onClick={() => {
-                                                toggleStopDropDown()
-                                                setIsRouteDropDownOpen(false)
-                                            }}
-                                                className="text-white w-72 bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center" type="button">{stopname}<svg className="ml-2 w-[11px] h-3" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></button>
-                                        </div>
-                                        {/* Dropdown */}
-                                        <div id='scroll' className={`${isStopDropDownOpen ? "" : "hidden"} ml-12 mt-36 z-10 w-64 rounded divide-y divide-gray-100 shadow bg-overlayprimary absolute`}>
-                                            <ul className="overflow-y-auto h-32 py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefault">
-                                                {
-                                                    stop && stop.map((item) => {
-                                                        return (
-                                                            <li key={item}>
-                                                                <p onClick={() => {
-                                                                    toggleStopDropDown()
-                                                                    setStopName(item)
-                                                                }} className="block py-2 px-4 hover:bg-gray-600 text-white">{item}</p>
-                                                                <hr className='w-auto border-gray-700' />
-                                                            </li>
-                                                        )
-                                                    })
-                                                }
-                                            </ul>
-                                        </div>
-                                    </>
-                                )
-                            }
-                            <div>
-                                <button onClick={() => setIsEdit(false)} className='text-gray-400 border-2 w-16 text-center border-gray-700 hover:bg-gray-600  rounded-xl mt-4'>Cancel</button>
-                                {
-                                    stopname !== 'Select your stop' ? <button onClick={() => updateRoutes()} className='text-green-400 border-2 w-14 text-center border-green-700 hover:bg-green-900 rounded-xl mt-4 ml-3'>Save</button> : null
-                                }
-                            </div>
-                        </div>
-                    ) : (
+                    isHaveRoutes && !isEdit ? (
                         <>
                             <div className='grid grid-cols-3 justify-items-start w-24'>
                                 <h1 className='text-md font-bold text-gray-400'>Route</h1>
                                 <span className='text-gray-400 ml-5'>:</span>
-                                <p className='text-gray-400 font-bold w-56'>{droutes}</p>
+                                <p className='text-gray-400 font-bold w-56'>{route}</p>
                             </div>
                             <div className='grid grid-cols-3 justify-items-start w-24 mt-5'>
                                 <h1 className='text-md font-bold text-gray-400'>Stop</h1>
                                 <span className='text-gray-400 ml-5'>:</span>
-                                <p className='text-gray-400 font-bold w-56'>{dstop}</p>
+                                <p className='text-gray-400 font-bold w-56'>{stop}</p>
+                            </div>
+                            <div className='relative mt-3 w-20' onClick={() => setIsEdit(true)}>
+                                <p className='text-gray-400 bg-overlayprimary w-20 text-center rounded-xl py-2 font-bold hover:bg-gray-700 cursor-pointer'>Edit</p>
                             </div>
                         </>
+                    ) : (
+                        <div>
+                            {
+                                routeLoading ? <SpinLoading /> :
+                                    // {/* route */}
+                                    <div>
+                                        <div className='grid grid-cols-3 justify-item-start mt-5 w-40'>
+                                            <h1 className='text-md font-bold text-gray-400'>Route</h1>
+                                            <span className='text-gray-400'>:</span>
+                                            <div className='w-72 -ml-10'>
+                                                <button onClick={() => {
+                                                    setIsRouteDropShown((prevState) => !prevState);
+                                                    setStop("Select your stop");
+                                                    setIsStopDropShown(false);
+                                                }}
+                                                    className="text-white w-64 bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none
+                        focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 
+                        dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">{route}<svg className="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></button>
+                                            </div>
+                                        </div>
+                                        {/* route dropdown */}
+                                        {
+                                            isRouteDropShown && (
+                                                <div id='scroll' className={`ml-10 z-10 w-64  rounded divide-y divide-gray-100 shadow bg-overlayprimary absolute`}>
+                                                    <ul className="overflow-y-auto h-48 py-1 text-sm text-gray-200" aria-labelledby="dropdownDefault">
+                                                        {
+                                                            routeData.map((item) => {
+                                                                return (
+                                                                    <li key={item.id}>
+                                                                        <p onClick={() => {
+                                                                            setIsRouteDropShown((prevState) => !prevState);
+                                                                            setRoute(item.route)
+                                                                            setStopArray(item.stops)
+                                                                        }} className="block py-2 px-4 hover:bg-gray-600 text-white">{item.route}</p>
+                                                                        <hr className='w-auto border-gray-700' />
+                                                                    </li>
+
+                                                                )
+                                                            })
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            )
+                                        }
+                                        {/* stop */}
+                                        {
+                                            route !== "Select your route" && (
+                                                <div className='grid grid-cols-3 justify-item-start mt-5 w-40'>
+                                                    <h1 className='text-md font-bold text-gray-400'>Stop</h1>
+                                                    <span className='text-gray-400'>:</span>
+                                                    <div className='w-72 -ml-10'>
+                                                        <button onClick={() => {
+                                                            if (route === routeAndStop.route && stop === routeAndStop.stop) {
+                                                                return;
+                                                            }
+                                                            setIsStopDropShown((prevState) => !prevState);
+                                                            setIsRouteDropShown(false);
+                                                        }}
+                                                            className="text-white w-64 bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none
+                        focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 
+                        dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">{stop}<svg className="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></button>
+                                                    </div>
+                                                </div>
+                                            )
+                                        }
+                                        {/*Stop Dropdown */}
+                                        {
+                                            isStopDropShown && (
+                                                <div id='scroll' className={`ml-10 z-10 w-64  rounded divide-y divide-gray-100 shadow bg-overlayprimary absolute`}>
+                                                    <ul className="overflow-y-auto h-48 py-1 text-sm text-gray-200" aria-labelledby="dropdownDefault">
+                                                        {
+                                                            stopArray.map((item) => {
+                                                                return (
+                                                                    <li key={item}>
+                                                                        <p onClick={() => {
+                                                                            setIsStopDropShown((prevState) => !prevState);
+                                                                            setStop(item)
+                                                                        }} className="block py-2 px-4 hover:bg-gray-600 text-white">{item}</p>
+                                                                        <hr className='w-auto border-gray-700' />
+                                                                    </li>
+
+                                                                )
+                                                            })
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            )
+                                        }
+                                        {
+                                            stop !== "Select your stop" ? <button onClick={() => saveRoute()} className='text-green-400 border-2 w-14 text-center border-green-700 hover:bg-green-900 rounded-xl mt-4'>Save</button> : null
+                                        }
+                                    </div>
+                            }
+                        </div>
                     )
-                }
-                {
-                    isEdit ? null : <div className='relative mt-3'>
-                        <p onClick={() => setIsEdit(true)} className='text-gray-400 bg-overlayprimary w-20 text-center rounded-xl py-2 font-bold hover:bg-gray-700 cursor-pointer'>Edit</p>
-                    </div>
                 }
             </div>
             <hr className='w-11/12 mt-4 border-gray-700' />
@@ -294,6 +353,6 @@ export default function Profile() {
             <div className='mt-8'>
                 &nbsp;
             </div>
-        </div >
+        </div>
     )
 }

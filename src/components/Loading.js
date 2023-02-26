@@ -9,3 +9,11 @@ export default function Loading() {
         </div>
     )
 }
+
+export function SpinLoading(){
+    return (
+        <div className="flex justify-center items-center">
+            <ReactLoading type="spinningBubbles" color="#9333EA" width={40}/>
+        </div>
+    )
+}

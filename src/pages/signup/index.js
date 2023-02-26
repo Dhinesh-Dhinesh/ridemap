@@ -6,9 +6,6 @@ import Loading from '../../components/Loading';
 //firebase
 import { signUp } from '../../firebase/firebase';
 
-//raw data
-import { routeData } from './data';
-
 export default function SignUp() {
 
     const navigate = useNavigate();
@@ -16,13 +13,6 @@ export default function SignUp() {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [route, setRoute] = useState('Select your route');
-
-    const [isRouteDropDownOpen, setIsRouteDropDownOpen] = useState(false);
-    const [isStopDropDownOpen, setIsStopDropDownOpen] = useState(false);
-
-    const [stopname, setStopName] = useState('Select your stop');
-    const [stop, setStop] = useState('');
 
     //ui
     const [worngPassword, setWrongPassword] = useState(false);
@@ -36,15 +26,6 @@ export default function SignUp() {
 
     const [isLoading, setLoading] = useState(false);
 
-    function toggleRouteDropDown() {
-        setIsRouteDropDownOpen((prevState) => !prevState);
-    }
-
-    function toggleStopDropDown() {
-        setIsStopDropDownOpen((prevState) => !prevState);
-    }
-
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -57,7 +38,7 @@ export default function SignUp() {
         setIsValidEmail(true);
         setIsEmailAllowed(true);
 
-        if ((email === '') || (password === '') || (name === '') || (route === 'Select your route') || (stopname === 'Select your stop')) {
+        if ((email === '') || (password === '') || (name === '')) {
             setAllFields(true)
             setLoading(false);
         } else {
@@ -75,11 +56,17 @@ export default function SignUp() {
             //Checks if the mail is in db or not and then checks if the email is allowed or not
             if (email) {
                 async function checkEmail() {
-                    await fetch(`https://us-central1-ridemap-11f0c.cloudfunctions.net/api/email?email=${email.trim()}`)
+                    await fetch(`https://us-central1-ridemap-11f0c.cloudfunctions.net/api/email?email=${email.trim()}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'access-key': process.env.REACT_APP_CF_API_KEY
+                        }
+                    })
                         .then(res => res.json())
                         .then(data => {
                             if (data.isEmailAllowed === true) {
-                                signUp(name, email, password, route, stopname).then(
+                                signUp(name, email, password).then(
                                     (data) => {
                                         if (data === false) {
                                             setEmailExist(true);
@@ -135,70 +122,6 @@ export default function SignUp() {
                 <div>
                     <label className='flex felx-col py-2 text-xl font-bold'>Confirm Password</label>
                     <input onChange={(e) => setConfirmPassword(e.target.value)} type='password' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
-                </div>
-                <div className='flex flex-col'>
-                    <div className='py-2 text-xl font-bold'>Route</div>
-                    <div className='w-72'>
-                        <button onClick={() => {
-                            toggleRouteDropDown()
-                            setIsStopDropDownOpen(false)
-                        }}
-                            className="text-white w-72 bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">{route}<svg className="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></button>
-                    </div>
-                    {/* Dropdown */}
-                    <div id='scroll' className={`${isRouteDropDownOpen ? "" : "hidden"} ml-12 mt-16 z-10 w-64 bg-white rounded divide-y divide-gray-100 shadow dark:bg-overlayprimary absolute`}>
-                        <ul className="overflow-y-auto h-48 py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefault">
-                            {
-                                routeData.map((item) => {
-                                    return (
-                                        <li key={item.id}>
-                                            <p onClick={() => {
-                                                setRoute(item.route)
-                                                setStop(item.stops)
-                                                toggleRouteDropDown()
-                                                setStopName('Select your stop')
-                                            }} className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{item.route}</p>
-                                            <hr className='w-auto border-gray-700' />
-                                        </li>
-
-                                    )
-                                })
-                            }
-                        </ul>
-                    </div>
-                    {/* stops */}
-                    {
-                        stop && (
-                            <>
-                                <div className='py-2 text-xl font-bold'>Stop</div>
-                                <div className='w-24 mt-1'>
-                                    <button onClick={() => {
-                                        toggleStopDropDown()
-                                        setIsRouteDropDownOpen(false)
-                                    }}
-                                        className="text-white w-72 bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">{stopname}<svg className="ml-2 w-[11px] h-3" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></button>
-                                </div>
-                                {/* Dropdown */}
-                                <div id='scroll' className={`${isStopDropDownOpen ? "" : "hidden"} ml-12 mt-36 z-10 w-64 bg-white rounded divide-y divide-gray-100 shadow dark:bg-overlayprimary absolute`}>
-                                    <ul className="overflow-y-auto h-32 py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefault">
-                                        {
-                                            stop && stop.map((item) => {
-                                                return (
-                                                    <li key={item}>
-                                                        <p onClick={() => {
-                                                            toggleStopDropDown()
-                                                            setStopName(item)
-                                                        }} className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{item}</p>
-                                                        <hr className='w-auto border-gray-700' />
-                                                    </li>
-                                                )
-                                            })
-                                        }
-                                    </ul>
-                                </div>
-                            </>
-                        )
-                    }
                 </div>
                 {
                     worngPassword && (<div className='text-xs mt-2 text-red-500'>Password must be at least 8 characters long</div>)
