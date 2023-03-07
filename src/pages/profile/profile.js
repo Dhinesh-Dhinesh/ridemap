@@ -17,6 +17,7 @@ export default function Profile() {
 
     const [isThemeChecked, setThemeChecked] = useState(false);
     const [isTrack, setIsTrack] = useState(false);
+    const [isNotificationEnabled, setIsNotificationEnabled] = useState(false);
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -25,6 +26,7 @@ export default function Profile() {
     //Routes data
     const [route, setRoute] = useState("Select your route");
     const [stop, setStop] = useState("Select your stop");
+    const [busNo, setIsBusNo] = useState(null);
     // backend
     const [stopArray, setStopArray] = useState([]);
     const [isHaveRoutes, setIsHaveRoutes] = useState(false);
@@ -45,7 +47,8 @@ export default function Profile() {
             if (doc.exists()) {
                 setName(doc.data().name);
                 setEmail(doc.data().email);
-                if (doc.data().route && doc.data().stop) {
+                if (doc.data().route && doc.data().stop && doc.data().isNotificationEnabled) {
+                    setIsNotificationEnabled(doc.data().isNotificationEnabled);
                     setRoute(doc.data().route);
                     setStop(doc.data().stop);
                     setRouteAndStop({ route: doc.data().route, stop: doc.data().stop });
@@ -69,7 +72,8 @@ export default function Profile() {
         const userRef = doc(firestoreDB, "users", uid)
         updateDoc(userRef, {
             route: route,
-            stop: stop
+            stop: stop,
+            isNotificationEnabled: true
         }).then(() => {
             console.log("Updated");
         })
@@ -172,17 +176,34 @@ export default function Profile() {
                 </div>
             </div>
             <hr className='w-11/12 mt-4 border-gray-700' />
-            
+
             {/* Routes */}
             <div className='flex flex-col w-11/12 mt-5 '>
                 <div className='flex felx-row justify-start -mt-2 -ml-2 py-2'>
                     <img alt="ico" src={require('./assets/route.webp')} width={32} height={32} />
-                    <p className='font-bold text-2xl text-gray-300'>Routes</p>
+                    <p className='font-bold text-2xl text-gray-300'>Notification</p>
                 </div>
                 {
                     isHaveRoutes && !isEdit ? (
                         <>
-                            <div className='grid grid-cols-3 justify-items-start w-24'>
+                            <div className='grid grid-cols-3 justify-items-start w-80 mt-2'>
+                                <h1 className='text-md font-bold text-gray-400'>Notification</h1>
+                                <span className='text-gray-400'>:</span>
+                                {/* Toggle bar */}
+                                <label className="inline-flex relative items-center cursor-pointer -ml-20">
+                                    <input type="checkbox" value="" id="purple-toggle" className="sr-only peer" checked={isNotificationEnabled} onChange={() => {
+                                        console.log("notification toggled");
+                                    }} />
+                                    <div className="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-2 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
+                                    <span className="ml-3 text-sm font-medium text-gray-400">{isNotificationEnabled ? "On" : "Off"}</span>
+                                </label>
+                            </div>
+                            <div className='grid grid-cols-3 justify-items-start w-24 mt-5'>
+                                <h1 className='text-md font-bold text-gray-400'>Bus No</h1>
+                                <span className='text-gray-400 ml-5'>:</span>
+                                <p className='text-gray-400 font-bold w-56'>{busNo}</p>
+                            </div>
+                            <div className='grid grid-cols-3 justify-items-start w-24 mt-5'>
                                 <h1 className='text-md font-bold text-gray-400'>Route</h1>
                                 <span className='text-gray-400 ml-5'>:</span>
                                 <p className='text-gray-400 font-bold w-56'>{route}</p>
@@ -202,90 +223,114 @@ export default function Profile() {
                                 routeLoading ? <SpinLoading /> :
                                     // {/* route */}
                                     <div>
-                                        <div className='grid grid-cols-3 justify-item-start mt-5 w-40'>
-                                            <h1 className='text-md font-bold text-gray-400'>Route</h1>
+                                        <div className='grid grid-cols-3 justify-items-start w-80 mt-2'>
+                                            <h1 className='text-md font-bold text-gray-400'>Notification</h1>
                                             <span className='text-gray-400'>:</span>
-                                            <div className='w-72 -ml-10'>
-                                                <button onClick={() => {
-                                                    setIsRouteDropShown((prevState) => !prevState);
-                                                    setStop("Select your stop");
-                                                    setIsStopDropShown(false);
-                                                }}
-                                                    className="text-white w-64 bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none
-                        focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 
-                        dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">{route}<svg className="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></button>
-                                            </div>
+                                            {/* Toggle bar */}
+                                            <label className="inline-flex relative items-center cursor-pointer -ml-20">
+                                                <input type="checkbox" value="" id="purple-toggle" className="sr-only peer" checked={isNotificationEnabled} onChange={() => {
+                                                    setIsNotificationEnabled(prev => !prev)
+                                                }} />
+                                                <div className="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-2 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
+                                                <span className="ml-3 text-sm font-medium text-gray-400">{isNotificationEnabled ? "On" : "Off"}</span>
+                                            </label>
                                         </div>
-                                        {/* route dropdown */}
-                                        {
-                                            isRouteDropShown && (
-                                                <div id='scroll' className={`ml-10 z-10 w-64  rounded divide-y divide-gray-100 shadow bg-overlayprimary absolute`}>
-                                                    <ul className="overflow-y-auto h-48 py-1 text-sm text-gray-200" aria-labelledby="dropdownDefault">
-                                                        {
-                                                            routeData.map((item) => {
-                                                                return (
-                                                                    <li key={item.id}>
-                                                                        <p onClick={() => {
-                                                                            setIsRouteDropShown((prevState) => !prevState);
-                                                                            setRoute(item.route)
-                                                                            setStopArray(item.stops)
-                                                                        }} className="block py-2 px-4 hover:bg-gray-600 text-white">{item.route}</p>
-                                                                        <hr className='w-auto border-gray-700' />
-                                                                    </li>
 
-                                                                )
-                                                            })
-                                                        }
-                                                    </ul>
-                                                </div>
-                                            )
-                                        }
-                                        {/* stop */}
                                         {
-                                            route !== "Select your route" && (
-                                                <div className='grid grid-cols-3 justify-item-start mt-5 w-40'>
-                                                    <h1 className='text-md font-bold text-gray-400'>Stop</h1>
-                                                    <span className='text-gray-400'>:</span>
-                                                    <div className='w-72 -ml-10'>
-                                                        <button onClick={() => {
-                                                            if (route === routeAndStop.route && stop === routeAndStop.stop) {
-                                                                return;
-                                                            }
-                                                            setIsStopDropShown((prevState) => !prevState);
-                                                            setIsRouteDropShown(false);
-                                                        }}
-                                                            className="text-white w-64 bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none
-                        focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 
-                        dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">{stop}<svg className="ml-2 w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></button>
+                                            isNotificationEnabled === true && (
+                                                <div>
+                                                    <div className='grid grid-cols-3 justify-item-start mt-5 w-40'>
+                                                        <h1 className='text-md font-bold text-gray-400'>Route</h1>
+                                                        <span className='text-gray-400'>:</span>
+                                                        <div className='w-72 -ml-10'>
+                                                            <button onClick={() => {
+                                                                setIsRouteDropShown((prevState) => !prevState);
+                                                                setStop("Select your stop");
+                                                                setIsStopDropShown(false);
+                                                            }}
+                                                                className="text-white w-64 bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none
+                                                            focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 
+                                                            dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">{route}<svg className="ml-2 w-4 h-4" aria-hidden="true" fill="none"
+                                                                    stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                                                        d="M19 9l-7 7-7-7"></path></svg></button>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            )
-                                        }
-                                        {/*Stop Dropdown */}
-                                        {
-                                            isStopDropShown && (
-                                                <div id='scroll' className={`ml-10 z-10 w-64  rounded divide-y divide-gray-100 shadow bg-overlayprimary absolute`}>
-                                                    <ul className="overflow-y-auto h-48 py-1 text-sm text-gray-200" aria-labelledby="dropdownDefault">
-                                                        {
-                                                            stopArray.map((item) => {
-                                                                return (
-                                                                    <li key={item}>
-                                                                        <p onClick={() => {
-                                                                            setIsStopDropShown((prevState) => !prevState);
-                                                                            setStop(item)
-                                                                        }} className="block py-2 px-4 hover:bg-gray-600 text-white">{item}</p>
-                                                                        <hr className='w-auto border-gray-700' />
-                                                                    </li>
+                                                    {/* route dropdown */}
+                                                    {
+                                                        isRouteDropShown && (
+                                                            <div id='scroll' className={`ml-10 z-10 w-64  rounded divide-y divide-gray-100 shadow bg-overlayprimary absolute`}>
+                                                                <ul className="overflow-y-auto h-48 py-1 text-sm text-gray-200" aria-labelledby="dropdownDefault">
+                                                                    {
+                                                                        routeData.map((item) => {
+                                                                            return (
+                                                                                <li key={item.id}>
+                                                                                    <p onClick={() => {
+                                                                                        setIsRouteDropShown((prevState) => !prevState);
+                                                                                        setRoute(item.route)
+                                                                                        setStopArray(item.stops)
+                                                                                    }} className="block py-2 px-4 hover:bg-gray-600 text-white">{item.route}</p>
+                                                                                    <hr className='w-auto border-gray-700' />
+                                                                                </li>
 
-                                                                )
-                                                            })
-                                                        }
-                                                    </ul>
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                </ul>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    {/* stop */}
+                                                    {
+                                                        route !== "Select your route" && (
+                                                            <div className='grid grid-cols-3 justify-item-start mt-5 w-40'>
+                                                                <h1 className='text-md font-bold text-gray-400'>Stop</h1>
+                                                                <span className='text-gray-400'>:</span>
+                                                                <div className='w-72 -ml-10'>
+                                                                    <button onClick={() => {
+                                                                        if (route === routeAndStop.route && stop === routeAndStop.stop) {
+                                                                            return;
+                                                                        }
+                                                                        setIsStopDropShown((prevState) => !prevState);
+                                                                        setIsRouteDropShown(false);
+                                                                    }}
+                                                                        className="text-white w-64 bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none
+                                                                focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 
+                                                                dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">{stop}<svg className="ml-2 w-4 h-4" aria-hidden="true" fill="none"
+                                                                            stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                                                                d="M19 9l-7 7-7-7"></path></svg></button>
+                                                                </div>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    {/*Stop Dropdown */}
+                                                    {
+                                                        isStopDropShown && (
+                                                            <div id='scroll' className={`ml-10 z-10 w-64  rounded divide-y divide-gray-100 shadow bg-overlayprimary absolute`}>
+                                                                <ul className="overflow-y-auto h-48 py-1 text-sm text-gray-200" aria-labelledby="dropdownDefault">
+                                                                    {
+                                                                        stopArray.map((item) => {
+                                                                            return (
+                                                                                <li key={item}>
+                                                                                    <p onClick={() => {
+                                                                                        setIsStopDropShown((prevState) => !prevState);
+                                                                                        setStop(item)
+                                                                                    }} className="block py-2 px-4 hover:bg-gray-600 text-white">{item}</p>
+                                                                                    <hr className='w-auto border-gray-700' />
+                                                                                </li>
+
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                </ul>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    {
+                                                        stop !== "Select your stop" ? <button onClick={() => saveRoute()} className='text-green-400 border-2 w-14 text-center border-green-700 hover:bg-green-900 rounded-xl mt-4'>Save</button> : null
+                                                    }
                                                 </div>
                                             )
-                                        }
-                                        {
-                                            stop !== "Select your stop" ? <button onClick={() => saveRoute()} className='text-green-400 border-2 w-14 text-center border-green-700 hover:bg-green-900 rounded-xl mt-4'>Save</button> : null
+
                                         }
                                     </div>
                             }
