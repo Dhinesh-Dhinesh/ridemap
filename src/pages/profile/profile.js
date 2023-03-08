@@ -26,7 +26,7 @@ export default function Profile() {
     //Routes data
     const [route, setRoute] = useState("Select your route");
     const [stop, setStop] = useState("Select your stop");
-    const [busNo, setIsBusNo] = useState(null);
+    const [busNo, setBusNo] = useState("Select your bus number");
     // backend
     const [stopArray, setStopArray] = useState([]);
     const [isHaveRoutes, setIsHaveRoutes] = useState(false);
@@ -34,6 +34,7 @@ export default function Profile() {
     // ui
     const [isRouteDropShown, setIsRouteDropShown] = useState(false);
     const [isStopDropShown, setIsStopDropShown] = useState(false);
+    const [isBusNoDropShown, setIsBusNoDropShown] = useState(false);
     const [routeLoading, setRouteLoading] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
 
@@ -51,7 +52,8 @@ export default function Profile() {
                     setIsNotificationEnabled(doc.data().isNotificationEnabled);
                     setRoute(doc.data().route);
                     setStop(doc.data().stop);
-                    setRouteAndStop({ route: doc.data().route, stop: doc.data().stop });
+                    setBusNo(doc.data().busNo)
+                    setRouteAndStop({ route: doc.data().route, stop: doc.data().stop, busNo: doc.data().busNo });
                     setIsHaveRoutes(true);
                 }
             }
@@ -60,11 +62,11 @@ export default function Profile() {
 
     // save routes
     function saveRoute() {
-        if (route === routeAndStop.route && stop === routeAndStop.stop) {
+        if ((route === routeAndStop.route && stop === routeAndStop.stop) && busNo === routeAndStop.busNo ) {
             setIsEdit(false);
             return;
         }
-        if (route === "Select your route" || stop === "Select your stop") {
+        if ((route === "Select your route" || stop === "Select your stop") || busNo === "Select your bus number") {
             return;
         }
 
@@ -73,6 +75,7 @@ export default function Profile() {
         updateDoc(userRef, {
             route: route,
             stop: stop,
+            busNo: busNo,
             isNotificationEnabled: true
         }).then(() => {
             console.log("Updated");
@@ -80,7 +83,7 @@ export default function Profile() {
 
         if (isHaveRoutes) {
             // !unsub
-            let unsubTopic = routeAndStop.route.split(/-+/)[0].replace(/[^a-zA-Z]/g, '') + '-' + routeAndStop.stop.replace(/[^a-zA-Z]/g, '')
+            let unsubTopic = routeAndStop.route.split(/-+/)[0].replace(/[^a-zA-Z]/g, '') + '-' + routeAndStop.stop.replace(/[^a-zA-Z]/g, '') + '-' + routeAndStop.busNo;
             console.log("Unsubscribing", unsubTopic);
             fetch("https://us-central1-ridemap-11f0c.cloudfunctions.net/api/unsubscribe", {
                 method: "POST",
@@ -95,7 +98,7 @@ export default function Profile() {
             })
         }
 
-        let subTopic = route.split(/-+/)[0].replace(/[^a-zA-Z]/g, '') + '-' + stop.replace(/[^a-zA-Z]/g, '')
+        let subTopic = route.split(/-+/)[0].replace(/[^a-zA-Z]/g, '') + '-' + stop.replace(/[^a-zA-Z]/g, '') + '-' + busNo;
         fetch("https://us-central1-ridemap-11f0c.cloudfunctions.net/api/subscribe", {
             method: "POST",
             headers: {
@@ -199,7 +202,7 @@ export default function Profile() {
                                 </label>
                             </div>
                             <div className='grid grid-cols-3 justify-items-start w-24 mt-5'>
-                                <h1 className='text-md font-bold text-gray-400'>Bus No</h1>
+                                <h1 className='text-md font-bold text-gray-400'>Busno</h1>
                                 <span className='text-gray-400 ml-5'>:</span>
                                 <p className='text-gray-400 font-bold w-56'>{busNo}</p>
                             </div>
@@ -235,10 +238,52 @@ export default function Profile() {
                                                 <span className="ml-3 text-sm font-medium text-gray-400">{isNotificationEnabled ? "On" : "Off"}</span>
                                             </label>
                                         </div>
+                                        {
+                                            (stop === "Select your stop" && isNotificationEnabled) && <p className='text-xs mt-3 text-yellow-300'>Choose a stop where you want to be notified when the bus arrives.</p>
+                                        }
 
                                         {
                                             isNotificationEnabled === true && (
                                                 <div>
+                                                    {/* busno */}
+                                                    <div className='grid grid-cols-3 justify-item-start mt-5 w-40'>
+                                                        <h1 className='text-md font-bold text-gray-400'>Bus no</h1>
+                                                        <span className='text-gray-400'>:</span>
+                                                        <div className='w-72 -ml-10'>
+                                                            <button onClick={() => {
+                                                                setIsBusNoDropShown((prevState) => !prevState)
+                                                            }}
+                                                                className={`text-white ${busNo === "Select your bus number" ? "w-64" : "w-20"} bg-blue-500 hover:bg-blue-800 focus:ring-2 focus:outline-none
+                                                            focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 
+                                                            dark:hover:bg-blue-700 dark:focus:ring-blue-800`} type="button">{busNo}<svg className="ml-2 w-4 h-4" aria-hidden="true" fill="none"
+                                                                    stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                                                        d="M19 9l-7 7-7-7"></path></svg></button>
+                                                        </div>
+                                                    </div>
+                                                    {/* busNo dropdown */}
+                                                    {
+                                                        isBusNoDropShown && (
+                                                            <div id='scroll' className={`ml-16 z-10 w-24  rounded divide-y divide-gray-100 shadow bg-overlayprimary absolute`}>
+                                                                <ul className="overflow-y-auto h-48 py-1 text-sm text-gray-200" aria-labelledby="dropdownDefault">
+                                                                    {
+                                                                        Array.from({ length: 27 }, (_, index) => index + 1).map((item) => {
+                                                                            return (
+                                                                                <li key={item.id} className="text-center">
+                                                                                    <p onClick={() => {
+                                                                                        setBusNo(item)
+                                                                                        setIsBusNoDropShown((prevState) => !prevState);
+                                                                                    }} className="block py-2 px-4 hover:bg-gray-600 text-white">{item}</p>
+                                                                                    <hr className='w-auto border-gray-700' />
+                                                                                </li>
+
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                </ul>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    {/* route */}
                                                     <div className='grid grid-cols-3 justify-item-start mt-5 w-40'>
                                                         <h1 className='text-md font-bold text-gray-400'>Route</h1>
                                                         <span className='text-gray-400'>:</span>
