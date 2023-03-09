@@ -38,6 +38,7 @@ export default function Profile() {
     const [routeLoading, setRouteLoading] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [isToken, setIsToken] = useState(true);
 
     const navigate = useNavigate();
 
@@ -126,6 +127,7 @@ export default function Profile() {
     // Logout 
     const handleLogOut = async () => {
         try {
+            if(routeLoading) return;
             if (isNotificationEnabled) {
                 setIsLoading(true)
                 const userRef = doc(firestoreDB, "users", uid);
@@ -172,11 +174,13 @@ export default function Profile() {
 
     //reset password
     const resetPassword = () => {
+        if(routeLoading) return;
         navigate('/reset-password');
     }
 
     //navigate to docs
     const navigateToDocs = () => {
+        if(routeLoading) return;
         navigate('/docs');
     }
 
@@ -194,7 +198,7 @@ export default function Profile() {
         <div className='flex flex-col w-screen h-screen items-center bg-backgroundprimary py-5'>
             <h1 className='text-4xl font-bold text-gray-300 tracking-wider'>Profile</h1>
             <img src={require('./assets/profile.webp')} alt="profile" width={160} height={160} className="pointer-events-none" unselectable="on" />
-            <h1 className='text-xl font-bold text-themeprimary -mt-5'>{name}</h1>
+            <h1 className='text-xl font-bold text-purple-500 -mt-5'>{name}</h1>
             <hr className='w-11/12 mt-2 border-gray-700' />
             {/* Info*/}
             <div className='flex flex-col w-11/12 mt-5 '>
@@ -230,6 +234,11 @@ export default function Profile() {
                                 {/* Toggle bar */}
                                 <label className="inline-flex relative items-center cursor-pointer -ml-20">
                                     <input type="checkbox" value="" id="purple-toggle" className="sr-only peer" checked={isNotificationEnabled} onChange={() => {
+                                        var token = window?.fcmToken?.getFcmToken();
+                                        if (!token) {
+                                            setIsToken(false);
+                                            return;
+                                        }
                                         setIsNotificationEnabled((prev) => !prev)
                                         if (isNotificationEnabled) {
                                             setRouteLoading(true);
@@ -308,6 +317,11 @@ export default function Profile() {
                                             {/* Toggle bar */}
                                             <label className="inline-flex relative items-center cursor-pointer -ml-20">
                                                 <input type="checkbox" value="" id="purple-toggle" className="sr-only peer" checked={isNotificationEnabled} onChange={() => {
+                                                    var token = window?.fcmToken?.getFcmToken();
+                                                    if (!token) {
+                                                        setIsToken(false);
+                                                        return;
+                                                    }
                                                     setIsNotificationEnabled(prev => !prev)
                                                 }} />
                                                 <div className="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-2 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
@@ -315,7 +329,10 @@ export default function Profile() {
                                             </label>
                                         </div>
                                         {
-                                            (stop === "Select your stop" && isNotificationEnabled) && <p className='text-xs mt-3 text-yellow-300'>Choose a stop where you want to be notified when the bus arrives.</p>
+                                            isToken === false && <div className='text-xs mt-3 text-yellow-400'>Not available, restart the application</div>
+                                        }
+                                        {
+                                            (stop === "Select your stop" && isNotificationEnabled) && <p className='text-xs mt-3 text-yellow-400'>Choose a stop where you want to be notified when the bus arrives.</p>
                                         }
 
                                         {
