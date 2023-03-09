@@ -9,7 +9,7 @@ import Loading from '../../components/Loading';
 import { routeData } from './data.js';
 
 //firebase
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, deleteField } from 'firebase/firestore';
 import { firestoreDB } from '../../firebase/firebase';
 import { useLayoutEffect } from 'react';
 
@@ -62,7 +62,7 @@ export default function Profile() {
 
     // save routes
     function saveRoute() {
-        if ((route === routeAndStop.route && stop === routeAndStop.stop) && busNo === routeAndStop.busNo ) {
+        if ((route === routeAndStop.route && stop === routeAndStop.stop) && busNo === routeAndStop.busNo) {
             setIsEdit(false);
             return;
         }
@@ -83,7 +83,8 @@ export default function Profile() {
 
         if (isHaveRoutes) {
             // !unsub
-            let unsubTopic = routeAndStop.route.split(/-+/)[0].replace(/[^a-zA-Z]/g, '') + '-' + routeAndStop.stop.replace(/[^a-zA-Z]/g, '') + '-' + routeAndStop.busNo;
+            //eslint-disable-next-line
+            let unsubTopic = routeAndStop.route.split(/-+/)[0].replace(/[^a-zA-Z]/g, '') + '-' + routeAndStop.stop.replace(/[^a-zA-Z]/g, '') + '-' + `${routeAndStop.busNo !== undefined ? routeAndStop.busNo : busNo}`;
             console.log("Unsubscribing", unsubTopic);
             fetch("https://us-central1-ridemap-11f0c.cloudfunctions.net/api/unsubscribe", {
                 method: "POST",
@@ -195,30 +196,71 @@ export default function Profile() {
                                 {/* Toggle bar */}
                                 <label className="inline-flex relative items-center cursor-pointer -ml-20">
                                     <input type="checkbox" value="" id="purple-toggle" className="sr-only peer" checked={isNotificationEnabled} onChange={() => {
-                                        console.log("notification toggled");
+                                        setIsNotificationEnabled((prev) => !prev)
+                                        if (isNotificationEnabled) {
+                                            setRouteLoading(true);
+                                            setIsHaveRoutes(false)
+                                            setBusNo("Select your bus number");
+                                            setStop("Select your stop");
+                                            setRoute("Select your route");
+                                            const userRef = doc(firestoreDB, "users", uid);
+                                            updateDoc(userRef, {
+                                                route: deleteField(),
+                                                stop: deleteField(),
+                                                busNo: deleteField(),
+                                                isNotificationEnabled: deleteField()
+                                            })
+                                            let unsubTopic = routeAndStop.route.split(/-+/)[0].replace(/[^a-zA-Z]/g, '') + '-' + routeAndStop.stop.replace(/[^a-zA-Z]/g, '') + '-' + busNo;
+                                            console.log("Unsubscribing", unsubTopic);
+                                            fetch("https://us-central1-ridemap-11f0c.cloudfunctions.net/api/unsubscribe", {
+                                                method: "POST",
+                                                headers: {
+                                                    "Content-Type": "application/json",
+                                                    'access-key': process.env.REACT_APP_CF_API_KEY
+                                                },
+                                                body: JSON.stringify({
+                                                    topicName: unsubTopic,
+                                                    uid
+                                                })
+                                            }).then(() => {
+                                                setRouteLoading(false);
+                                            })
+
+                                        }
+                                        console.log(isNotificationEnabled);
                                     }} />
                                     <div className="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-2 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
                                     <span className="ml-3 text-sm font-medium text-gray-400">{isNotificationEnabled ? "On" : "Off"}</span>
                                 </label>
                             </div>
-                            <div className='grid grid-cols-3 justify-items-start w-24 mt-5'>
-                                <h1 className='text-md font-bold text-gray-400'>Busno</h1>
-                                <span className='text-gray-400 ml-5'>:</span>
-                                <p className='text-gray-400 font-bold w-56'>{busNo}</p>
-                            </div>
-                            <div className='grid grid-cols-3 justify-items-start w-24 mt-5'>
-                                <h1 className='text-md font-bold text-gray-400'>Route</h1>
-                                <span className='text-gray-400 ml-5'>:</span>
-                                <p className='text-gray-400 font-bold w-56'>{route}</p>
-                            </div>
-                            <div className='grid grid-cols-3 justify-items-start w-24 mt-5'>
-                                <h1 className='text-md font-bold text-gray-400'>Stop</h1>
-                                <span className='text-gray-400 ml-5'>:</span>
-                                <p className='text-gray-400 font-bold w-56'>{stop}</p>
-                            </div>
-                            <div className='relative mt-3 w-20' onClick={() => setIsEdit(true)}>
-                                <p className='text-gray-400 bg-overlayprimary w-20 text-center rounded-xl py-2 font-bold hover:bg-gray-700 cursor-pointer'>Edit</p>
-                            </div>
+                            {
+                                routeLoading ? <div className='mt-3'><SpinLoading /></div> : (
+                                    <>
+                                        <div className='grid grid-cols-3 justify-items-start w-24 mt-5'>
+                                            <h1 className='text-md font-bold text-gray-400'>Busno</h1>
+                                            <span className='text-gray-400 ml-5'>:</span>
+                                            <p className='text-gray-400 font-bold w-56'>{busNo}</p>
+                                        </div>
+                                        <div className='grid grid-cols-3 justify-items-start w-24 mt-5'>
+                                            <h1 className='text-md font-bold text-gray-400'>Route</h1>
+                                            <span className='text-gray-400 ml-5'>:</span>
+                                            <p className='text-gray-400 font-bold w-56'>{route}</p>
+                                        </div>
+                                        <div className='grid grid-cols-3 justify-items-start w-24 mt-5'>
+                                            <h1 className='text-md font-bold text-gray-400'>Stop</h1>
+                                            <span className='text-gray-400 ml-5'>:</span>
+                                            <p className='text-gray-400 font-bold w-56'>{stop}</p>
+                                        </div>
+                                    </>
+                                )
+                            }
+                            {
+                                routeAndStop.busNo !== undefined && (
+                                    <div className='relative mt-3 w-20' onClick={() => setIsEdit(true)}>
+                                        <p className='text-gray-400 bg-overlayprimary w-20 text-center rounded-xl py-2 font-bold hover:bg-gray-700 cursor-pointer'>Edit</p>
+                                    </div>
+                                )
+                            }
                         </>
                     ) : (
                         <div>
@@ -268,7 +310,7 @@ export default function Profile() {
                                                                     {
                                                                         Array.from({ length: 27 }, (_, index) => index + 1).map((item) => {
                                                                             return (
-                                                                                <li key={item.id} className="text-center">
+                                                                                <li key={item} className="text-center">
                                                                                     <p onClick={() => {
                                                                                         setBusNo(item)
                                                                                         setIsBusNoDropShown((prevState) => !prevState);
