@@ -37,6 +37,7 @@ export default function Profile() {
     const [isBusNoDropShown, setIsBusNoDropShown] = useState(false);
     const [routeLoading, setRouteLoading] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -125,12 +126,45 @@ export default function Profile() {
     // Logout 
     const handleLogOut = async () => {
         try {
-            await logOut().then(() => {
-                sessionStorage.removeItem('uid');
-                sessionStorage.removeItem('isLoggedIn');
-                sessionStorage.setItem('hideCreateAccount', true);
-                navigate('/')
-            });
+            if (isNotificationEnabled) {
+                setIsLoading(true)
+                const userRef = doc(firestoreDB, "users", uid);
+                updateDoc(userRef, {
+                    route: deleteField(),
+                    stop: deleteField(),
+                    busNo: deleteField(),
+                    isNotificationEnabled: deleteField()
+                })
+                let unsubTopic = route.split(/-+/)[0].replace(/[^a-zA-Z]/g, '') + '-' + stop.replace(/[^a-zA-Z]/g, '') + '-' + busNo;
+                console.log("Unsubscribing", unsubTopic);
+                fetch("https://us-central1-ridemap-11f0c.cloudfunctions.net/api/unsubscribe", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        'access-key': process.env.REACT_APP_CF_API_KEY
+                    },
+                    body: JSON.stringify({
+                        topicName: unsubTopic,
+                        uid
+                    })
+                }).then(() => {
+                    logOut().then(() => {
+                        sessionStorage.removeItem('uid');
+                        sessionStorage.removeItem('isLoggedIn');
+                        sessionStorage.setItem('hideCreateAccount', true);
+                        setIsLoading(false);
+                        navigate('/')
+                    });
+                })
+            } else {
+                logOut().then(() => {
+                    sessionStorage.removeItem('uid');
+                    sessionStorage.removeItem('isLoggedIn');
+                    sessionStorage.setItem('hideCreateAccount', true);
+                    navigate('/')
+                });
+            }
+
         } catch (e) {
             console.log(e.message)
         }
@@ -148,11 +182,11 @@ export default function Profile() {
 
     useLayoutEffect(() => {
         localStorage.getItem('isLite') === 'false' ? setThemeChecked(false) : setThemeChecked(true);
-        localStorage.getItem('isTrack') === 'false' ? setIsTrack(false) : setIsTrack(true);;
+        localStorage.getItem('isTrack') === 'false' ? setIsTrack(false) : setIsTrack(true);
         setUid(sessionStorage.getItem('uid'));
     }, []);
 
-    if (!email) {
+    if (!email || isLoading) {
         return <Loading />
     }
 
