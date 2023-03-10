@@ -1,5 +1,5 @@
-import { useState } from 'react'
-
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Navigate, useNavigate } from 'react-router-dom';
 import { signIn, useAuth, } from '../../firebase/firebase';
 
@@ -8,6 +8,8 @@ import Lottie from 'react-lottie';
 import busAnimation from './bus.json'
 
 export default function Login() {
+
+  const [searchParams] = useSearchParams();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,6 +29,15 @@ export default function Login() {
     animationData: busAnimation,
     renderer: 'svg'
   }
+
+  useEffect(()=>{
+    sessionStorage.setItem("new_email",searchParams.get('email'));
+    
+    if (searchParams.get("email") !== null){
+      setEmail(searchParams.get('email'));
+    }
+
+  },[searchParams]);
 
   if (user === undefined || loading) {
     return <Loading />
@@ -84,18 +95,18 @@ export default function Login() {
       <div className="w-[90vw] items-center flex justify-center flex-col">
         <div>
           <label className='flex felx-col py-2 text-xl font-bold'>Email</label>
-          <input onChange={(e) => setEmail(e.target.value)} type='email' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
+          <input value={email} onChange={(e) => setEmail(e.target.value)} type='email' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
         </div>
         <div className='mt-6'>
           <label className='flex felx-col py-2 text-xl font-bold'>Password</label>
           <input onChange={(e) => setPassword(e.target.value)} type='password' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
-          <label className={`${wrongPassword ? "flex" : "hidden"} py-2 text-sm text-red-500 w-72 relative`}>The password that you've entered is incorrect.<u onClick={()=>forgotPassword()} className='absolute top-8 right-20 text-blue-500 cursor-pointer'>Forgotten password?</u></label>
+          <label className={`${wrongPassword ? "flex" : "hidden"} py-2 text-sm text-red-500 w-72 relative`}>The password that you've entered is incorrect.<u onClick={() => forgotPassword()} className='absolute top-8 right-20 text-blue-500 cursor-pointer'>Forgotten password?</u></label>
           <label className={`${notFound ? "flex" : "hidden"} mt-3 py-2 text-sm text-red-500 w-72 relative left-24`}>User not found !..</label>
         </div>
         <button onClick={handleSubmit} className='rounded-full border border-themeprimary bg-overlayprimary hover:bg-gray-700 w-56 mt-10 p-3 text-themeprimary'>Sign In</button>
       </div>
       {
-        isHideCreateAccount === 'true' ? null : <div className='text-blue-400 relative -bottom-14 cursor-pointer hover:text-blue-200'><p onClick={()=>toCreateAccount()}>Create an account</p></div>
+        isHideCreateAccount === 'true' ? null : <div className='text-blue-400 relative -bottom-14 cursor-pointer hover:text-blue-200'><p onClick={() => toCreateAccount()}>Create an account</p></div>
       }
     </div>
   )

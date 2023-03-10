@@ -18,7 +18,7 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": "https://ridemap.in/",
+  "start_url": "https://mvit.ridemap.in/",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"

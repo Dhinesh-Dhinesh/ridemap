@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { NavLink, useNavigate } from 'react-router-dom';
 import Loading from '../../components/Loading';
-
 //firebase
 import { signUp } from '../../firebase/firebase';
 
@@ -25,6 +24,14 @@ export default function SignUp() {
     const [isSamePassword, setIsSamePassword] = useState(false);
 
     const [isLoading, setLoading] = useState(false);
+
+
+    useEffect(() => {
+        let new_email = sessionStorage.getItem("new_email");
+        if (new_email !== "null") {
+            setEmail(new_email.trim());
+        }
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -98,6 +105,15 @@ export default function SignUp() {
         }
     }
 
+    function openWhatsApp() {
+        const phoneNumber = '917092340198';
+        const message = `Please add my email - ${email}`;
+
+        const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
+
+        window.open(url, '_blank');
+    }
+
     if (isLoading) {
         return <Loading />
     }
@@ -113,7 +129,7 @@ export default function SignUp() {
                 </div>
                 <div>
                     <label className='flex felx-col py-2 text-xl font-bold'>Email</label>
-                    <input onChange={(e) => setEmail(e.target.value)} type='email' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
+                    <input value={email} onChange={(e) => setEmail(e.target.value)} type='email' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
                 </div>
                 <div>
                     <label className='flex felx-col py-2 text-xl font-bold'>Password</label>
@@ -124,22 +140,22 @@ export default function SignUp() {
                     <input onChange={(e) => setConfirmPassword(e.target.value)} type='password' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
                 </div>
                 {
-                    worngPassword && (<div className='text-xs mt-2 text-red-500'>Password must be at least 8 characters long</div>)
+                    worngPassword && (<div className='text-xs mt-2 text-red-500 text-center'>Password must be at least 8 characters long</div>)
                 }
                 {
-                    !isEmailAllowed && (<div className='text-xs mt-2 text-red-500'>This email is not permitted, Request that your transportation department add your email address to ridemap.</div>)
+                    !isEmailAllowed && (<div className='text-xs mt-2 text-red-500 text-center'>This email is not permitted, Request that your transportation department add your email address to ridemap.<p className='text-blue-500 underline' onClick={()=>openWhatsApp()}>Request email</p></div>)
                 }
                 {
-                    !isValidEmail && (<div className='text-xs mt-2 text-red-500'>incorrect email, Only your organization's email is acceptable (Eg:@mvit.edu.in)</div>)
+                    !isValidEmail && (<div className='text-xs mt-2 text-red-500 text-center'>incorrect email, Only your organization's email is acceptable (Eg:@mvit.edu.in)</div>)
                 }
                 {
-                    allFields && (<div className='text-xs mt-2 text-yellow-400'>* All fields required</div>)
+                    allFields && (<div className='text-xs mt-2 text-yellow-400 text-center'>* All fields required</div>)
                 }
                 {
-                    emailExist && (<div className='text-xs mt-2 text-yellow-400'>Email already exists</div>)
+                    emailExist && (<div className='text-xs mt-2 text-yellow-400 text-center'>Email already exists</div>)
                 }
                 {
-                    isSamePassword && (<div className='text-xs mt-2 text-yellow-400'>Password mismatch</div>)
+                    isSamePassword && (<div className='text-xs mt-2 text-yellow-400 text-center'>Password mismatch</div>)
                 }
                 <button className='rounded-full border border-themeprimary bg-overlayprimary hover:bg-gray-700 w-56 mt-10 p-3 text-themeprimary'>Create account</button>
                 <p className='mt-4 text-xs'>Already have an account <NavLink to='/' className='underline underline-offset-2 cursor-pointer'>Sign in</NavLink></p>
