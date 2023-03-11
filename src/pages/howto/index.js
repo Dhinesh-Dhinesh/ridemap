@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useLayoutEffect } from 'react'
 import NearMeIcon from '@mui/icons-material/NearMe';
 import ShareLocationIcon from '@mui/icons-material/ShareLocation';
 import WestIcon from '@mui/icons-material/West';
@@ -7,7 +7,7 @@ import BugReportIcon from '@mui/icons-material/BugReport';
 export default function Index() {
 
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     window.scrollTo(0, 0)
   }, [])
 

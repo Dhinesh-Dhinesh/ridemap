@@ -30,14 +30,14 @@ export default function Login() {
     renderer: 'svg'
   }
 
-  useEffect(()=>{
-    sessionStorage.setItem("new_email",searchParams.get('email'));
-    
-    if (searchParams.get("email") !== null){
+  useEffect(() => {
+    sessionStorage.setItem("new_email", searchParams.get('email'));
+
+    if (searchParams.get("email") !== null) {
       setEmail(searchParams.get('email'));
     }
 
-  },[searchParams]);
+  }, [searchParams]);
 
   if (user === undefined || loading) {
     return <Loading />
@@ -86,23 +86,22 @@ export default function Login() {
   }
 
   return (
-
     <div className='w-screen h-screen flex flex-col justify-center items-center bg-backgroundprimary text-white'>
       <div className='-mt-32 relative'>
         <Lottie options={defaultOptionsLottie} height={300} width={300} isClickToPauseDisabled={true} />
         <p className='absolute right-[7rem] bottom-12 text-gray-400'>Ridemap.in</p>
       </div>
-      <div className="w-[90vw] items-center flex justify-center flex-col">
-        <div>
-          <label className='flex felx-col py-2 text-xl font-bold'>Email</label>
-          <input value={email} onChange={(e) => setEmail(e.target.value)} type='email' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
-        </div>
-        <div className='mt-6'>
-          <label className='flex felx-col py-2 text-xl font-bold'>Password</label>
-          <input onChange={(e) => setPassword(e.target.value)} type='password' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
-          <label className={`${wrongPassword ? "flex" : "hidden"} py-2 text-sm text-red-500 w-72 relative`}>The password that you've entered is incorrect.<u onClick={() => forgotPassword()} className='absolute top-8 right-20 text-blue-500 cursor-pointer'>Forgotten password?</u></label>
-          <label className={`${notFound ? "flex" : "hidden"} mt-3 py-2 text-sm text-red-500 w-72 relative left-24`}>User not found !..</label>
-        </div>
+      <div>
+        <label className='flex felx-col py-2 text-xl font-bold'>Email</label>
+        <input value={email} onChange={(e) => setEmail(e.target.value)} type='email' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
+      </div>
+      <div className='mt-5'>
+        <label className='flex felx-col py-2 text-xl font-bold'>Password</label>
+        <input onChange={(e) => setPassword(e.target.value)} type='password' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
+      </div>
+      <label className={`${wrongPassword ? "" : "hidden"} py-2 text-sm text-red-500 w-72 text-center`}>The password that you've entered is incorrect.<p onClick={() => forgotPassword()} className='text-blue-500 text-center cursor-pointer'>Forgotten password?</p></label>
+      <label className={`${notFound ? "" : "hidden"} mt-3 py-2 text-sm text-red-500 w-72 text-center`}>User not found ⚠️</label>
+      <div>
         <button onClick={handleSubmit} className='rounded-full border border-themeprimary bg-overlayprimary hover:bg-gray-700 w-56 mt-10 p-3 text-themeprimary'>Sign In</button>
       </div>
       {

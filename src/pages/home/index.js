@@ -228,7 +228,7 @@ export default function Home() {
             } else {
                 return (
                     <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
-                        icon={bus.data.data.accstatus === 1 || bus.data.data.speed > 0 ? BusMovIcon : BusIcon} duration={5000}
+                        icon={bus.data.data.accstatus === 1 || bus.data.data.speed > 0 ? BusMovIcon : BusIcon}
                         rotationAngle={bus.data.data.course} rotationOrigin="center">
                         <Tooltip permanent direction="bottom" offset={[0, 10]} opacity={1} key={bus.key} >
                             Bus {bus.data.busdetails.no}
@@ -375,13 +375,6 @@ export default function Home() {
                     subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
                     className={theme === 'dark' ? 'map-tiles-theme--dark' : 'map-tiles-theme--lite'}
                 />
-                {/* Routing Machine */}
-                {/* {wayPoints === 1 ? <RoutingMachine coords={routes[0]} /> : null}
-                {wayPoints === 2 ? <RoutingMachine coords={routes[1]} /> : null}
-                {wayPoints === 3 ? <RoutingMachine coords={routes[2]} /> : null}
-                {wayPoints === 4 ? <RoutingMachine coords={routes[3]} /> : null}
-                {wayPoints === 5 ? <RoutingMachine coords={routes[4]} /> : null} */}
-
                 {/* Location Marker */}
                 {
                     locationMarkerPosition && <Marker position={locationMarkerPosition} icon={locationIcon}>
