@@ -32,11 +32,6 @@ export default function Login() {
 
   useEffect(() => {
     sessionStorage.setItem("new_email", searchParams.get('email'));
-
-    if (searchParams.get("email") !== null) {
-      setEmail(searchParams.get('email'));
-    }
-
   }, [searchParams]);
 
   if (user === undefined || loading) {
@@ -94,7 +89,7 @@ export default function Login() {
       <form onSubmit={handleSubmit}>
         <div>
           <label className='flex felx-col py-2 text-xl font-bold'>Email</label>
-          <input value={email} onChange={(e) => setEmail(e.target.value)} type='email' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
+          <input onChange={(e) => setEmail(e.target.value)} type='email' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
         </div>
         <div className='mt-5'>
           <label className='flex felx-col py-2 text-xl font-bold'>Password</label>
@@ -102,7 +97,7 @@ export default function Login() {
         </div>
         <div className='flex justify-center items-center'>
           <label className={`${wrongPassword ? "" : "hidden"} py-2 text-sm text-red-500 w-72 text-center`}>The password that you've entered is incorrect.<p onClick={() => forgotPassword()} className='text-blue-500 text-center cursor-pointer'>Forgotten password?</p></label>
-          <label className={`${notFound ? "" : "hidden"} mt-3 py-2 text-sm text-red-500 w-72 text-center`}>User not found ⚠️</label>
+          <label className={`${notFound ? "" : "hidden"} mt-3 py-2 text-sm text-red-500 w-72 text-center`}>User not found ⚠️,Please create an account</label>
         </div>
         <div className='flex justify-center items-center'>
           <button type='submit' className='rounded-full border border-themeprimary bg-overlayprimary hover:bg-gray-700 w-56 mt-10 p-3 text-themeprimary'>Sign In</button>
