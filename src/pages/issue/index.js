@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import ReactLoading from "react-loading";
 import Lottie from 'react-lottie';
 import rocketAnimation from './assets/rocket.json'
+import issueAnimation from './assets/issue.json'
 
 //context
 import { BottomContext } from '../../context/BottomContext';
@@ -63,11 +64,19 @@ export default function Issue() {
         <div className='flex justify-center items-center text-white h-screen flex-col'>
             {
                 !loading && !submitted ? <>
-                    <h1 className='font-bold'>Tell us about the problems you're having.</h1>
+                    <Lottie options={{
+                        loop: true,
+                        autoplay: true,
+                        animationData: issueAnimation,
+                        renderer: 'svg'
+                    }} height={300} width={300} isClickToPauseDisabled={true} />
+                    <h1 className='font-bold'>Tell us about the issue you're having.</h1>
                     <hr className='w-11/12 m-4 border-gray-700' />
                     <div className='w-10/12'>
                         <label className="block mb-2 text-sm font-medium text-white">Your message</label>
-                        <textarea onChange={e => setMessage(e.target.value)} rows="4" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your thoughts here..."></textarea>
+                        <textarea onChange={e => setMessage(e.target.value)} rows="4" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border 
+                        border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
+                        dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Describe the issue here, Your message will be anonymous."></textarea>
                         <button onClick={() => goToHome()} className='bg-gray-500 p-2 rounded-lg text-black mt-3 hover:bg-gray-600'>Cancel</button>
                         <button onClick={() => submitIssue()} className='ml-3 bg-themeprimary p-2 rounded-lg text-black mt-3 hover:bg-[#6f983ee4]'>Submit</button>
                     </div>

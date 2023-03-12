@@ -11,7 +11,7 @@ export const routeData = [
     },
     {
         id: 3,
-        route: 'VILLUPURAM',
+        route: 'VILLUPURAM - Rediyar Mill , Valavanur',
         stops : ["Old Bus stand", "Gandhi statue",  "Madha Kovil","Rediyar Mill", "Koliyanur-x-road","Valavanur"]
     },
     {
