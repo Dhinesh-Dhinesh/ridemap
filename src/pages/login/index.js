@@ -91,19 +91,23 @@ export default function Login() {
         <Lottie options={defaultOptionsLottie} height={300} width={300} isClickToPauseDisabled={true} />
         <p className='absolute right-[7rem] bottom-12 text-gray-400'>Ridemap.in</p>
       </div>
-      <div>
-        <label className='flex felx-col py-2 text-xl font-bold'>Email</label>
-        <input value={email} onChange={(e) => setEmail(e.target.value)} type='email' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
-      </div>
-      <div className='mt-5'>
-        <label className='flex felx-col py-2 text-xl font-bold'>Password</label>
-        <input onChange={(e) => setPassword(e.target.value)} type='password' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
-      </div>
-      <label className={`${wrongPassword ? "" : "hidden"} py-2 text-sm text-red-500 w-72 text-center`}>The password that you've entered is incorrect.<p onClick={() => forgotPassword()} className='text-blue-500 text-center cursor-pointer'>Forgotten password?</p></label>
-      <label className={`${notFound ? "" : "hidden"} mt-3 py-2 text-sm text-red-500 w-72 text-center`}>User not found ⚠️</label>
-      <div>
-        <button onClick={handleSubmit} className='rounded-full border border-themeprimary bg-overlayprimary hover:bg-gray-700 w-56 mt-10 p-3 text-themeprimary'>Sign In</button>
-      </div>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label className='flex felx-col py-2 text-xl font-bold'>Email</label>
+          <input value={email} onChange={(e) => setEmail(e.target.value)} type='email' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
+        </div>
+        <div className='mt-5'>
+          <label className='flex felx-col py-2 text-xl font-bold'>Password</label>
+          <input onChange={(e) => setPassword(e.target.value)} type='password' className='bg-overlayprimary px-5 py-3 rounded-md p-2 focus:outline-none text-gray-400 w-72' />
+        </div>
+        <div className='flex justify-center items-center'>
+          <label className={`${wrongPassword ? "" : "hidden"} py-2 text-sm text-red-500 w-72 text-center`}>The password that you've entered is incorrect.<p onClick={() => forgotPassword()} className='text-blue-500 text-center cursor-pointer'>Forgotten password?</p></label>
+          <label className={`${notFound ? "" : "hidden"} mt-3 py-2 text-sm text-red-500 w-72 text-center`}>User not found ⚠️</label>
+        </div>
+        <div className='flex justify-center items-center'>
+          <button type='submit' className='rounded-full border border-themeprimary bg-overlayprimary hover:bg-gray-700 w-56 mt-10 p-3 text-themeprimary'>Sign In</button>
+        </div>
+      </form>
       {
         isHideCreateAccount === 'true' ? null : <div className='text-blue-400 relative -bottom-14 cursor-pointer hover:text-blue-200'><p onClick={() => toCreateAccount()}>Create an account</p></div>
       }

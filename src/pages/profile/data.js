@@ -1,132 +1,122 @@
 export const routeData = [
     {
         id: 1,
-        route: 'KOTTAKUPPAM - Muthiyalpet, Ajantha Signal, New Bustand',
-        stops : ["Kottakuppam","Muthiyalpet (Perumal Koil)", "Muthiyalpet (Ezhia Mariamman Koil)", "Muthiyalpet Clock Tower", "Renuga theatre", "Ajantha Signal", "Kandhan Complex", "Raja Theatre", "Pothys", "Old Bus Stand", "New Bus Stand", "Nellithoppu Signal", "I.G.Square", "Ariyur Sugar Mill"]
+        route: 'TINDIVANAM - Panayapuram',
+        stops : ["Gandhi Statue","Vasanth&co", "Kutteripatu", "VikravandiToll", "Panayapuram", "Thirukannur"]
     },
     {
         id: 2,
-        route: 'KARUVADIKUPPAM - Iyyanar Koil, Uzhavar Sandhai, Kurinji Nagar',
-        stops : ["Karuvadikuppam(Vinayagar Temple)","Karuvadikuppam(Rice Mill stop)","Iyyanar Koil Stop (Air Port Road)","Uzhavar Sandhai","J.T.S","Navalar School","Kurinji Nagar(Vanavil)","Cluny School","Ponniyamman Koil","Auto Stand(Vinayagar Temple)","Latha steel,Cokku park","Sarathambal Koil stop","I.G Square"]
+        route: 'LAWSPET - Sivaji Square, Karuvadikuppam',
+        stops : ["Sivaji Square","Karuvadikuppam (Vinayagar Temple)","Iyyanar Koil Stop (Air Port Road)","Uzhavar Sandhai","Kurinji Nagar(Vanavil)","Latha steel"]
     },
     {
         id: 3,
-        route: 'RAINBOW NAGAR - Nathan Mahal, Thattachavadi, Moolakullam',
-        stops : ["Rainbow Nagar", "Nathan Kalyana Mandabam",  "Velsokkanathan Kalyana Mandabam","Balaji Theatre", "New Saram", "Annamalai hotel", "Anandarangam Mahal", "Thattachavadi", "Subbiah Nagar", "VVP Nagar", "Thilaspet", "Kathirkamam School", "Shanmugapuram", "Mettupalayam", "Moolakullam"]
+        route: 'VILLUPURAM',
+        stops : ["Old Bus stand", "Gandhi statue",  "Madha Kovil","Rediyar Mill", "Koliyanur-x-road","Valavanur"]
     },
     {
         id: 4,
-        route: 'MUDALIYARPET - Bharathidasan Nagar, I.G, Villiyanur temple',
-        stops : ["AFT Mill", "Mudaliyarpet Police Station","Marapalam", "Viduthalai Nagar", "Bharathidasan Nagar", "Railway gate(Cement Road)Karamanikuppam", "Housing Board (Rice Mill)", "Indira Gandhi Square", "Kamban Nagar", "Villiyanur Temple", "Villiyanur Police Station"]
+        route: 'KOTTAKUPPAM - Muthiyalpet, Ariyur',
+        stops : ["Muthiyalpet (Perumal Koil)","Renuga Theatre","Kandhan Complex", "New Bus Stand", "I.G. Square", "Ariyur Sugar Mill"]
     },
     {
         id: 5,
-        route: 'MARAKKANAM - Anumanadai, Pondicherry University, Kanadamangalam',
-        stops : ["Marakkanam","Panichamedu","Anumandai","Koonimedu","Keezhputhupattu Chavady", "Ganapathichettikulam", "Pondicherry University", "Periya Mudaliyar Chavady", "Aurovil", "Kottakuppam", "Sivaji Square","Latha Steel"]
+        route: 'RAINBOW NAGAR - Kathirkamam',
+        stops : ["Rainbow Nagar","Balaji Theatre","Annamalai Hotel","Kathirkamam School","Mettupalayam", "Iyyankuttipalayam"]
     },
     {
         id: 6,
-        route: 'VEERAMPATTINAM - Arriyankuppam, Odiyanpet, Villyanur Kodaimadu',
-        stops : ["Veerampattinam","Ariyankuppam","Murungapakkam","Murungapakkam Govt. School","Kombakkam","Odiyanpet", "Kanuvapet", "Villyanur madha kovil","Villyanur Kodaimadu"]
+        route: 'ANTHONIYAR - Cement Road',
+        stops :["AFT Mill","Bharathidasan Nagar","Karamanikuppam","I.G. Square","Kamban Nagar","Villiyanur Temple"]
     },
     {
         id: 7,
-        route: 'CUDDALORE - Bahour, Karikalampakkam, Kottamedu',
-        stops : ["Cuddalore","Kanniyakovil","Bahour","Seliamedu","Aranganur","Karikalampakkam","Uruvaiyar","Kottamedu"]
+        route: 'MARAKKANAM - Ecr',
+        stops : ["Marakkanam","Panichamedu","Koonimedu","Keezhputhupattu Chavady","Ganapathi Chettikulam","KSivaji SQ"]
     },
     {
         id: 8,
-        route: 'VVP NAGAR - Jipmer, Pathukannu, Kanadakangalam',
-        stops : ["VVP Nagar", "Subbiah Nagar", "Thattachavati", "JIPMER", "ESI Hospital", "Mettupalayam", "Muthiraiyarpalayam", "Iyyankuttipalayam","Pathukannu", "Kudapakkam", "Agaram", "Kanadamangalam"]
+        route: 'VEERAMPATTINAM - Ariyankuppam',
+        stops : ["Veerampattinam", "Ariyankuppam", "Murungampakkam Govt. School", "Odiyanpet", "Kanuvapet Villiyanur madha Koil", "Villiyanur Kottaimadu"]
     },
     {
         id: 9,
-        route: 'KATTUKUPPAM - Thavalakuppam, Ariyankuppam, Villiyanur',
-        stops : ["Kattukuppam","MGM", "Irumampakkam", "Anugraha Satellie Township", "Thavalakuppam", "Poornankuppam", "Edayarpalayam", "Nonakuppam Boat House", "Ariyankuppam", "Murungapakkam", "Villianur Church", "Kottamedu", "Villianur by Pass", "Ariyapalayam"]
+        route: 'CUDDALORE - O.T',
+        stops : ["Pachayan Kuppam","GRT Signal", "Semmandalam", "Bahour", "Aranganur", "Uruvaiyar"]
     },
     {
         id: 10,
-        route: 'VANUR - Koot Road, Muthiraiyarpalayam, Ariyur(petrol Bunk)',
-        stops : ["VANUR", "SEDARAPET", "Koot Road", "JIPMER", "Mettupalayam", "Muthiraiyarpalayam", "Iyyankuttipalayam", "Pangur","Ariyur Petrol Bunk"]
+        route: 'VVP NAGAR - Iyyankuttipalayam',
+        stops : ["VVP Nagar", "Jipmer", "Mettupalayam", "Patthukannu", "Agaram", "Kandamangalam"]
     },
     {
         id: 11,
-        route: 'RANIBOW NAGAR - Nathan Mahal, Balaji Theatre, Anandarangam Mahal',
-        stops : ["Rainbow Nagar","Nathan Kalyana Mandabam","Velsokkanathan Kalyana Mandabam", "Balaji Theatre", "New Saram", "Annamalai hotel", "Anandarangam Mahal"]
+        route: 'KATTUKUPPAM - Thavalakuppam',
+        stops : ["Kattukuppam","Thavalakuppam","Nonakuppam Boat House", "Murungapakkam", "Kottamedu", "Ariyapalayam"]
     },
     {
         id: 12,
-        route: 'THATTACHAVADI - VVP Nagar, Kathirkamam School, Iyyankuttipalayam',
-        stops : ["Thattachavadi","Subbiah Nagar","VVP Nagar","Thilaspet","Kathirkamam School", "Shanmugapuram", "Mettupalayam", "Iyyankuttipalayam"]
+        route: 'VANUR - Jipmer',
+        stops : ["Vanur","Koot Road","Jipmer","Mettupalayam","Iyyankuttipalayam", "Pangur"]
     },
     {
         id: 13,
-        route: 'KANDHAN COMPLEX - New Bus Stand, I.G Square',
-        stops : ["Ginger HotelKandhan Complex","Raja Theatre","Pothys" ,"Old Bus Stand","Nellithoppu Signal","I.G.Square","Ariyur Sugar Mill","Kandamangalam"]
+        route: 'RAINBOW NAGAR - SARAM',
+        stops : ["RainBow Nagar","Velsokkanathan kalyana Mandabam","Balaji Theatre" ,"New Saram","Anandarangam Mahal","I.G.Square"]
     },
     {
         id: 14,
-        route: 'MUTHIYALPET - Renuga theatre, Saram, I.G square',
-        stops : ["Muthiyalpet(Ezhia Mariamman Koil)", "Muthiyalpet Clock Tower", "Renuga theatre", "Ajantha Signal", "Saram", "Saradabal kovil", "I.G. Square"]
+        route: 'MURUGA THEATRE - Kathirkamam',
+        stops : ["Muruga Theatre", "Gowndanpalayam", "Kathirkamam School", "Shanmugapuram", "Mettupalayam"]
     },
     {
         id: 15,
-        route: 'Uzahavar Sandha - J.T.S, Cokku park, I.G square',
-        stops : ["Uzhavar Sandha", "J.T.S", "Vanavil", "Kurinji Nagar", "Cokku park", "I.G Square"]
+        route: 'KANDHAN COMPLEX - New Bus Stand',
+        stops : ["Ginger Hotel", "Raja Theatre", "Old Bus Stand", "I.G. Square", "Ariyur Sugar Mill", "Kandamangalam"]
     },
     {
         id: 16,
-        route: 'Cuddalore Post Office - Nellikuppam, Madukari, Vallavanur',
-        stops : ["Post Office","Semmandalam", "Chavadi", "Karamanikuppam", "Nellikuppam", "Vazhapattu", "Thirukandeshwaram","Pattampakkam", "Sornauoor", "Rampakkam", "Madukari", "Siruvanthadu", "Vallavanur"]
+        route: 'MUTHIALPET - Saram',
+        stops : ["Muthiyalpet (Ezhai Mariamman Koil)","Renuga Theatre", "Ajanta signal", "Saram", "Saradambal Koil", "I.G. Square"]
     },
     {
         id: 17,
-        route: 'UPPALAM - New bus stand, I.G square, Moolakulam',
-        stops : ["Uppalam", "Railway Station", "Old Bus stand(uzhavar santhai)", "New bus stand", "Indira Gandhi Square", "Pazhava naga", "Jaya Nagar", "Moolakulam", "Arumparthapuram-Kovil", "Villianur By-Pass"]
+        route: 'CUDDALORE POST OFFICE - Madukarai',
+        stops : ["Cuddalore (Post Office)", "Karamanikuppam", "Vazhapattu", "Pattampakkam", "Madukarai", "Eripakkam x road"]
     },
     {
         id: 18,
-        route: 'MURUNGAPAKKAM - Nainar Mandabam, Kompakkam',
-        stops : ["Murungapakkam", "Nainar Mandabam", "Marapalam Signal", "Sun way Hotel – 100ft road", "J.K. TVS (RTO office)", "Kamatchi HOTEL", "I.G Square", "Pavazha Nagar(PSR)", "Reddiyarpalayam(Kamban Nagar)", "Moolakulam"]
+        route: 'UPPALAM - Railway Station',
+        stops : ["Uppalam Water Tank", "New Bus stand", "I.G. Square", "Jaya Nagar", "Moolakulam", "Villiyanur By-pass"]
     },
     {
         id: 19,
-        route: 'AFT MILL - Cement Road, I.G square, Kamban nagar',
-        stops : ["AFT Mill","Police Station","Marapalam","Viduthalai Nagar","Bharathidasan Nagar","Railway gate (Cement Road)","Karamanikuppam","Housing Board (Rice Mill)","Indira Gandhi Square","Kamban Nagar"]
+        route: 'MURUNGAPAKKAM - Nainar Mandabam',
+        stops : ["Murungapakkam","Sun Way Hotel","Kamatchi Hotel","I.G. Square","ReddiyarPalam (kamban Nagar)","Moolakulam"]
     },
     {
         id: 20,
-        route: 'KOTTAKUPPAM - Muthiyalpet, Naveena Theatre',
-        stops : ["Kottakuppam","Muthiyalpet(Perumal Koil)","Muthiyalpet(Ezhia Mariamman Koil)","Muthiyalpet Clock Tower","Renuga theatre","Ajantha Signal","Thiruvaluvar Salai (Naveena Theatre)","Nellithoppu Signal","I.G. Square"]
+        route: 'KOTTAKUPPAM - Muthiyalpet, Thiruvalluvar Salai',
+        stops : ["Kottakuppam","Muthiyalpet Clock Tower","Ajanta Signal","Thiruvalluvar Salai","Nellithoppu Signal","I.G. Square"]
     },
     {
         id: 21,
-        route: 'VILLUPURAM(ANNAMALI HOTEL) - Old Bus stand, Koliyanur, Valavanur',
-        stops : ["Villupuram","Committee Stop","Old Bus stand","Gandhi statue","Santhi theatre Bus stop","Madha Kovil","Rediyar Mill","Koliyanur","Koliyanur X-road","Sagadevan Pettai","Valavanur"]
+        route: 'NEYVELI - Koliyanur X Road',
+        stops : ["Neyveli","Kadampaliyur mampatthu","Panruti","Rajapalayam","Koliyanur x Road"]
     },
     {
         id: 22,
-        route: 'VILLUPURAM(PERIYAR QUARTERS) - Old Bus stand, Koliyanur, Valavanur',
-        stops : ["Villupuram","Committee Stop","Old Bus stand","Gandhi statue","Santhi theatre Bus stop","Madha Kovil","Rediyar Mill","Koliyanur","Koliyanur X-road","Sagadevan Pettai","Valavanur"]
+        route: 'CUDDALORE - Pallur',
+        stops : ["Pallur","Koothapakkam","Cuddalore KV Tex","Irulan Santhai","Thukkanampakkam","Embalam","Pakkam X Road"]
     },
     {
         id: 23,
-        route: 'VIRUTHACHALLAM - Neyveli, Panruti, Koliyanur',
-        stops : ["Viruthachallam", "Neyveli", "Kadampaliyur mampattu", "Sathupattu Govt. College", "Panruti", "Annagramam", "Rajapalayam", "Kandrakottai", "Koliyanur X-Road", "Valavanur"]
+        route: 'LAWSPET - I.G Square',
+        stops : ["Sivaji Square", "Navalur School", "Cluny School", "Ponniyamman Koil", "Kokku Park", "I.G. Square"]
     },
     {
         id: 24,
-        route: 'TINDIVANAM - Kutteripattu, Vikravandi, Thirukanur',
-        stops : ["Tindivanam", "Kutteripattu", "Sendur", "Vikarvandi-Toll Gate", "Panayapuram", "Radhapuram", "Thirukanur", "Vadhanur", "P.S.Palayam"]
-    },
-    {
-        id: 25,
-        route: 'CUDDALORE - Pallor, Emabalam, Thirubhuanai',
-        stops : ["Naduveerapattu","Pallor","Thiruvanthipuram", "Koothapakkam", "Cuddalore–KV Tex", "Kondur", "Irulan santhai", "Thookanampakkam", "EMBALAM", "Pakkam X–Road", "Mandagapet","Thirubhuvanai"]
-    },
-    {
-        id: 26,
-        route: 'SIVAJI SQUARE - Karuvadikuppam, Navalar school, I.G square',
-        stops : ["Sivaji square", "Karuvadikuppam Rice Mill","Iyyanar Kovil Stop(AIR PORT ROAD)", "Navalar School","Cluny School","Ponniyamman Koil", "Auto Stand(Vinayagar Temple)","I.G Square"]
-    },
+        route: 'PANRUTI - Siruvandhadu',
+        stops : ["Panruti", "Pongunam", "Rajapalayam", "Kandrakottai", "Panchamadevi", "Siruvandhadu", "Pudhupalayam"]
+    }
 ]
