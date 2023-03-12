@@ -105,15 +105,6 @@ export default function SignUp() {
         }
     }
 
-    function openWhatsApp() {
-        const phoneNumber = '917092340198';
-        const message = `Please add my email - ${email}`;
-
-        const url = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
-
-        window.open(url, '_blank');
-    }
-
     if (isLoading) {
         return <Loading />
     }
@@ -143,7 +134,7 @@ export default function SignUp() {
                     worngPassword && (<div className='text-xs mt-2 text-red-500 text-center'>Password must be at least 8 characters long</div>)
                 }
                 {
-                    !isEmailAllowed && (<div className='text-xs mt-2 text-red-500 text-center'>This email is not permitted, Request that your transportation department add your email address to ridemap.<p className='text-blue-500 underline' onClick={()=>openWhatsApp()}>Request email</p></div>)
+                    !isEmailAllowed && (<div className='text-xs mt-2 text-red-500 text-center'>This email is not permitted, Request that your transportation department add your email address to ridemap.</div>)
                 }
                 {
                     !isValidEmail && (<div className='text-xs mt-2 text-red-500 text-center'>incorrect email, Only your organization's email is acceptable (Eg:@mvit.edu.in)</div>)
