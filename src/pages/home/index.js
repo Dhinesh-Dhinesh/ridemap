@@ -227,7 +227,7 @@ export default function Home() {
                 return null;
             } else {
                 return (
-                    <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
+                    <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]} duration={300}
                         icon={bus.data.data.accstatus === 1 || bus.data.data.speed > 0 ? BusMovIcon : BusIcon}
                         rotationAngle={bus.data.data.course} rotationOrigin="center">
                         <Tooltip permanent direction="bottom" offset={[0, 10]} opacity={1} key={bus.key} >
@@ -249,7 +249,8 @@ export default function Home() {
 
                 return (
                     <LeafletTrackingMarker key={bus.key} position={[bus.data.data.lat, bus.data.data.lng]}
-                        icon={BusIcon} duration={5000} rotationAngle={bus.data.data.course} rotationOrigin="center">
+                    icon={bus.data.data.accstatus === 1 || bus.data.data.speed > 0 ? BusMovIcon : BusIcon}
+                    duration={5000} rotationAngle={bus.data.data.course} rotationOrigin="center">
                         <Tooltip permanent direction="bottom" offset={[0, 10]} opacity={1} key={bus.key}>
                             Bus {bus.data.busdetails.no}
                         </Tooltip>
