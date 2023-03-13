@@ -86,22 +86,24 @@ export default function SignUp() {
                                     }
                                 )
                             } else {
-                                setIsEmailAllowed(false);
-                                setLoading(false);
+                                // Regex for MVIT email
+                                const mvit = /\b[A-Za-z0-9._%+-]+@mvit\.edu\.in\b/;
+                                if (mvit.test(email)) {
+                                    setIsEmailAllowed(false);
+                                    setLoading(false);
+                                } else {
+                                    setIsValidEmail(false);
+                                    setLoading(false);
+                                }
                             }
                         }).catch(err => {
                             console.log(err);
                         })
                 }
-                // Regex for MVIT email
-                const mvit = /\b[A-Za-z0-9._%+-]+@mvit\.edu\.in\b/;
-                if (mvit.test(email)) {
-                    await checkEmail();
-                } else {
-                    setIsValidEmail(false);
-                    setLoading(false);
-                }
+                // caling the above async function
+                await checkEmail();
             }
+
         }
     }
 

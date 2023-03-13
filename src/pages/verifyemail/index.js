@@ -41,7 +41,7 @@ export default function VerifyEmail() {
       <p>Verify your email!</p>
       <Lottie options={defaultOptionsLottie} height={300} width={300} isClickToPauseDisabled={true} />
       {
-        isEmailSend === false && <p className='text-sm mt-5 text-gray-400'>If you didn't receive your mail. <span className='underline underline-offset-2 cursor-pointer text-blue-500' onClick={sendVerificationEmail}>Resend Mail</span></p>
+        isEmailSend === false && <p className='text-sm mt-5 text-gray-400'>If you didn't receive mail. <span className='underline underline-offset-2 cursor-pointer text-blue-500' onClick={sendVerificationEmail}>Resend Mail</span></p>
       }
       {
         isEmailSend && <p className='text-sm mt-5 text-gray-400'>Email Send</p>
